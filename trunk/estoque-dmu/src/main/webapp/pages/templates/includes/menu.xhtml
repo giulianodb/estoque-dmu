@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
+	<!--CONVENÇÂO 
+		Para que o comportamento do Menu funcione adequadamente, será necessário seguir algumas dicas:
+		- Não mude o ID do FORM ("celMenubar")
+		- Não utilize caracretes especiais para definir o conteudo do atributo ID
+		- Criar ID único para cada tag "li" que deverá receber a marca de seleção 
+		- Não modifique o atributo class do item de menu INICIAL porque essa classe é utilizada para marcar a seleção do item
+		- A primeira ocorrência da tag UL deve receber a classe "page-sidebar-menu" as demais devem receber a classe "sub-menu"
+		
+		OBSERVAÇÂO
+		- Os itens de menu que acessam os caso de uso não precisam ter ID porque o motor (Mojarra) do JSF criará automaticamente com base no ID do form 		 
+	 -->
+	<!-- INÍCIO SIDEBAR MENU -->
+	<h:form id="celMenubar">
+	<ul class="page-sidebar-menu">
+		<li class="sidebar-toggler-wrapper">
+          <div class="sidebar-toggler-nome">Bem vindo: Giuliano</div>
+          <div class="sidebar-toggler hidden-phone"></div>
+        </li>
+		<li id="inicial" class="start"><p:commandLink action="/pages/templates/initial.jsf" ajax="false"> <i
+				class="fa fa-home"></i> <span class="title"> Inicial </span>
+		</p:commandLink></li>
+		<li id="aluno">
+			<a href="javascript:;"> <i class="fa fa-user"></i> <span
+				class="title">Usuário</span></a>
+			<ul class="sub-menu">
+				<li>
+					<p:commandLink action="#{usuarioController.iniciarCadastrarUsuario()}" ajax="false">
+						Novo usuário
+					</p:commandLink>
+				</li>
+			</ul>
+		</li>
+
+		
+	</ul>
+	</h:form>
+</ui:component>
