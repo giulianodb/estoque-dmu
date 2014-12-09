@@ -19,7 +19,7 @@ import org.exception.ApplicationException;
 @Stateless
 public class AlunoDAO {
 
-	@PersistenceContext(unitName = "estoque-dmu")
+	@PersistenceContext(unitName = "estoque")
 	private EntityManager em;
 
 	

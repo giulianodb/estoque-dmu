@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="usuario",schema="estoque-dmu")
+@Table(name="usuario",schema="estoque")
 public class Usuario implements Serializable {
 	
 	/**

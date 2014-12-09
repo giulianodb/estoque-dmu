@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="papel",schema="controle-dmu")
+@Table(name="papel",schema="estoque")
 @NamedQueries({ @NamedQuery(name = "listarPapel", query = "SELECT p FROM Papel p") 	
 })
 public class Papel implements Serializable{

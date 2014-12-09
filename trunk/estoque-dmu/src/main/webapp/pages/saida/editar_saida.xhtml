@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:component
+ 	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
+	<ui:composition template="/pages/templates/layout.xhtml">
+		<ui:define name="breadcrumb">
+			<ul class="page-breadcrumb breadcrumb">
+		    	<li id="inicial"> <i class="fa fa-home"></i> <p:commandLink id="breadHome" action="/pages/templates/initial.jsf" ajax="false"> Início </p:commandLink> <i class="fa fa-angle-right"></i> </li>
+        		<li><i class="fa fa-hdd-o"></i><span>Secretaria</span> <i class="fa fa-angle-right"></i> </li>
+		        <li> <span> Realizar Matrícula </span> </li>
+		    </ul>
+		    <div class="col-md-12 well"> 
+		        <h1 class="pagedesc">
+		        	<i class="fa fa-table x-big"></i> Realizar Matrícula <br/>
+		        	<span class="observacao">(*) campo obrigatório</span>           
+		        </h1>        
+		    </div>
+	    </ui:define>
+		<ui:define name="body">		
+				<h:form>
+					<p:panel toggleable="true" id="pgCampos" header="Saida">
+						<p:focus context="pgCampos" />
+				 		<h:panelGrid columns="2">
+				 			
+				 			<p:outputLabel for="produto" value="Produto:" />
+							<p:selectOneMenu value="#{saidaController.saida.produto.id}" id="produto" required="true">
+								<f:selectItem itemLabel="Selecione" itemValue="" />
+								<f:selectItems value="#{saidaController.listProdutoCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
+							</p:selectOneMenu>
+				 			
+				 			
+				 			<p:outputLabel for="data" value="Data saida:" />
+							<p:calendar
+								value="#{saidaController.saida.data}"
+								id="data" required="true" 
+								locale="pt" pattern="dd/MM/yyyy" maxlength="10" size="20">
+							</p:calendar> 
+				 			
+				 			<p:outputLabel for="quantidade" value="Quantidade:" />
+				 			<p:inputText value="#{saidaController.saida.quantidade}" id="quantidade" label="Quantidade" maxlength="60" size="50">
+							</p:inputText>
+															
+							<p:outputLabel for="tipoReceptor" value="Tipo receptor:" />
+							<p:selectOneMenu value="#{saidaController.tipoParceiroSelecionado}" id="tipoReceptor" required="true" >
+								<f:selectItem itemLabel="Selecione" itemValue="" />
+								<f:selectItems value="#{saidaController.listaTipoParceiroCombo}" var="s" itemLabel="#{s.descricao}" itemValue="#{s}" />
+								<p:ajax partialSubmit="true" listener="#{saidaController.listenerAlterarTipoReceptor()}" update="pgPanel" ></p:ajax>
+							</p:selectOneMenu >
+							
+							<p:outputLabel id="labelCampanha" value="Receptor:"/>
+							
+							<h:panelGroup id="pgPanel" > 
+								
+								<p:selectOneMenu value="#{saidaController.saida.campanha.id}" id="comboCampanha" required="true" rendered="#{saidaController.mostrarComboCampanha}">
+									<f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{saidaController.listaCampanhaCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
+								</p:selectOneMenu >
+								
+								<p:selectOneMenu value="#{saidaController.saida.familia.id}" id="comboFamilia" required="true" rendered="#{saidaController.mostrarComboFamilia}">
+									<f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{saidaController.listaFamiliaCombo}" var="s" itemLabel="#{s.nomeResponsavel}" itemValue="#{s.id}" />
+								</p:selectOneMenu >
+	
+								
+								<p:selectOneMenu value="#{saidaController.saida.instituicao.id}" id="comboInstituicao" required="true" rendered="#{saidaController.mostrarComboInstituicao}">
+									<f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{saidaController.listaInstituicaoCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
+								</p:selectOneMenu >
+							</h:panelGroup>
+							
+						</h:panelGrid>
+						<br></br>
+						
+						<p:separator id="separator"/>
+						<h:panelGrid columns="3" cellpadding="3">
+							<p:commandButton action="#{saidaController.alterarSaida}" value="Alterar" rendered="#{!empty saidaController.saida.id}" ajax="false" icon="ui-icon-disk"/>
+							<p:commandButton action="#{saidaController.incluirSaida}" value="Incluir" rendered="#{empty saidaController.saida.id}" ajax="false" icon="ui-icon-disk" />
+							<p:commandButton action="#{saidaController.iniciarPesquisaSaida()}" value="Voltar" immediate="true" ajax="false" icon="ui-icon-arrowreturnthick-1-w" />
+						</h:panelGrid>
+					</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</ui:component>

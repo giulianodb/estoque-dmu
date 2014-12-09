@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:component
+ 	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
+	<ui:composition template="/pages/templates/layout.xhtml">
+		<ui:define name="breadcrumb">
+			<ul class="page-breadcrumb breadcrumb">
+		    	<li id="inicial"> <i class="fa fa-home"></i> <p:commandLink id="breadHome" action="/pages/templates/initial.jsf" ajax="false"> Início </p:commandLink> <i class="fa fa-angle-right"></i> </li>
+        		<li><i class="fa fa-hdd-o"></i><span>Secretaria</span> <i class="fa fa-angle-right"></i> </li>
+		        <li> <span> Realizar Matrícula </span> </li>
+		    </ul>
+		    <div class="col-md-12 well"> 
+		        <h1 class="pagedesc">
+		        	<i class="fa fa-table x-big"></i> Realizar Matrícula <br/>
+		        	<span class="observacao">(*) campo obrigatório</span>           
+		        </h1>        
+		    </div>
+	    </ui:define>
+		<ui:define name="body">		
+				<h:form>
+					<p:panel toggleable="true" id="pgCampos" header="Familiar">
+						<p:focus context="pgCampos" />
+				 		<h:panelGrid columns="2">
+				 			<p:outputLabel for="nomeResponsavelFamilia" value="Nome responsável:" />
+				 			<p:inputText value="#{familiaController.familia.nomeResponsavel}" id="nomeResponsavelFamilia" label="Nome Responsável Família" maxlength="60" size="50">
+							</p:inputText>
+							
+							<p:outputLabel for="cpf" value="CPF:" />
+				 			<p:inputText value="#{familiaController.familia.cpfResponsavel}" id="cpf" label="CPF" maxlength="60" size="50">
+							</p:inputText> 
+							
+							<p:outputLabel for="estado" value="Estado:" />
+				 			<p:inputText value="#{familiaController.familia.estado}" id="estado" label="Estado" maxlength="60" size="50">
+							</p:inputText> 
+							
+							<p:outputLabel for="cidade" value="Cidade:" />
+				 			<p:inputText value="#{familiaController.familia.cidade}" id="cidade" label="Cidade" maxlength="60" size="50">
+							</p:inputText> 
+							
+							<p:outputLabel for="bairro" value="Bairro:" />
+				 			<p:inputText value="#{familiaController.familia.bairro}" id="bairro" label="Bairro" maxlength="60" size="50">
+							</p:inputText> 
+							
+							<p:outputLabel for="rua" value="Rua:" />
+				 			<p:inputText value="#{familiaController.familia.rua}" id="rua" label="Rua" maxlength="60" size="50">
+							</p:inputText> 
+							
+							<p:outputLabel for="telefone" value="Telefone:" />
+				 			<p:inputText value="#{familiaController.familia.telefone}" id="telefone" label="Telefone" maxlength="60" size="50">
+							</p:inputText> 
+							
+							<p:outputLabel for="celular" value="Celular:" />
+				 			<p:inputText value="#{familiaController.familia.celular}" id="celular" label="Celular" maxlength="60" size="50">
+							</p:inputText> 
+							
+							<p:outputLabel for="email" value="Email:" />
+				 			<p:inputText value="#{familiaController.familia.email}" id="email" label="Email" maxlength="60" size="50">
+							</p:inputText> 
+							
+							
+																			
+						</h:panelGrid>
+						
+						<br></br>
+						
+						<p:separator id="separator"/>
+						<h:panelGrid columns="3" cellpadding="3">
+							<p:commandButton action="#{familiaController.alterarFamilia}" value="Alterar" rendered="#{!empty familiaController.familia.id}" ajax="false" icon="ui-icon-disk"/>
+							<p:commandButton action="#{familiaController.incluirFamilia}" value="Incluir" rendered="#{empty familiaController.familia.id}" ajax="false" icon="ui-icon-disk" />
+							<p:commandButton action="#{familiaController.iniciarPesquisaFamilia()}" value="Voltar" immediate="true" ajax="false" icon="ui-icon-arrowreturnthick-1-w" />
+						</h:panelGrid>
+					</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</ui:component>

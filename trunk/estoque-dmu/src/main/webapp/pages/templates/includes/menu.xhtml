@@ -37,8 +37,96 @@
 				</li>
 			</ul>
 		</li>
-
+		<li id="produto">
+			<a href="javascript:;"> <i class="fa fa-user"></i> <span
+				class="title">Produto</span></a>
+			<ul class="sub-menu">
+				<li>
+					<p:commandLink action="#{produtoController.iniciarPesquisaProduto()}" ajax="false">
+						Listar produtos
+					</p:commandLink>
+				</li>
+				<li>
+					<p:commandLink action="#{produtoController.iniciarIncluirProduto()}" ajax="false">
+						Cadastrar produto
+					</p:commandLink>
+				</li>
+				
+				<li>
+					<p:commandLink action="#{entradaController.iniciarIncluirEntrada()}" ajax="false">
+						Entrada produto
+					</p:commandLink>
+				</li>
+				<li>
+					<p:commandLink action="#{entradaController.iniciarPesquisaEntrada()}" ajax="false">
+						Pesquisar entrada produto
+					</p:commandLink>
+				</li>
+				
+					<li>
+					<p:commandLink action="#{saidaController.iniciarIncluirSaida()}" ajax="false">
+						Saida produto
+					</p:commandLink>
+				</li>
+				<li>
+					<p:commandLink action="#{saidaController.iniciarPesquisaSaida()}" ajax="false">
+						Pesquisar saida produto
+					</p:commandLink>
+				</li>
+			</ul>
+		</li>
 		
+	  <li id="campanha">
+			<a href="javascript:;"> <i class="fa fa-user"></i> <span
+				class="title">Campanha</span></a>
+			<ul class="sub-menu">
+				<li>
+					<p:commandLink action="#{campanhaController.iniciarPesquisaCampanha()}" ajax="false">
+						Listar campanhas
+					</p:commandLink>
+				</li>
+				<li>
+					<p:commandLink action="#{campanhaController.iniciarIncluirCampanha()}" ajax="false">
+						Cadastrar Campanha
+					</p:commandLink>
+				</li>
+			</ul>
+		</li>
+		
+	  <li id="instituicao">
+			<a href="javascript:;"> <i class="fa fa-user"></i> <span
+				class="title">Instituição</span></a>
+			<ul class="sub-menu">
+				<li>
+					<p:commandLink action="#{instituicaoController.iniciarPesquisaInstituicao()}" ajax="false">
+						Listar instituição
+					</p:commandLink>
+				</li>
+				<li>
+					<p:commandLink action="#{instituicaoController.iniciarIncluirInstituicao()}" ajax="false">
+						Cadastrar instituição
+					</p:commandLink>
+				</li>
+			</ul>
+		</li>
+		
+		  <li id="familia">
+			<a href="javascript:;"> <i class="fa fa-user"></i> <span
+				class="title">Família</span></a>
+			<ul class="sub-menu">
+				<li>
+					<p:commandLink action="#{familiaController.iniciarPesquisaFamilia()}" ajax="false">
+						Listar família
+					</p:commandLink>
+					</li>
+				<li>
+					<p:commandLink action="#{familiaController.iniciarIncluirFamilia()}" ajax="false">
+						Cadastrar familia
+					</p:commandLink>
+				</li>
+			</ul>
+		</li>
+	
 	</ul>
 	</h:form>
 </ui:component>
