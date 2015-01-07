@@ -10,19 +10,19 @@
 		<ui:define name="breadcrumb">
 			<ul class="page-breadcrumb breadcrumb">
 		    	<li id="inicial"> <i class="fa fa-home"></i> <p:commandLink id="breadHome" action="/pages/templates/initial.jsf" ajax="false"> Início </p:commandLink> <i class="fa fa-angle-right"></i> </li>
-        		<li><i class="fa fa-hdd-o"></i><span>Secretaria</span> <i class="fa fa-angle-right"></i> </li>
-		        <li> <span> Realizar Matrícula </span> </li>
+        		<li><i class="fa fa-hdd-o"></i><span>Saída</span> <i class="fa fa-angle-right"></i> </li>
+		        <li> <span> Incluir saída </span> </li>
 		    </ul>
 		    <div class="col-md-12 well"> 
 		        <h1 class="pagedesc">
-		        	<i class="fa fa-table x-big"></i> Realizar Matrícula <br/>
+		        	<i class="fa fa-table x-big"></i> Incluir saída <br/>
 		        	<span class="observacao">(*) campo obrigatório</span>           
 		        </h1>        
 		    </div>
 	    </ui:define>
 		<ui:define name="body">		
 				<h:form>
-					<p:panel toggleable="true" id="pgCampos" header="Saida">
+					<p:panel toggleable="true" id="pgCampos" header="Saída">
 						<p:focus context="pgCampos" />
 				 		<h:panelGrid columns="2">
 				 			
@@ -48,30 +48,42 @@
 							<p:selectOneMenu value="#{saidaController.tipoParceiroSelecionado}" id="tipoReceptor" required="true" >
 								<f:selectItem itemLabel="Selecione" itemValue="" />
 								<f:selectItems value="#{saidaController.listaTipoParceiroCombo}" var="s" itemLabel="#{s.descricao}" itemValue="#{s}" />
-								<p:ajax partialSubmit="true" listener="#{saidaController.listenerAlterarTipoReceptor()}" update="pgPanel" ></p:ajax>
+								<p:ajax partialSubmit="true" listener="#{saidaController.listenerAlterarTipoReceptor()}" update="pgPanel,panel2,panel3" ></p:ajax>
 							</p:selectOneMenu >
 							
 							<p:outputLabel id="labelCampanha" value="Receptor:"/>
 							
 							<h:panelGroup id="pgPanel" > 
 								
-								<p:selectOneMenu value="#{saidaController.saida.campanha.id}" id="comboCampanha" required="true" rendered="#{saidaController.mostrarComboCampanha}">
+								<p:selectOneMenu value="#{saidaController.saida.campanha.id}" filter="true" id="comboCampanha" required="true" rendered="#{saidaController.mostrarComboCampanha}">
 									<f:selectItem itemLabel="Selecione" itemValue="" />
 									<f:selectItems value="#{saidaController.listaCampanhaCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
 								</p:selectOneMenu >
 								
-								<p:selectOneMenu value="#{saidaController.saida.familia.id}" id="comboFamilia" required="true" rendered="#{saidaController.mostrarComboFamilia}">
+								<p:selectOneMenu value="#{saidaController.saida.familia.id}" filter="true" id="comboFamilia" required="true" rendered="#{saidaController.mostrarComboFamilia}">
 									<f:selectItem itemLabel="Selecione" itemValue="" />
 									<f:selectItems value="#{saidaController.listaFamiliaCombo}" var="s" itemLabel="#{s.nomeResponsavel}" itemValue="#{s.id}" />
 								</p:selectOneMenu >
 	
 								
-								<p:selectOneMenu value="#{saidaController.saida.instituicao.id}" id="comboInstituicao" required="true" rendered="#{saidaController.mostrarComboInstituicao}">
+								<p:selectOneMenu value="#{saidaController.saida.instituicao.id}" filter="true" id="comboInstituicao" required="true" rendered="#{saidaController.mostrarComboInstituicao}">
 									<f:selectItem itemLabel="Selecione" itemValue="" />
 									<f:selectItems value="#{saidaController.listaInstituicaoCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
 								</p:selectOneMenu >
+							
 							</h:panelGroup>
 							
+							<h:panelGroup layout="block" id="panel2">
+								<p:outputLabel id="labelPara" value="Para:" rendered="#{saidaController.mostrarComboFamiliaCampanha}" />
+							</h:panelGroup>
+							
+							<h:panelGroup layout="block" id="panel3">
+							<p:selectOneMenu value="#{saidaController.saida.familiaCampanha.id}" filter="true" id="comboFamiliaCampanha"  rendered="#{saidaController.mostrarComboFamiliaCampanha}">
+									<f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{saidaController.listaFamiliaCombo}" var="s" itemLabel="#{s.nomeResponsavel}" itemValue="#{s.id}" />
+							</p:selectOneMenu >
+							</h:panelGroup>
+									
 						</h:panelGrid>
 						<br></br>
 						

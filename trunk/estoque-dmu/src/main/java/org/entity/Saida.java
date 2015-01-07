@@ -42,6 +42,11 @@ public class Saida implements Serializable{
 	
 	@ManyToOne
 	private Familia familia;
+	
+	//Caso a saída for de campanha essa é a família que irá receber a saída de estqoue
+	@ManyToOne
+	private Familia familiaCampanha;
+	
 
 	public Integer getId() {
 		return id;
@@ -97,6 +102,14 @@ public class Saida implements Serializable{
 
 	public void setFamilia(Familia familia) {
 		this.familia = familia;
+	}
+
+	public Familia getFamiliaCampanha() {
+		return familiaCampanha;
+	}
+
+	public void setFamiliaCampanha(Familia familiaCampanha) {
+		this.familiaCampanha = familiaCampanha;
 	}
 
 	

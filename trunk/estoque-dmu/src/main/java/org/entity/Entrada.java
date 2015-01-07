@@ -47,7 +47,7 @@ public class Entrada implements Serializable{
 	private Instituicao instituicao;
 	
 	@ManyToOne
-	private Familia familia;
+	private Doador doador;
 
 	public Integer getId() {
 		return id;
@@ -121,13 +121,14 @@ public class Entrada implements Serializable{
 		this.instituicao = instituicao;
 	}
 
-	public Familia getFamilia() {
-		return familia;
+	public Doador getDoador() {
+		return doador;
 	}
 
-	public void setFamilia(Familia familia) {
-		this.familia = familia;
+	public void setDoador(Doador doador) {
+		this.doador = doador;
 	}
-	
+
+
 	
 }

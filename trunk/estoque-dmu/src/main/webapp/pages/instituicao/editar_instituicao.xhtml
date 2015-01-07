@@ -10,22 +10,22 @@
 		<ui:define name="breadcrumb">
 			<ul class="page-breadcrumb breadcrumb">
 		    	<li id="inicial"> <i class="fa fa-home"></i> <p:commandLink id="breadHome" action="/pages/templates/initial.jsf" ajax="false"> Início </p:commandLink> <i class="fa fa-angle-right"></i> </li>
-        		<li><i class="fa fa-hdd-o"></i><span>Secretaria</span> <i class="fa fa-angle-right"></i> </li>
-		        <li> <span> Realizar Matrícula </span> </li>
+        		<li><i class="fa fa-hdd-o"></i><span>Instituição</span> <i class="fa fa-angle-right"></i> </li>
+		        <li> <span> Cadastrar Instituição </span> </li>
 		    </ul>
 		    <div class="col-md-12 well"> 
 		        <h1 class="pagedesc">
-		        	<i class="fa fa-table x-big"></i> Realizar Matrícula <br/>
+		        	<i class="fa fa-table x-big"></i> Cadastrar Instituição <br/>
 		        	<span class="observacao">(*) campo obrigatório</span>           
 		        </h1>        
 		    </div>
 	    </ui:define>
 		<ui:define name="body">		
 				<h:form>
-					<p:panel toggleable="true" id="pgCampos" header="Instituicaor">
+					<p:panel toggleable="true" id="pgCampos" header="Instituição">
 						<p:focus context="pgCampos" />
 				 		<h:panelGrid columns="2">
-				 			<p:outputLabel for="nomeInstituicao" value="Instituicao:" />
+				 			<p:outputLabel for="nomeInstituicao" value="Instituição:" />
 				 			<p:inputText value="#{instituicaoController.instituicao.nome}" id="nomeInstituicao" label="Nome Instituicao" maxlength="60" size="50">
 							</p:inputText>
 							

@@ -11,18 +11,18 @@
 	<ui:define name="breadcrumb">
       <ul class="page-breadcrumb breadcrumb">
         <li id="inicial"> <i class="fa fa-home"></i> <p:commandLink id="breadHome" action="/pages/templates/initial.jsf" ajax="false"> Início </p:commandLink> <i class="fa fa-angle-right"></i> </li>
-		<li><i class="fa fa-building"></i> <span>Familia</span><i class="fa fa-angle-right"></i></li>
-        <li> <span>Pesquisar Familia</span> </li>
+		<li><i class="fa fa-building"></i> <span>Família</span><i class="fa fa-angle-right"></i></li>
+        <li> <span>Pesquisar Família</span> </li>
       </ul>
       <div class="col-md-12 well"> 
         <h1 class="pagedesc">
-        	<i class="fa fa-table x-big"></i> Pesquisar Familia<br/>
+        	<i class="fa fa-table x-big"></i> Pesquisar Família<br/>
         </h1>        
       </div>
     </ui:define>		
 		<ui:define name="body">	
 			<h:form id="familiaForm">
-				<p:panel toggleable="true" id="pgCampos" header="Informações da Familia">
+				<p:panel toggleable="true" id="pgCampos" header="Informações da Família">
 					<p:focus context="pgCampos" />
 					<h:panelGrid columns="2" >		
 						<p:outputLabel for="nomeFamilia" value="Nome Familia:" />

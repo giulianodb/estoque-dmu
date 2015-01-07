@@ -31,7 +31,7 @@ public class Usuario implements Serializable {
 	@Size(max=50)
 	private String nome;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne 
 	private Papel papel;
 	
 	@Column(unique=true)

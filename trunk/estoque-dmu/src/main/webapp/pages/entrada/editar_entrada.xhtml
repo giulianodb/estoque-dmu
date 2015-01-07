@@ -10,12 +10,12 @@
 		<ui:define name="breadcrumb">
 			<ul class="page-breadcrumb breadcrumb">
 		    	<li id="inicial"> <i class="fa fa-home"></i> <p:commandLink id="breadHome" action="/pages/templates/initial.jsf" ajax="false"> Início </p:commandLink> <i class="fa fa-angle-right"></i> </li>
-        		<li><i class="fa fa-hdd-o"></i><span>Secretaria</span> <i class="fa fa-angle-right"></i> </li>
-		        <li> <span> Realizar Matrícula </span> </li>
+        		<li><i class="fa fa-hdd-o"></i><span>Entrada</span> <i class="fa fa-angle-right"></i> </li>
+		        <li> <span> Realizar Entrada </span> </li>
 		    </ul>
 		    <div class="col-md-12 well"> 
 		        <h1 class="pagedesc">
-		        	<i class="fa fa-table x-big"></i> Realizar Matrícula <br/>
+		        	<i class="fa fa-table x-big"></i> Realizar Entrada <br/>
 		        	<span class="observacao">(*) campo obrigatório</span>           
 		        </h1>        
 		    </div>
@@ -76,18 +76,17 @@
 							
 							<h:panelGroup id="pgPanel" > 
 								
-								<p:selectOneMenu value="#{entradaController.entrada.campanha.id}" id="comboCampanha" required="true" rendered="#{entradaController.mostrarComboCampanha}">
+								<p:selectOneMenu value="#{entradaController.entrada.campanha.id}" filter="true" id="comboCampanha" required="true" rendered="#{entradaController.mostrarComboCampanha}">
 									<f:selectItem itemLabel="Selecione" itemValue="" />
 									<f:selectItems value="#{entradaController.listaCampanhaCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
 								</p:selectOneMenu >
 								
-								<p:selectOneMenu value="#{entradaController.entrada.familia.id}" id="comboFamilia" required="true" rendered="#{entradaController.mostrarComboFamilia}">
+								<p:selectOneMenu value="#{entradaController.entrada.doador.id}" filter="true" id="comboDoador" required="true" rendered="#{entradaController.mostrarComboDoador}">
 									<f:selectItem itemLabel="Selecione" itemValue="" />
-									<f:selectItems value="#{entradaController.listaFamiliaCombo}" var="s" itemLabel="#{s.nomeResponsavel}" itemValue="#{s.id}" />
+									<f:selectItems value="#{entradaController.listaDoadorCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
 								</p:selectOneMenu >
-	
 								
-								<p:selectOneMenu value="#{entradaController.entrada.instituicao.id}" id="comboInstituicao" required="true" rendered="#{entradaController.mostrarComboInstituicao}">
+								<p:selectOneMenu value="#{entradaController.entrada.instituicao.id}" filter="true" id="comboInstituicao" required="true" rendered="#{entradaController.mostrarComboInstituicao}">
 									<f:selectItem itemLabel="Selecione" itemValue="" />
 									<f:selectItems value="#{entradaController.listaInstituicaoCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
 								</p:selectOneMenu >

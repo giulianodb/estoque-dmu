@@ -11,18 +11,18 @@
 	<ui:define name="breadcrumb">
       <ul class="page-breadcrumb breadcrumb">
         <li id="inicial"> <i class="fa fa-home"></i> <p:commandLink id="breadHome" action="/pages/templates/initial.jsf" ajax="false"> Início </p:commandLink> <i class="fa fa-angle-right"></i> </li>
-		<li><i class="fa fa-building"></i> <span>Saida</span><i class="fa fa-angle-right"></i></li>
+		<li><i class="fa fa-building"></i> <span>Saída</span><i class="fa fa-angle-right"></i></li>
         <li> <span>Pesquisar Saida</span> </li>
       </ul>
       <div class="col-md-12 well"> 
         <h1 class="pagedesc">
-        	<i class="fa fa-table x-big"></i> Pesquisar Saida<br/>
+        	<i class="fa fa-table x-big"></i> Pesquisar Saída<br/>
         </h1>        
       </div>
     </ui:define>		
 		<ui:define name="body">	
 			<h:form id="saidaForm">
-				<p:panel toggleable="true" id="pgCampos" header="Informações da Saida">
+				<p:panel toggleable="true" id="pgCampos" header="Informações da Saída">
 					<p:focus context="pgCampos" />
 					<h:panelGrid columns="2" >		
 						<p:outputLabel for="nomeProduto" value="Nome produto:" />

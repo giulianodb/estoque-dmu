@@ -6,7 +6,8 @@ public enum TipoParceiroEnum {
 	CAMPANHA("Campanha"),
 	FAMILIA("Família"),
 	ANONIMO("Anônimo"),
-	INSTITUICAO("Instiuição");
+	INSTITUICAO("Instiuição"),
+	PESSOA("Pessoa física");
 	
 	private String descricao;
 	private TipoParceiroEnum(String descricao) {

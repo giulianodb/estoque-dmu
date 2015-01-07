@@ -11,23 +11,23 @@
 	<ui:define name="breadcrumb">
       <ul class="page-breadcrumb breadcrumb">
         <li id="inicial"> <i class="fa fa-home"></i> <p:commandLink id="breadHome" action="/pages/templates/initial.jsf" ajax="false"> Início </p:commandLink> <i class="fa fa-angle-right"></i> </li>
-		<li><i class="fa fa-building"></i> <span>Instituição</span><i class="fa fa-angle-right"></i></li>
-        <li> <span>Pesquisar Instituição</span> </li>
+		<li><i class="fa fa-building"></i> <span>Família</span><i class="fa fa-angle-right"></i></li>
+        <li> <span>Pesquisar Família</span> </li>
       </ul>
       <div class="col-md-12 well"> 
         <h1 class="pagedesc">
-        	<i class="fa fa-table x-big"></i> Pesquisar Instituição<br/>
+        	<i class="fa fa-table x-big"></i> Pesquisar Família<br/>
         </h1>        
       </div>
     </ui:define>		
 		<ui:define name="body">	
-			<h:form id="instituicaoForm">
-				<p:panel toggleable="true" id="pgCampos" header="Informações da Instituição">
+			<h:form id="doadorForm">
+				<p:panel toggleable="true" id="pgCampos" header="Informações da Família">
 					<p:focus context="pgCampos" />
 					<h:panelGrid columns="2" >		
-						<p:outputLabel for="nomeInstituicao" value="Nome Instituicao:" />
-						<p:inputText value="#{instituicaoController.instituicaoDataModel.instituicaoPesquisa.nome}" 
-							id="nomeInstituicao" label="Nome Instituicao"
+						<p:outputLabel for="nomeDoador" value="Nome Doador:" />
+						<p:inputText value="#{doadorController.doadorDataModel.doadorPesquisa.nome}" 
+							id="nomeDoador" label="Nome "
 							maxlength="60" size="50">
 						</p:inputText> 
 				
@@ -35,16 +35,16 @@
 					</h:panelGrid>
 					<h:panelGrid columns="3" cellpadding="3" >													 
 						<p:commandButton icon="ui-icon-disk" 
-							update=":gridForm instituicaoForm"
+							update=":gridForm doadorForm"
 							value="Pesquisa"
-						 	title="Pesquisar Instituicao"
-							action="#{instituicaoController.iniciarPesquisaInstituicao()}"						 		
+						 	title="Pesquisar Doador"
+							action="#{doadorController.iniciarPesquisaDoador()}"						 		
 							ajax="false"></p:commandButton>
 							<p:commandButton icon="ui-icon-disk" 
 							
-							value="Novo instituicao"
-						 	title="Novo Instituicao"
-							action="#{instituicaoController.iniciarIncluirInstituicao()}"						 		
+							value="Novo doador"
+						 	title="Novo Doador"
+							action="#{doadorController.iniciarIncluirDoador()}"						 		
 							ajax="false"></p:commandButton>
 					</h:panelGrid>
 				</p:panel>
@@ -57,42 +57,46 @@
 					
 		<!-- Grade -->
 			<h:form id="gridForm">
-		    	<p:dataTable var="instituicao" 
-				    value="#{instituicaoController.instituicaoDataModel}" 
+		    	<p:dataTable var="doador" 
+				    value="#{doadorController.doadorDataModel}" 
 				    paginator="true" 
 				    rows="10"  
 	                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
 	                rowsPerPageTemplate="10,20,40" 
 	                selectionMode="single" 
-	                id="gdInstituicaos" 
+	                id="gdDoadors" 
 	                lazy="true" 
 	                paginatorPosition="bottom"
 	                emptyMessage="#{appMessages['message.datatable.noRecords']}">  				
-					<p:column headerText="Instituicao">
-		    	        <p:outputLabel value="#{instituicao.nome}" />
-		        	</p:column>
-		        	<p:column headerText="Nome contato">
-		    	        <p:outputLabel value="#{instituicao.nomeContato}" />
+					<p:column headerText="Nome responável">
+		    	        <p:outputLabel value="#{doador.nome}" />
 		        	</p:column>
 		        	<p:column headerText="Telefone">
-		    	        <p:outputLabel value="#{instituicao.telefone}" />
+		    	        <p:outputLabel value="#{doador.telefone}" />
+		        	</p:column>
+		        	<p:column headerText="Celular">
+		    	        <p:outputLabel value="#{doador.celular}" />
 		        	</p:column>
 		        	<p:column headerText="Email">
-		    	        <p:outputLabel value="#{instituicao.email}" />
+		    	        <p:outputLabel value="#{doador.email}" />
+		        	</p:column>
+		        	
+		        	<p:column headerText="Bairro">
+		    	        <p:outputLabel value="#{doador.bairro}" />
 		        	</p:column>
 		        	
 		        	
 			        <p:column headerText="Selecionar" style="text-align: center;" >				                
-				        <p:commandButton id="cmdExcluirInstituicao" icon="ui-icon-trash"									 	 
-					 		update=":gridForm :instituicaoForm"
-					 		title="Excluir Instituicao"	
+				        <p:commandButton id="cmdExcluirDoador" icon="ui-icon-trash"									 	 
+					 		update=":gridForm :doadorForm"
+					 		title="Excluir Doador"	
 					 		ajax="true"
-							action="#{instituicaoController.excluirInstituicao()}">
-							<f:setPropertyActionListener target="#{instituicaoController.instituicao}" value="#{instituicao}"/> 		 	 
+							action="#{doadorController.excluirDoador()}">
+							<f:setPropertyActionListener target="#{doadorController.doador}" value="#{doador}"/> 		 	 
 						</p:commandButton>			            
 				    </p:column>
 			        <f:facet name="footer">  
-						#{instituicaoController.instituicaoDataModel.getRowCount()} #{appMessages['message.datatable.records']}
+						#{doadorController.doadorDataModel.getRowCount()} #{appMessages['message.datatable.records']}
 					</f:facet>	
 				</p:dataTable>
 			</h:form>		

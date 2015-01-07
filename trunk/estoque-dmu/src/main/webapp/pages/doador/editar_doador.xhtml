@@ -25,40 +25,40 @@
 					<p:panel toggleable="true" id="pgCampos" header="Família">
 						<p:focus context="pgCampos" />
 				 		<h:panelGrid columns="2">
-				 			<p:outputLabel for="nomeResponsavelFamilia" value="Nome responsável:" />
-				 			<p:inputText value="#{familiaController.familia.nomeResponsavel}" id="nomeResponsavelFamilia" label="Nome Responsável Família" maxlength="60" size="50">
+				 			<p:outputLabel for="nome" value="Nome:" />
+				 			<p:inputText value="#{doadorController.doador.nome}" id="nome" label="Nome Responsável Família" maxlength="60" size="50">
 							</p:inputText>
 							
 							<p:outputLabel for="cpf" value="CPF:" />
-				 			<p:inputText value="#{familiaController.familia.cpfResponsavel}" id="cpf" label="CPF" maxlength="60" size="50">
+				 			<p:inputText value="#{doadorController.doador.cpf}" id="cpf" label="CPF" maxlength="60" size="50">
 							</p:inputText> 
 							
 							<p:outputLabel for="estado" value="Estado:" />
-				 			<p:inputText value="#{familiaController.familia.estado}" id="estado" label="Estado" maxlength="60" size="50">
+				 			<p:inputText value="#{doadorController.doador.estado}" id="estado" label="Estado" maxlength="60" size="50">
 							</p:inputText> 
 							
 							<p:outputLabel for="cidade" value="Cidade:" />
-				 			<p:inputText value="#{familiaController.familia.cidade}" id="cidade" label="Cidade" maxlength="60" size="50">
+				 			<p:inputText value="#{doadorController.doador.cidade}" id="cidade" label="Cidade" maxlength="60" size="50">
 							</p:inputText> 
 							
 							<p:outputLabel for="bairro" value="Bairro:" />
-				 			<p:inputText value="#{familiaController.familia.bairro}" id="bairro" label="Bairro" maxlength="60" size="50">
+				 			<p:inputText value="#{doadorController.doador.bairro}" id="bairro" label="Bairro" maxlength="60" size="50">
 							</p:inputText> 
 							
 							<p:outputLabel for="rua" value="Rua:" />
-				 			<p:inputText value="#{familiaController.familia.rua}" id="rua" label="Rua" maxlength="60" size="50">
+				 			<p:inputText value="#{doadorController.doador.rua}" id="rua" label="Rua" maxlength="60" size="50">
 							</p:inputText> 
 							
 							<p:outputLabel for="telefone" value="Telefone:" />
-				 			<p:inputText value="#{familiaController.familia.telefone}" id="telefone" label="Telefone" maxlength="60" size="50">
+				 			<p:inputText value="#{doadorController.doador.telefone}" id="telefone" label="Telefone" maxlength="60" size="50">
 							</p:inputText> 
 							
 							<p:outputLabel for="celular" value="Celular:" />
-				 			<p:inputText value="#{familiaController.familia.celular}" id="celular" label="Celular" maxlength="60" size="50">
+				 			<p:inputText value="#{doadorController.doador.celular}" id="celular" label="Celular" maxlength="60" size="50">
 							</p:inputText> 
 							
 							<p:outputLabel for="email" value="Email:" />
-				 			<p:inputText value="#{familiaController.familia.email}" id="email" label="Email" maxlength="60" size="50">
+				 			<p:inputText value="#{doadorController.doador.email}" id="email" label="Email" maxlength="60" size="50">
 							</p:inputText> 
 							
 							
@@ -69,9 +69,9 @@
 						
 						<p:separator id="separator"/>
 						<h:panelGrid columns="3" cellpadding="3">
-							<p:commandButton action="#{familiaController.alterarFamilia}" value="Alterar" rendered="#{!empty familiaController.familia.id}" ajax="false" icon="ui-icon-disk"/>
-							<p:commandButton action="#{familiaController.incluirFamilia}" value="Incluir" rendered="#{empty familiaController.familia.id}" ajax="false" icon="ui-icon-disk" />
-							<p:commandButton action="#{familiaController.iniciarPesquisaFamilia()}" value="Voltar" immediate="true" ajax="false" icon="ui-icon-arrowreturnthick-1-w" />
+							<p:commandButton action="#{doadorController.alterarDoador}" value="Alterar" rendered="#{!empty doadorController.doador.id}" ajax="false" icon="ui-icon-disk"/>
+							<p:commandButton action="#{doadorController.incluirDoador}" value="Incluir" rendered="#{empty doadorController.doador.id}" ajax="false" icon="ui-icon-disk" />
+							<p:commandButton action="#{doadorController.iniciarPesquisaDoador()}" value="Voltar" immediate="true" ajax="false" icon="ui-icon-arrowreturnthick-1-w" />
 						</h:panelGrid>
 					</p:panel>
 			</h:form>

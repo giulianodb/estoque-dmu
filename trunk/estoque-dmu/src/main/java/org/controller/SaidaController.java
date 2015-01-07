@@ -73,6 +73,8 @@ public class SaidaController implements Serializable  {
 	
 	private Boolean mostrarComboFamilia;
 	
+	private Boolean mostrarComboFamiliaCampanha;
+	
 	private Float valorMedioProduto;
 	
 	@Inject
@@ -133,6 +135,12 @@ public class SaidaController implements Serializable  {
 			mostrarComboCampanha = true;
 			mostrarComboFamilia = false;
 			mostrarComboInstituicao = false;
+			mostrarComboFamiliaCampanha = true;
+			saida.setFamiliaCampanha(new Familia());
+			if(listaFamiliaCombo == null || listaFamiliaCombo.size() == 0){
+				listaFamiliaCombo = familiaService.pesquisarFamilia(new Familia());
+			}
+			
 			
 			break;
 		}
@@ -145,6 +153,7 @@ public class SaidaController implements Serializable  {
 			mostrarComboCampanha = false;
 			mostrarComboInstituicao = false;
 			mostrarComboFamilia = true;
+			mostrarComboFamiliaCampanha = false;
 			break;
 		}
 		
@@ -152,6 +161,7 @@ public class SaidaController implements Serializable  {
 			mostrarComboCampanha = false;
 			mostrarComboFamilia = false;
 			mostrarComboInstituicao = false;
+			mostrarComboFamiliaCampanha = false;
 			break;
 		}
 		case 3: {
@@ -163,6 +173,7 @@ public class SaidaController implements Serializable  {
 			mostrarComboCampanha = false;
 			mostrarComboFamilia = false;
 			mostrarComboInstituicao = true;
+			mostrarComboFamiliaCampanha = false;
 			break;
 		}
 		
@@ -269,6 +280,14 @@ public class SaidaController implements Serializable  {
 
 	public void setValorMedioProduto(Float valorMedioProduto) {
 		this.valorMedioProduto = valorMedioProduto;
+	}
+
+	public Boolean getMostrarComboFamiliaCampanha() {
+		return mostrarComboFamiliaCampanha;
+	}
+
+	public void setMostrarComboFamiliaCampanha(Boolean mostrarComboFamiliaCampanha) {
+		this.mostrarComboFamiliaCampanha = mostrarComboFamiliaCampanha;
 	}
 
 }

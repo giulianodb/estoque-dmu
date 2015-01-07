@@ -126,7 +126,26 @@
 				</li>
 			</ul>
 		</li>
-	
+		
+		
+		 <li id="doador">
+			<a href="javascript:;"> <i class="fa fa-user"></i> <span
+				class="title">Doador</span></a>
+			<ul class="sub-menu">
+				<li>
+					<p:commandLink action="#{doadorController.iniciarPesquisaDoador()}" ajax="false">
+						Listar doador
+					</p:commandLink>
+					</li>
+				<li>
+					<p:commandLink action="#{doadorController.iniciarIncluirDoador()}" ajax="false">
+						Cadastrar doador
+					</p:commandLink>
+				</li>
+			</ul>
+		</li>
+		
+		
 	</ul>
 	</h:form>
 </ui:component>

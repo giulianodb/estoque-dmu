@@ -13,16 +13,16 @@ import javax.inject.Provider;
 import org.apache.myfaces.extensions.cdi.core.api.scope.conversation.ViewAccessScoped;
 import org.controller.model.EntradaDataModel;
 import org.entity.Campanha;
+import org.entity.Doador;
 import org.entity.Entrada;
-import org.entity.Familia;
 import org.entity.Instituicao;
 import org.entity.Produto;
 import org.entity.TipoParceiroEnum;
 import org.exception.ApplicationException;
 import org.exception.ControllerExceptionHandler;
 import org.service.CampanhaService;
+import org.service.DoadorService;
 import org.service.EntradaService;
-import org.service.FamiliaService;
 import org.service.InstituicaoService;
 import org.service.ProdutoService;
 import org.util.Message;
@@ -47,7 +47,7 @@ public class EntradaController implements Serializable  {
 	private CampanhaService campanhaService;
 	
 	@Inject
-	private FamiliaService familiaService;
+	private DoadorService doadorService;
 	
 	@Inject
 	private InstituicaoService instituicaoService;
@@ -63,7 +63,7 @@ public class EntradaController implements Serializable  {
 	
 	private List<Instituicao> listaInstituicaoCombo;
 	
-	private List<Familia> listaFamiliaCombo;
+	private List<Doador> listaDoadorCombo;
 	
 	private TipoParceiroEnum tipoParceiroSelecionado;
 	
@@ -71,7 +71,7 @@ public class EntradaController implements Serializable  {
 	
 	private Boolean mostrarComboInstituicao;
 	
-	private Boolean mostrarComboFamilia;
+	private Boolean mostrarComboDoador;
 	
 	private Float valorMedioProduto;
 	
@@ -91,9 +91,10 @@ public class EntradaController implements Serializable  {
 		//carregando combos iniciais
 		listProdutoCombo = produtoService.pesquisarProduto(new Produto(), 0, 0);
 		listaTipoParceiroCombo = new ArrayList<TipoParceiroEnum>(Arrays.asList(TipoParceiroEnum.values()));
+		listaTipoParceiroCombo.remove(1);
 		
 		mostrarComboCampanha = false;
-		mostrarComboFamilia = false;
+		mostrarComboDoador = false;
 		mostrarComboInstituicao = false;
 		
 		entrada.setData(new Date());
@@ -131,35 +132,35 @@ public class EntradaController implements Serializable  {
 			}
 			entrada.setCampanha(new Campanha());
 			entrada.setInstituicao(null);
-			entrada.setFamilia(null);
+			entrada.setDoador(null);
 			
 			mostrarComboCampanha = true;
-			mostrarComboFamilia = false;
+			mostrarComboDoador = false;
 			mostrarComboInstituicao = false;
 			
 			break;
 		}
-		case 1: {
-			if(listaFamiliaCombo == null || listaFamiliaCombo.size() == 0){
-				listaFamiliaCombo = familiaService.pesquisarFamilia(new Familia());
+		case 4: {
+			if(listaDoadorCombo == null || listaDoadorCombo.size() == 0){
+				listaDoadorCombo = doadorService.pesquisarDoador(new Doador());
 			}
 			
-			entrada.setFamilia(new Familia());
+			entrada.setDoador(new Doador());
 			entrada.setInstituicao(null);
 			entrada.setCampanha(null);
 			
 			mostrarComboCampanha = false;
 			mostrarComboInstituicao = false;
-			mostrarComboFamilia = true;
+			mostrarComboDoador = true;
 			break;
 		}
 		
 		case 2: {
 			mostrarComboCampanha = false;
-			mostrarComboFamilia = false;
+			mostrarComboDoador = false;
 			mostrarComboInstituicao = false;
 			entrada.setInstituicao(null);
-			entrada.setFamilia(null);
+			entrada.setDoador(null);
 			entrada.setCampanha(null);
 			
 			break;
@@ -169,11 +170,11 @@ public class EntradaController implements Serializable  {
 				listaInstituicaoCombo = instituicaoService.pesquisarInstituicao(new Instituicao());
 			}
 			entrada.setInstituicao(new Instituicao());
-			entrada.setFamilia(null);
+			entrada.setDoador(null);
 			entrada.setCampanha(null);
 			
 			mostrarComboCampanha = false;
-			mostrarComboFamilia = false;
+			mostrarComboDoador = false;
 			mostrarComboInstituicao = true;
 			break;
 		}
@@ -235,12 +236,12 @@ public class EntradaController implements Serializable  {
 		this.listaInstituicaoCombo = listaInstituicaoCombo;
 	}
 
-	public List<Familia> getListaFamiliaCombo() {
-		return listaFamiliaCombo;
+	public List<Doador> getListaDoadorCombo() {
+		return listaDoadorCombo;
 	}
 
-	public void setListaFamiliaCombo(List<Familia> listaFamiliaCombo) {
-		this.listaFamiliaCombo = listaFamiliaCombo;
+	public void setListaDoadorCombo(List<Doador> listaDoadorCombo) {
+		this.listaDoadorCombo = listaDoadorCombo;
 	}
 
 	public Boolean getMostrarComboCampanha() {
@@ -259,12 +260,12 @@ public class EntradaController implements Serializable  {
 		this.mostrarComboInstituicao = mostrarComboInstituicao;
 	}
 
-	public Boolean getMostrarComboFamilia() {
-		return mostrarComboFamilia;
+	public Boolean getMostrarComboDoador() {
+		return mostrarComboDoador;
 	}
 
-	public void setMostrarComboFamilia(Boolean mostrarComboFamilia) {
-		this.mostrarComboFamilia = mostrarComboFamilia;
+	public void setMostrarComboDoador(Boolean mostrarComboDoador) {
+		this.mostrarComboDoador = mostrarComboDoador;
 	}
 
 	public TipoParceiroEnum getTipoParceiroSelecionado() {

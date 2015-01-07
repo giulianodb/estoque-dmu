@@ -10,19 +10,19 @@
 		<ui:define name="breadcrumb">
 			<ul class="page-breadcrumb breadcrumb">
 		    	<li id="inicial"> <i class="fa fa-home"></i> <p:commandLink id="breadHome" action="/pages/templates/initial.jsf" ajax="false"> Início </p:commandLink> <i class="fa fa-angle-right"></i> </li>
-        		<li><i class="fa fa-hdd-o"></i><span>Secretaria</span> <i class="fa fa-angle-right"></i> </li>
-		        <li> <span> Realizar Matrícula </span> </li>
+        		<li><i class="fa fa-hdd-o"></i><span>Campanha</span> <i class="fa fa-angle-right"></i> </li>
+		        <li> <span> Editar campanha </span> </li>
 		    </ul>
 		    <div class="col-md-12 well"> 
 		        <h1 class="pagedesc">
-		        	<i class="fa fa-table x-big"></i> Realizar Matrícula <br/>
+		        	<i class="fa fa-table x-big"></i> Campanha <br/>
 		        	<span class="observacao">(*) campo obrigatório</span>           
 		        </h1>        
 		    </div>
 	    </ui:define>
 		<ui:define name="body">		
 				<h:form>
-					<p:panel toggleable="true" id="pgCampos" header="Campanhar">
+					<p:panel toggleable="true" id="pgCampos" header="Campanha">
 						<p:focus context="pgCampos" />
 				 		<h:panelGrid columns="2">
 				 			<p:outputLabel for="nomeCampanha" value="Campanha:" />
