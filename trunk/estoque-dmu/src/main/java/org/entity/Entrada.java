@@ -1,7 +1,6 @@
 package org.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.inject.Inject;
 import javax.persistence.Column;
@@ -30,9 +29,12 @@ public class Entrada implements Serializable{
 	@ManyToOne
 	private Produto produto;
 	
-	private Float quantidade;
+	//Definir qual lote essa entrada faz parte
+	@ManyToOne
+	@Inject
+	private LoteEntrada loteEntrada;
 	
-	private Date data;
+	private Float quantidade;
 	
 	private Float valor;
 	
@@ -40,14 +42,12 @@ public class Entrada implements Serializable{
 	
 	private String descricaoNota;
 	
-	@ManyToOne
-	private Campanha campanha;
+	private Float valorMediaUltimo;
 	
-	@ManyToOne
-	private Instituicao instituicao;
+	private Float quantidadeUltimo;
 	
-	@ManyToOne
-	private Doador doador;
+//	Atributo que define qual era o saldo em valor essa saída foi efetuda
+	private Float saldoUltimo;
 
 	public Integer getId() {
 		return id;
@@ -65,20 +65,20 @@ public class Entrada implements Serializable{
 		this.produto = produto;
 	}
 
+	public LoteEntrada getLoteEntrada() {
+		return loteEntrada;
+	}
+
+	public void setLoteEntrada(LoteEntrada loteEntrada) {
+		this.loteEntrada = loteEntrada;
+	}
+
 	public Float getQuantidade() {
 		return quantidade;
 	}
 
 	public void setQuantidade(Float quantidade) {
 		this.quantidade = quantidade;
-	}
-
-	public Date getData() {
-		return data;
-	}
-
-	public void setData(Date data) {
-		this.data = data;
 	}
 
 	public Float getValor() {
@@ -105,29 +105,31 @@ public class Entrada implements Serializable{
 		this.descricaoNota = descricaoNota;
 	}
 
-	public Campanha getCampanha() {
-		return campanha;
+	public Float getValorMediaUltimo() {
+		return valorMediaUltimo;
 	}
 
-	public void setCampanha(Campanha campanha) {
-		this.campanha = campanha;
+	public void setValorMediaUltimo(Float valorMediaUltimo) {
+		this.valorMediaUltimo = valorMediaUltimo;
 	}
 
-	public Instituicao getInstituicao() {
-		return instituicao;
+	public Float getQuantidadeUltimo() {
+		return quantidadeUltimo;
 	}
 
-	public void setInstituicao(Instituicao instituicao) {
-		this.instituicao = instituicao;
+	public void setQuantidadeUltimo(Float quantidadeUltimo) {
+		this.quantidadeUltimo = quantidadeUltimo;
 	}
 
-	public Doador getDoador() {
-		return doador;
+	public Float getSaldoUltimo() {
+		return saldoUltimo;
 	}
 
-	public void setDoador(Doador doador) {
-		this.doador = doador;
+	public void setSaldoUltimo(Float saldoUltimo) {
+		this.saldoUltimo = saldoUltimo;
 	}
+	
+	
 
 
 	

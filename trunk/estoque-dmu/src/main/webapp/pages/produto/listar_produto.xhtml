@@ -90,7 +90,17 @@
 					 		ajax="true"
 							action="#{produtoController.excluirProduto()}">
 							<f:setPropertyActionListener target="#{produtoController.produto}" value="#{produto}"/> 		 	 
-						</p:commandButton>			            
+						</p:commandButton>
+						
+						
+						     <p:commandButton id="relatorio" icon="ui-icon-direction"									 	 
+					 		update=":gridForm :produtoForm"
+					 		title="Relatorio"	
+					 		ajax="false"
+							action="#{relatorioController.gerarRelatorioFaturaExito(produto)}">
+							<f:setPropertyActionListener target="#{produtoController.produto}" value="#{produto}"/> 		 	 
+						</p:commandButton>	
+							            
 				    </p:column>
 			        <f:facet name="footer">  
 						#{produtoController.produtoDataModel.getRowCount()} #{appMessages['message.datatable.records']}

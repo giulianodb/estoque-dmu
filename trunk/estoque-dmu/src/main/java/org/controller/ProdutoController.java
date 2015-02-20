@@ -75,6 +75,13 @@ public class ProdutoController implements Serializable  {
 		return iniciarPesquisaProduto();
 	}
 	
+	public String emitirRelatorioEntradaProduto(){
+		
+		
+		
+		return null;
+	}
+	
 	public String alterarProduto(){
 		return "/pages/produto/listar_produto";
 	}

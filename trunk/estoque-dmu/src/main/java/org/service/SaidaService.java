@@ -23,7 +23,7 @@ public class SaidaService {
 	@Inject
 	private ProdutoService produtoService;
 	
-	public List<Saida> pesquisarSaida(Saida saida, int primeiroRegistro, int tamanhoPagina) throws ApplicationException{
+	public List<Saida> pesquisarSaida(Saida saida, Integer primeiroRegistro, Integer tamanhoPagina) throws ApplicationException{
 		try {
 			StringBuilder sb = new StringBuilder("SELECT saida FROM Saida saida ");		
 			TypedQuery<Saida> query = em.createQuery(sb.toString(),Saida.class);
@@ -31,8 +31,12 @@ public class SaidaService {
 			sb.append("ORDER BY saida.nome ");
 			
 			//Delimita o num de registro para a pagina a ser recuperada
-	        query.setFirstResult(primeiroRegistro);
-	        query.setMaxResults(tamanhoPagina);				
+	        if (primeiroRegistro != null){
+	        	query.setFirstResult(primeiroRegistro);
+	        }
+	        if (tamanhoPagina != null){
+	        	query.setMaxResults(tamanhoPagina);				
+	        }
 			return query.getResultList();
 		} catch(Exception e) {
 			throw new ApplicationException("br.gov.pr.celepar.exemplo.dao.MatriculaDAO.listarPorAlunoComRelacionamentos.ERRO", e);
@@ -63,10 +67,14 @@ public class SaidaService {
 		Produto produto = produtoService.obterProduto(saida.getProduto().getId());
 		
 		
+		produtoService.alterarProduto(produto);
+		
+		saida.setValorMediaUltimo(produto.valorMedioProduto());
+		saida.setQuantidadeUltimo(produto.getQuantidadeEstoque());
+		
 		//atualizando valores para historico e média 
 		produto.setQuantidadeEstoque(NumeroUtil.diminuirDinheiro(produto.getQuantidadeEstoque(), saida.getQuantidade(), 3));
-		
-		produtoService.alterarProduto(produto);
+	
 		
 		em.persist(saida);
 	}

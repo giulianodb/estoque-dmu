@@ -97,7 +97,7 @@ public class EntradaController implements Serializable  {
 		mostrarComboDoador = false;
 		mostrarComboInstituicao = false;
 		
-		entrada.setData(new Date());
+		entrada.getLoteEntrada().setData(new Date());
 		
 		return "/pages/entrada/editar_entrada";
 	}
@@ -130,9 +130,9 @@ public class EntradaController implements Serializable  {
 			if(listaCampanhaCombo == null || listaCampanhaCombo.size() == 0){
 				listaCampanhaCombo = campanhaService.pesquisarCampanha(new Campanha());
 			}
-			entrada.setCampanha(new Campanha());
-			entrada.setInstituicao(null);
-			entrada.setDoador(null);
+			entrada.getLoteEntrada().setCampanha(new Campanha());
+			entrada.getLoteEntrada().setInstituicao(null);
+			entrada.getLoteEntrada().setDoador(null);
 			
 			mostrarComboCampanha = true;
 			mostrarComboDoador = false;
@@ -145,9 +145,9 @@ public class EntradaController implements Serializable  {
 				listaDoadorCombo = doadorService.pesquisarDoador(new Doador());
 			}
 			
-			entrada.setDoador(new Doador());
-			entrada.setInstituicao(null);
-			entrada.setCampanha(null);
+			entrada.getLoteEntrada().setDoador(new Doador());
+			entrada.getLoteEntrada().setInstituicao(null);
+			entrada.getLoteEntrada().setCampanha(null);
 			
 			mostrarComboCampanha = false;
 			mostrarComboInstituicao = false;
@@ -159,9 +159,9 @@ public class EntradaController implements Serializable  {
 			mostrarComboCampanha = false;
 			mostrarComboDoador = false;
 			mostrarComboInstituicao = false;
-			entrada.setInstituicao(null);
-			entrada.setDoador(null);
-			entrada.setCampanha(null);
+			entrada.getLoteEntrada().setInstituicao(null);
+			entrada.getLoteEntrada().setDoador(null);
+			entrada.getLoteEntrada().setCampanha(null);
 			
 			break;
 		}
@@ -169,9 +169,9 @@ public class EntradaController implements Serializable  {
 			if(listaInstituicaoCombo == null || listaInstituicaoCombo.size() == 0){
 				listaInstituicaoCombo = instituicaoService.pesquisarInstituicao(new Instituicao());
 			}
-			entrada.setInstituicao(new Instituicao());
-			entrada.setDoador(null);
-			entrada.setCampanha(null);
+			entrada.getLoteEntrada().setInstituicao(new Instituicao());
+			entrada.getLoteEntrada().setDoador(null);
+			entrada.getLoteEntrada().setCampanha(null);
 			
 			mostrarComboCampanha = false;
 			mostrarComboDoador = false;

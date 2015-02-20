@@ -47,6 +47,14 @@ public class Saida implements Serializable{
 	@ManyToOne
 	private Familia familiaCampanha;
 	
+	//Atributo que define qual é o ultimo valor medio quando essa saída foi efetuda
+	private Float valorMediaUltimo;
+	
+//	Atributo que define qual é a quantidade quando essa saída foi efetuda
+	private Float quantidadeUltimo;
+	
+//	Atributo que define qual era o saldo em valor essa saída foi efetuda
+	private Float saldoUltimo;
 
 	public Integer getId() {
 		return id;
@@ -110,6 +118,30 @@ public class Saida implements Serializable{
 
 	public void setFamiliaCampanha(Familia familiaCampanha) {
 		this.familiaCampanha = familiaCampanha;
+	}
+
+	public Float getValorMediaUltimo() {
+		return valorMediaUltimo;
+	}
+
+	public void setValorMediaUltimo(Float valorMediaUltimo) {
+		this.valorMediaUltimo = valorMediaUltimo;
+	}
+
+	public Float getQuantidadeUltimo() {
+		return quantidadeUltimo;
+	}
+
+	public void setQuantidadeUltimo(Float quantidadeUltimo) {
+		this.quantidadeUltimo = quantidadeUltimo;
+	}
+
+	public Float getSaldoUltimo() {
+		return saldoUltimo;
+	}
+
+	public void setSaldoUltimo(Float saldoUltimo) {
+		this.saldoUltimo = saldoUltimo;
 	}
 
 	

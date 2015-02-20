@@ -36,7 +36,7 @@
 				 			
 				 			<p:outputLabel for="data" value="Data entrada:" />
 							<p:calendar
-								value="#{entradaController.entrada.data}"
+								value="#{entradaController.entrada.loteEntrada.data}"
 								id="data" required="true" 
 								locale="pt" pattern="dd/MM/yyyy" maxlength="10" size="20">
 							</p:calendar> 
@@ -54,7 +54,6 @@
 				 			<p:inputText value="#{entradaController.entrada.valor}" id="valor" label="Valor" maxlength="60" size="50" >
 				 				<f:converter converterId="converter.MoedaConverter"></f:converter>
 							</p:inputText>
-			
 							
 							<p:outputLabel for="nf" value="Nota fiscal:" />
 				 			<p:inputText value="#{entradaController.entrada.numeroNF}" id="nf" label="NF" maxlength="60" size="50">
@@ -76,17 +75,17 @@
 							
 							<h:panelGroup id="pgPanel" > 
 								
-								<p:selectOneMenu value="#{entradaController.entrada.campanha.id}" filter="true" id="comboCampanha" required="true" rendered="#{entradaController.mostrarComboCampanha}">
+								<p:selectOneMenu value="#{entradaController.entrada.loteEntrada.campanha.id}" filter="true" id="comboCampanha" required="true" rendered="#{entradaController.mostrarComboCampanha}">
 									<f:selectItem itemLabel="Selecione" itemValue="" />
 									<f:selectItems value="#{entradaController.listaCampanhaCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
 								</p:selectOneMenu >
 								
-								<p:selectOneMenu value="#{entradaController.entrada.doador.id}" filter="true" id="comboDoador" required="true" rendered="#{entradaController.mostrarComboDoador}">
+								<p:selectOneMenu value="#{entradaController.entrada.loteEntrada.doador.id}" filter="true" id="comboDoador" required="true" rendered="#{entradaController.mostrarComboDoador}">
 									<f:selectItem itemLabel="Selecione" itemValue="" />
 									<f:selectItems value="#{entradaController.listaDoadorCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
 								</p:selectOneMenu >
 								
-								<p:selectOneMenu value="#{entradaController.entrada.instituicao.id}" filter="true" id="comboInstituicao" required="true" rendered="#{entradaController.mostrarComboInstituicao}">
+								<p:selectOneMenu value="#{entradaController.entrada.loteEntrada.instituicao.id}" filter="true" id="comboInstituicao" required="true" rendered="#{entradaController.mostrarComboInstituicao}">
 									<f:selectItem itemLabel="Selecione" itemValue="" />
 									<f:selectItems value="#{entradaController.listaInstituicaoCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
 								</p:selectOneMenu >

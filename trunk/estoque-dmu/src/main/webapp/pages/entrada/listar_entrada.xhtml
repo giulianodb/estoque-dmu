@@ -82,19 +82,17 @@
 		        	</p:column>
 		        	
 		        	<p:column headerText="Data">
-		    	        <p:outputLabel value="#{entrada.data}" >
+		    	        <p:outputLabel value="#{entrada.loteEntrada.data}" >
 		    	        	<f:convertDateTime pattern="dd/MM/yyyy" />
 		    	        </p:outputLabel>
 		        	</p:column>
 		        	
 		        	<p:column headerText="Doador" >
-		    	        <p:outputLabel value="#{entrada.campanha.nome}" rendered="#{!empty entrada.campanha}"/>
+		    	        <p:outputLabel value="#{entrada.loteEntrada.campanha.nome}" rendered="#{!empty entrada.loteEntrada.campanha}"/>
 		        	
-		    	        <p:outputLabel value="#{entrada.familia.nomeResponsavel}" rendered="#{!empty entrada.familia}"/>
+		    	        <p:outputLabel value="#{entrada.loteEntrada.instituicao.nome}" rendered="#{!empty entrada.loteEntrada.instituicao}"/>
 		        	
-		    	        <p:outputLabel value="#{entrada.instituicao.nome}" rendered="#{!empty entrada.instituicao}"/>
-		        	
-		    	        <p:outputLabel value="Anônimo" rendered="#{empty entrada.instituicao and empty entrada.campanha and empty entrada.familia}"/>
+		    	        <p:outputLabel value="Anônimo" rendered="#{empty entrada.loteEntrada.instituicao and empty entrada.loteEntrada.campanha and empty entrada.loteEntrada.instituicao}"/>
 		        	</p:column>
 		        	
 		        	

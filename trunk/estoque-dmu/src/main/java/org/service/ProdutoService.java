@@ -1,5 +1,6 @@
 package org.service;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -17,7 +18,7 @@ public class ProdutoService {
 	@PersistenceContext(unitName = "estoque")
 	private EntityManager em;
 	
-	public List<Produto> pesquisarProduto(Produto produto, int primeiroRegistro, int tamanhoPagina) throws ApplicationException{
+	public List<Produto> pesquisarProduto(Produto produto, Integer primeiroRegistro, Integer tamanhoPagina) throws ApplicationException{
 		try {
 			StringBuilder sb = new StringBuilder("SELECT produto FROM Produto produto ");		
 			TypedQuery<Produto> query = em.createQuery(sb.toString(),Produto.class);
@@ -25,14 +26,45 @@ public class ProdutoService {
 			sb.append("ORDER BY produto.nome ");
 			
 			//Delimita o num de registro para a pagina a ser recuperada
-	        query.setFirstResult(primeiroRegistro);
-	        query.setMaxResults(tamanhoPagina);				
+			if (primeiroRegistro != null){
+				query.setFirstResult(primeiroRegistro);
+			}
+	        if (tamanhoPagina != null){
+	        	query.setMaxResults(tamanhoPagina);				
+	        }
 			return query.getResultList();
 		} catch(Exception e) {
 			throw new ApplicationException("br.gov.pr.celepar.exemplo.dao.MatriculaDAO.listarPorAlunoComRelacionamentos.ERRO", e);
 		}
 		
 	}
+	
+	
+	public List<Produto> pesquisarProdutoComMovimentacoes(Produto produto, Date dataInicio, Date dataFim) throws ApplicationException{
+		try {
+			StringBuilder sb = new StringBuilder("SELECT p FROM Produto p ");		
+//			sb.append(" LEFT JOIN FETCH p.listaEntrada entrada ");
+//			sb.append(" LEFT JOIN FETCH p.listaSaida saida ");
+			
+			if (produto !=null && produto.getId() != null){
+				sb.append(" WHERE p.id = :id");
+			}
+			
+			TypedQuery<Produto> query = em.createQuery(sb.toString(),Produto.class);
+			
+			if (produto !=null && produto.getId() != null){
+				query.setParameter(produto.getId(), "id");
+			}
+			
+			sb.append("ORDER BY p.nome ,entrada.loteEntrada.data, saida.data ");
+			
+			return query.getResultList();
+		} catch(Exception e) {
+			throw new ApplicationException("br.gov.pr.celepar.exemplo.dao.MatriculaDAO.listarPorAlunoComRelacionamentos.ERRO", e);
+		}
+		
+	}
+	
 	
 	
 	public Integer obterQtdeProduto(Produto produto) throws ApplicationException{
