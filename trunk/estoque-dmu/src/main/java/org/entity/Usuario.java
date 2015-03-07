@@ -23,7 +23,7 @@ public class Usuario implements Serializable {
 	private static final long serialVersionUID = -3795035789464662511L;
 	
 	@Id
-	@SequenceGenerator(name = "USUARIO_ID", sequenceName = "id_usuario_seq", schema="controle",allocationSize = 1)
+	@SequenceGenerator(name = "USUARIO_ID", sequenceName = "id_usuario_seq", schema="estoque",allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "USUARIO_ID")
 	@Column(name = "id_usuario")
 	private Integer idUsuario;

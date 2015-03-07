@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="saida",schema="estoque")
@@ -32,6 +34,8 @@ public class Saida implements Serializable{
 	
 	private Float quantidade;
 	
+	@Column(name = "data") 
+	@Temporal(value=TemporalType.TIMESTAMP)
 	private Date data;
 	
 	@ManyToOne

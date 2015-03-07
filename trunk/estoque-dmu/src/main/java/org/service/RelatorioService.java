@@ -17,9 +17,11 @@ import org.entity.Entrada;
 import org.entity.Produto;
 import org.entity.Saida;
 import org.exception.ApplicationException;
+import org.util.DateUtil;
 import org.util.NumeroUtil;
 import org.util.PropertiesLoaderImpl;
 
+import converter.MoedaConverter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -120,8 +122,8 @@ public class RelatorioService {
 			
 			Float quantidadeSaldoAnterior = produto.quantidadeAnterior();
 			Float valorTotalAnterior = produto.valorTotalAnterior();
-			Float quantidadeSaldoAtual = produto.quantidadeUltimo();
 			
+			Float quantidadeSaldoAtual = produto.quantidadeUltimo();
 			Float valorTotalAtual = produto.valorTotalUltimoUltimo();
 			Float valorMedioAtual = 0f;
 			
@@ -146,29 +148,71 @@ public class RelatorioService {
 			
 			for (Saida saida : produto.getListaSaida()) {
 				quantidadeTotalSaida = NumeroUtil.somarDinheiro(quantidadeTotalSaida, saida.getQuantidade(), 3);
-				valorTotalSaida = NumeroUtil.somarDinheiro(valorTotalSaida, saida.getValorMediaUltimo(), 3);
+				valorTotalSaida = NumeroUtil.somarDinheiro(valorTotalSaida, (NumeroUtil.multiplicarDinheiro(saida.getValorMediaUltimo(), saida.getQuantidade(), 3)), 3);
 			}
+			MoedaConverter mc = new MoedaConverter();
 			
+			dto.setQuantidadeSaldoAnterior(mc.getAsString(null, null, quantidadeSaldoAnterior));
+			dto.setValorSaldoAnterior( mc.getAsString(null, null, valorTotalAnterior) .toString());
 			
-			dto.setQuantidadeSaldoAnterior(quantidadeSaldoAnterior.toString());
-			dto.setValorSaldoAnterior(valorTotalAnterior.toString());
+			dto.setQuantidadeEntrada(mc.getAsString(null, null, quantidadeTotalEntrada) .toString());
+			dto.setValorEntrada(mc.getAsString(null, null, valorTotalEntrada) .toString());
 			
-			dto.setQuantidadeEntrada(quantidadeTotalEntrada.toString());
-			dto.setValorEntrada(valorTotalEntrada.toString());
+			dto.setQuantidadeSaida(mc.getAsString(null, null, quantidadeTotalSaida));
+			dto.setValorSaida(mc.getAsString(null, null, valorTotalSaida));
 			
-			dto.setQuantidadeSaida(quantidadeTotalSaida.toString());
-			dto.setValorSaida(valorTotalSaida.toString());
+			dto.setQuantidadeSaldoAtual(mc.getAsString(null, null, quantidadeSaldoAtual) );
+			dto.setValorSaldoAtual(mc.getAsString(null, null, valorTotalAtual) );
+			dto.setValorMedioAtual(mc.getAsString(null, null, valorMedioAtual));
 			
-			dto.setQuantidadeSaldoAtual(quantidadeSaldoAtual.toString());
-			dto.setValorSaldoAtual(valorTotalAtual.toString());
-			dto.setValorMedioAtual(valorMedioAtual.toString());
+			dto.setUnidadeMedida(produto.getTipoMedida().getAbreviatura());
 			
 			estoqueSintetico.add(dto);
 			
 		}
 		
 		
-		return null;
+		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(estoqueSintetico);
+		
+		Map<String, Object> mapa = new HashMap<String, Object>();
+		mapa.put("produto", "TIRAR ESSE NOME DO PRODUTO AQUI...");
+		//ESSE Atributo está indo para a tabela...
+		mapa.put("zabumba", beanColDataSource);
+		
+		mapa.put("dataEmissao", DateUtil.dataToString(new Date()));
+		mapa.put("horarioEmissao", DateUtil.getHoraAtual());
+		mapa.put("data", DateUtil.dataToString(dataInicio) + " - " + DateUtil.dataToString(dataFim));
+		
+		JasperReport report;
+		try {
+			report = JasperCompileManager
+					.compileReport(PropertiesLoaderImpl.getValor("sintetico"));
+			// // preenchimento do relatorio, note que o metodo
+			// recebe 3 parametros: // 1 - o relatorio // // 2 - um
+			// Map, com parametros que sao passados ao relatorio //
+			// no momento do preenchimento. No nosso caso eh null,
+			// pois nao // estamos usando nenhum parametro // // 3 -
+			// o data source. Note que nao devemos passar a lista
+			// diretamente, // e sim "transformar" em um data source
+			// utilizando a classe //
+			// JRBeanCollectionDataSource
+			JasperPrint print = JasperFillManager.fillReport(report, mapa,
+					new JRBeanCollectionDataSource(estoqueSintetico)); // exportacao do
+			// relatorio para outro formato, no caso PDF]]
+
+			// JasperExportManager.exportReportToPdfFile(print,
+			// "/home/giuliano/RelatorioClientes.pdf");
+			System.out.println("Relatório gerado.");
+
+			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			byteArrayOutputStream.write(JasperExportManager
+					.exportReportToPdf(print));
+
+			return byteArrayOutputStream;
+		}catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	
@@ -228,7 +272,6 @@ public ByteArrayOutputStream relatorioEstoqueAnalitico(Produto produto, Date dat
 			
 			estoqueSintetico.add(dto);
 			
-		
 		
 		return null;
 	}

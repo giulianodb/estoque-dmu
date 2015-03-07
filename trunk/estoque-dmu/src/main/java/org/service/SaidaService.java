@@ -1,5 +1,7 @@
 package org.service;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -44,7 +46,7 @@ public class SaidaService {
 		
 	}
 	
-	
+	 
 	public Integer obterQtdeSaida(Saida saida) throws ApplicationException{
 			
 			try {
@@ -69,8 +71,17 @@ public class SaidaService {
 		
 		produtoService.alterarProduto(produto);
 		
+		Calendar myCal = new GregorianCalendar();
+		myCal.setTime(saida.getData());
+		myCal.set(Calendar.HOUR, Calendar.getInstance().get(Calendar.HOUR));
+		myCal.set(Calendar.MINUTE, Calendar.getInstance().get(Calendar.MINUTE));
+		myCal.set(Calendar.SECOND, Calendar.getInstance().get(Calendar.SECOND));
+		
+		saida.setData(myCal.getTime());
+		
 		saida.setValorMediaUltimo(produto.valorMedioProduto());
 		saida.setQuantidadeUltimo(produto.getQuantidadeEstoque());
+		saida.setSaldoUltimo(NumeroUtil.multiplicarDinheiro(produto.valorMedioProduto(), produto.getQuantidadeEstoque(), 4));
 		
 		//atualizando valores para historico e média 
 		produto.setQuantidadeEstoque(NumeroUtil.diminuirDinheiro(produto.getQuantidadeEstoque(), saida.getQuantidade(), 3));

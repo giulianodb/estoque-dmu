@@ -1,6 +1,8 @@
 package org.service;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -109,7 +111,17 @@ public class EntradaService {
 		//alterando valores do produto
 		
 		//Definindo o código do numero de entrada que será como um numero do recibo
-		String numeroEntrada = DateUtil.dataToString(entrada.getLoteEntrada().getData(), "yymmdd");
+		String numeroEntrada = DateUtil.dataToString(entrada.getLoteEntrada().getData(), "yyMMdd");
+		
+		Calendar myCal = new GregorianCalendar();
+		myCal.setTime(entrada.getLoteEntrada().getData());
+		myCal.set(Calendar.HOUR, Calendar.getInstance().get(Calendar.HOUR));
+		myCal.set(Calendar.MINUTE, Calendar.getInstance().get(Calendar.MINUTE));
+		myCal.set(Calendar.SECOND, Calendar.getInstance().get(Calendar.SECOND));
+		
+		entrada.getLoteEntrada().setData(myCal.getTime());
+		entrada.setData(myCal.getTime());
+		
 		if (entrada.getLoteEntrada().getCampanha() != null && entrada.getLoteEntrada().getCampanha().getId() != null){
 			numeroEntrada = numeroEntrada + entrada.getLoteEntrada().getCampanha().getId() + TipoParceiroEnum.CAMPANHA.ordinal();
 		
@@ -145,6 +157,7 @@ public class EntradaService {
 		
 		entrada.setValorMediaUltimo(produto.valorMedioProduto());
 		entrada.setQuantidadeUltimo(produto.getQuantidadeEstoque());
+		entrada.setSaldoUltimo(NumeroUtil.multiplicarDinheiro(produto.valorMedioProduto(), produto.getQuantidadeEstoque(), 4));
 		
 		//atualizando valores para historico e média 
 		produto.setQuantidadeEstoque(NumeroUtil.somarDinheiro(produto.getQuantidadeEstoque(), entrada.getQuantidade(), 3));

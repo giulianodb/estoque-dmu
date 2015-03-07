@@ -63,6 +63,15 @@ public class DateUtil {
 	}
 	
 	
+	public static String getHoraAtual(){
+		
+		GregorianCalendar teste = new GregorianCalendar();  
+		SimpleDateFormat teste2 = new SimpleDateFormat("HH:mm");  
+		System.out.println(teste2.format(teste.getTime())); 
+		
+		return teste2.format(teste.getTime());
+	}
+	
 	public enum MesesEnum{
 		JANEIRO("Janeiro"),
 		FEVEREIRO("Fevereiro"),

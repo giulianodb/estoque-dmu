@@ -6,7 +6,7 @@
 	<packaging>war</packaging>
 	<version>1.0.0</version>
 	<name>Projeto exemplo </name>
- 
+
 	<build>
 		<plugins>
 			<plugin>
@@ -69,6 +69,7 @@
 			<id>jboss</id>
 			<url>https://repository.jboss.org/nexus/content/repositories/public-jboss/</url>
 		</pluginRepository>
+	
 
 	</pluginRepositories>
 
@@ -150,35 +151,35 @@
 				</dependency>
 
 				<!-- Dependencias para uso do JasperReport -->
-			<dependency>
-			<groupId>net.sf.jasperreports</groupId>
-			<artifactId>jasperreports</artifactId>
-			<version>5.6.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.lucene</groupId>
-					<artifactId>lucene-core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.lucene</groupId>
-					<artifactId>lucene-queryparser</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.lucene</groupId>
-					<artifactId>lucene-analyzers-common</artifactId>
-				</exclusion>
+				<dependency>
+					<groupId>net.sf.jasperreports</groupId>
+					<artifactId>jasperreports</artifactId>
+					<version>5.6.0</version>
+					<exclusions>
+						<exclusion>
+							<groupId>org.apache.lucene</groupId>
+							<artifactId>lucene-core</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.apache.lucene</groupId>
+							<artifactId>lucene-queryparser</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.apache.lucene</groupId>
+							<artifactId>lucene-analyzers-common</artifactId>
+						</exclusion>
 
-			</exclusions>
+					</exclusions>
 
-		</dependency>
-		<dependency>
+				</dependency>
+				<dependency>
 
-			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy-all</artifactId>
-			<version>2.1.1</version>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-all</artifactId>
+					<version>2.1.1</version>
 
 
-		</dependency>
+				</dependency>
 
 
 				<!-- Quartz para agendamento -->
@@ -196,11 +197,11 @@
 				</dependency>
 
 				<!-- CELEPAR Utils -->
-<!-- 				<dependency> -->
-<!-- 					<groupId>br.gov.pr.celepar.utils</groupId> -->
-<!-- 					<artifactId>pr-jee-utils</artifactId> -->
-<!-- 					<version>1.0.0</version> -->
-<!-- 				</dependency> -->
+				<!-- <dependency> -->
+				<!-- <groupId>br.gov.pr.celepar.utils</groupId> -->
+				<!-- <artifactId>pr-jee-utils</artifactId> -->
+				<!-- <version>1.0.0</version> -->
+				<!-- </dependency> -->
 
 				<!-- PRIMEFACES -->
 				<dependency>
@@ -209,35 +210,75 @@
 					<version>${primefacesVersion}</version>
 				</dependency>
 
-				<!-- Themes -->				
+				<!-- Themes -->
 				<dependency>
-			      <groupId>org.primefaces.themes</groupId>
-			      <artifactId>all-themes</artifactId>
-			      <version>${theme.version}</version>
-			    </dependency>
+					<groupId>org.primefaces.themes</groupId>
+					<artifactId>all-themes</artifactId>
+					<version>${theme.version}</version>
+				</dependency>
 
-				
+
 				<!-- Dependências do CODI -->
 				<dependency>
 					<groupId>org.apache.myfaces.extensions.cdi.bundles</groupId>
 					<artifactId>myfaces-extcdi-bundle-jsf20</artifactId>
 					<version>1.0.6</version>
 				</dependency>
-					
+
 				<!-- Parser JSon -->
 				<dependency>
 					<groupId>com.google.code.gson</groupId>
 					<artifactId>gson</artifactId>
 					<version>2.2.4</version>
 				</dependency>
-				
+
 				<!-- Axis (Utilizado para chamada de WS da Plataforma Pinhão) -->
 				<dependency>
 					<groupId>axis</groupId>
 					<artifactId>axis</artifactId>
 					<version>1.4</version>
 				</dependency>
+
+				<dependency>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-core</artifactId>
+					<scope>provided</scope>
+					<exclusions>
+						<exclusion>
+							<artifactId>xml-apis</artifactId>
+							<groupId>xml-apis</groupId>
+						</exclusion>
+					</exclusions>
+				</dependency>
 			</dependencies>
+			
+				<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.jboss.bom</groupId>
+				<artifactId>jboss-javaee-6.0-with-hibernate</artifactId>
+				<version>1.0.1.Final</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.bom</groupId>
+				<artifactId>jboss-javaee-6.0-with-hibernate</artifactId>
+				<version>1.0.0.M7</version>
+				<type>pom</type>
+				<scope>import</scope>
+				<optional>false</optional>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.bom</groupId>
+				<artifactId>jboss-javaee-6.0-with-hibernate</artifactId>
+				<version>1.0.0.M7</version>
+				<type>pom</type>
+				<scope>import</scope>
+				<optional>false</optional>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 		</profile>
 	</profiles>

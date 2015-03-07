@@ -1,12 +1,16 @@
 package org.entity;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="loteEntrada",schema="estoque")
@@ -28,9 +32,11 @@ public class LoteEntrada implements Serializable{
 	
 	@ManyToOne
 	private Doador doador;
-
+	
+	@Temporal(value=TemporalType.TIMESTAMP )
+	@Column(name="dataEntrada")
 	private Date data;
-
+	
 	public String getNumeroEntrada() {
 		return numeroEntrada;
 	}
@@ -62,7 +68,7 @@ public class LoteEntrada implements Serializable{
 	public void setDoador(Doador doador) {
 		this.doador = doador;
 	}
-
+	
 	public Date getData() {
 		return data;
 	}

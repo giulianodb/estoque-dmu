@@ -23,7 +23,7 @@ public class Papel implements Serializable{
 	 */
 	private static final long serialVersionUID = 8996467323447003284L;
 	@Id
-	@SequenceGenerator(name = "PAPEL_ID", sequenceName = "id_papel_seq", schema="controle",allocationSize = 1)
+	@SequenceGenerator(name = "PAPEL_ID", sequenceName = "id_papel_seq", schema="estoque",allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "PAPEL_ID")
 	@Column(name = "id_papel")
 	private Integer idPapel;

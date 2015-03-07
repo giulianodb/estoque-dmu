@@ -1,8 +1,10 @@
 package org.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,10 +14,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.IndexColumn;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.util.NumeroUtil;
 
 @Entity
@@ -54,10 +60,16 @@ public class Produto implements Serializable {
 	private String descricao;
 	
 	@OneToMany(mappedBy = "produto",fetch = FetchType.LAZY)
-	private List<Saida> listaSaida;
+//	@IndexColumn(name="produto")
+//	@LazyCollection(LazyCollectionOption.FALSE)
+	@OrderBy("data asc")
+	private Set<Saida> listaSaida;
 	
-	@OneToMany(mappedBy = "produto",fetch = FetchType.LAZY)
-	private List<Entrada> listaEntrada;
+	@OrderBy("data asc")
+	@OneToMany(mappedBy = "produto", fetch = FetchType.LAZY)
+//	@LazyCollection(LazyCollectionOption.FALSE)
+//	@IndexColumn(name="produto")
+	private Set<Entrada> listaEntrada;
 	
 	//mètodo responsavel em retornar o valor médio historico do produto em questão
 	public Float valorMedioProduto(){
@@ -75,27 +87,27 @@ public class Produto implements Serializable {
 	 */
 	public Float quantidadeAnterior(){
 		if (listaEntrada != null && listaSaida != null){
+			List<Entrada> entradas = new ArrayList<Entrada>(listaEntrada);
+			List<Saida> saidas = new ArrayList<Saida>(listaSaida);
 			
 			Entrada primeiraEntrada = null;
 			Saida primeiraSaida = null;
 			
-			if (listaEntrada.size() > 0){
-				primeiraEntrada = listaEntrada.get(0);
-				
-			}
-			
-			if (listaSaida.size() > 0){
-				primeiraSaida = listaSaida.get(0);
-				
-			}
-			
-			
-			
 			Date dataEntrada = null;
 			Date dataSaida = null;
 			
+			if (entradas.size() > 0){
+				primeiraEntrada = entradas.get(0);
+				
+			}
+			
+			if (saidas.size() > 0){
+				primeiraSaida = saidas.get(0);
+				
+			}
+			
 			if (primeiraEntrada != null){
-				dataEntrada = primeiraEntrada.getLoteEntrada().getData();
+				dataEntrada = primeiraEntrada.getData();
 			} else {
 				if (primeiraSaida != null){
 					return primeiraSaida.getQuantidadeUltimo();
@@ -142,16 +154,21 @@ public class Produto implements Serializable {
 	 */
 	public Float valorTotalAnterior(){
 		if (listaEntrada != null && listaSaida != null){
+
+			List<Entrada> entradas = new ArrayList<Entrada>(listaEntrada);
+			List<Saida> saidas = new ArrayList<Saida>(listaSaida);
+			
+			
 			Entrada primeiraEntrada = null;
 			Saida primeiraSaida = null;
 			
-			if (listaEntrada.size() > 0){
-				primeiraEntrada = listaEntrada.get(0);
+			if (entradas.size() > 0){
+				primeiraEntrada = entradas.get(0);
 				
 			}
 			
-			if (listaSaida.size() > 0){
-				primeiraSaida = listaSaida.get(0);
+			if (saidas.size() > 0){
+				primeiraSaida = saidas.get(0);
 				
 			}
 			
@@ -159,7 +176,7 @@ public class Produto implements Serializable {
 			Date dataSaida = null;
 			
 			if (primeiraEntrada != null){
-				dataEntrada = primeiraEntrada.getLoteEntrada().getData();
+				dataEntrada = primeiraEntrada.getData();
 			} else {
 				if (primeiraSaida != null){
 					return primeiraSaida.getSaldoUltimo();
@@ -204,17 +221,18 @@ public class Produto implements Serializable {
 	 */
 	public Float quantidadeUltimo(){
 		if (listaEntrada != null && listaSaida != null){
-			
+			List<Entrada> entradas = new ArrayList<Entrada>(listaEntrada);
+			List<Saida> saidas = new ArrayList<Saida>(listaSaida);
 			Saida ultimaSaida = null;
 			Entrada ultimaEntrada = null;
 			
-			if (listaEntrada.size() > 0){
-				ultimaEntrada = listaEntrada.get(listaEntrada.size()-1);
+			if (entradas.size() > 0){
+				ultimaEntrada = entradas.get(entradas.size()-1);
 				
 			}
 			
-			if (listaSaida.size() > 0){
-				ultimaSaida = listaSaida.get(listaEntrada.size()-1);
+			if (saidas.size() > 0){
+				ultimaSaida = saidas.get(saidas.size()-1);
 				
 			}
 		
@@ -223,11 +241,11 @@ public class Produto implements Serializable {
 			Date dataSaida = null;
 			
 			if (ultimaEntrada != null){
-				dataEntrada = ultimaEntrada.getLoteEntrada().getData();
+				dataEntrada = ultimaEntrada.getData();
 			} else {
 				if (ultimaSaida != null){
 					
-					return ultimaSaida.getQuantidadeUltimo()+ultimaSaida.getQuantidade();
+					return NumeroUtil.diminuirDinheiro(ultimaSaida.getQuantidadeUltimo(), ultimaSaida.getQuantidade(), 3);
 				}
 			}
 			
@@ -251,7 +269,7 @@ public class Produto implements Serializable {
 				return ultimaEntrada.getQuantidadeUltimo() + ultimaEntrada.getQuantidade();
 			}
 			else {
-				return ultimaSaida.getQuantidadeUltimo() + ultimaSaida.getQuantidade();
+				return NumeroUtil.diminuirDinheiro(ultimaSaida.getQuantidadeUltimo(), ultimaSaida.getQuantidade(), 3);
 			}
 			
 		} else {
@@ -270,16 +288,18 @@ public class Produto implements Serializable {
 	 */
 	public Float valorTotalUltimoUltimo(){
 		if (listaEntrada != null && listaSaida != null){
+			List<Entrada> entradas = new ArrayList<Entrada>(listaEntrada);
+			List<Saida> saidas = new ArrayList<Saida>(listaSaida);
 			Saida ultimaSaida = null;
 			Entrada ultimaEntrada = null;
 			
-			if (listaEntrada.size() > 0){
-				ultimaEntrada = listaEntrada.get(listaEntrada.size()-1);
+			if (entradas.size() > 0){
+				ultimaEntrada = entradas.get(entradas.size()-1);
 				
 			}
 			
-			if (listaSaida.size() > 0){
-				ultimaSaida = listaSaida.get(listaEntrada.size()-1);
+			if (saidas.size() > 0){
+				ultimaSaida = saidas.get(saidas.size()-1);
 				
 			}
 		
@@ -288,7 +308,7 @@ public class Produto implements Serializable {
 			Date dataSaida = null;
 			
 			if (ultimaEntrada != null){
-				dataEntrada = ultimaEntrada.getLoteEntrada().getData();
+				dataEntrada = ultimaEntrada.getData();
 			} else {
 				if (ultimaSaida != null){
 					
@@ -312,10 +332,10 @@ public class Produto implements Serializable {
 			//caso todos os dois vierem com valores deve retornar o maior
 		
 			if (dataEntrada.after(dataSaida)){
-				return ultimaEntrada.getQuantidadeUltimo() + ultimaEntrada.getQuantidade();
+				return ultimaEntrada.getSaldoUltimo() + ultimaEntrada.getValor();
 			}
 			else {
-				return ultimaSaida.getQuantidadeUltimo() + ultimaSaida.getQuantidade();
+				return ultimaSaida.getSaldoUltimo() - (NumeroUtil.multiplicarDinheiro(ultimaSaida.getValorMediaUltimo(), ultimaSaida.getQuantidade(), 3));
 			}
 			
 		} else {
@@ -389,20 +409,22 @@ public class Produto implements Serializable {
 		this.valorHistoricoTotal = valorHistoricoTotal;
 	}
 
-	public List<Saida> getListaSaida() {
+	public Set<Saida> getListaSaida() {
 		return listaSaida;
 	}
 
-	public void setListaSaida(List<Saida> listaSaida) {
+	public void setListaSaida(Set<Saida> listaSaida) {
 		this.listaSaida = listaSaida;
 	}
 
-	public List<Entrada> getListaEntrada() {
+	public Set<Entrada> getListaEntrada() {
 		return listaEntrada;
 	}
 
-	public void setListaEntrada(List<Entrada> listaEntrada) {
+	public void setListaEntrada(Set<Entrada> listaEntrada) {
 		this.listaEntrada = listaEntrada;
 	}
+
+
 
 }

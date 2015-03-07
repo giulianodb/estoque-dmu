@@ -28,6 +28,10 @@ public class RelatorioController implements Serializable{
 	@EJB
 	private RelatorioService relatorioService;
 	
+	private Date dataInicialPesquisa;
+	
+	private Date dataFinalPesquisa;
+	
 	public void gerarRelatorioFaturaExito(Produto produto){
 		try {
 			
@@ -56,10 +60,20 @@ public class RelatorioController implements Serializable{
 		
 	}
 	
+	public String paginaRelatorioEstoqueSintetico(){
+		try {
+			return "/pages/relatorio/sintetico";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "/pages/inicial";
+		}
+		
+	}
+	
 	public void relatorioEstoqueSintetico(){
 		try {
 			
-			ByteArrayOutputStream byteArrayOutputStream  = relatorioService.relatorioEstoqueSintetico(new Date(2012, 12, 1), new Date(2015, 12, 1));
+			ByteArrayOutputStream byteArrayOutputStream  = relatorioService.relatorioEstoqueSintetico(dataInicialPesquisa, dataFinalPesquisa);
 			
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 
@@ -110,6 +124,22 @@ public class RelatorioController implements Serializable{
 			e.printStackTrace();
 		}
 		
+	}
+
+	public Date getDataInicialPesquisa() {
+		return dataInicialPesquisa;
+	}
+
+	public void setDataInicialPesquisa(Date dataInicialPesquisa) {
+		this.dataInicialPesquisa = dataInicialPesquisa;
+	}
+
+	public Date getDataFinalPesquisa() {
+		return dataFinalPesquisa;
+	}
+
+	public void setDataFinalPesquisa(Date dataFinalPesquisa) {
+		this.dataFinalPesquisa = dataFinalPesquisa;
 	}
 	
 	

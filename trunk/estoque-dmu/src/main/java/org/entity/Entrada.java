@@ -1,6 +1,7 @@
 package org.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.inject.Inject;
 import javax.persistence.Column;
@@ -11,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="entrada",schema="estoque")
@@ -45,6 +48,10 @@ public class Entrada implements Serializable{
 	private Float valorMediaUltimo;
 	
 	private Float quantidadeUltimo;
+	
+	@Temporal(value=TemporalType.TIMESTAMP )
+	@Column(name="dataEntrada")
+	private Date data;
 	
 //	Atributo que define qual era o saldo em valor essa saída foi efetuda
 	private Float saldoUltimo;
@@ -127,6 +134,14 @@ public class Entrada implements Serializable{
 
 	public void setSaldoUltimo(Float saldoUltimo) {
 		this.saldoUltimo = saldoUltimo;
+	}
+
+	public Date getData() {
+		return data;
+	}
+
+	public void setData(Date data) {
+		this.data = data;
 	}
 	
 	
