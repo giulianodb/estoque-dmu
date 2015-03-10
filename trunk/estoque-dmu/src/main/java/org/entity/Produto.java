@@ -17,11 +17,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
-import org.hibernate.annotations.IndexColumn;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.util.NumeroUtil;
 
 @Entity
@@ -60,16 +58,14 @@ public class Produto implements Serializable {
 	private String descricao;
 	
 	@OneToMany(mappedBy = "produto",fetch = FetchType.LAZY)
-//	@IndexColumn(name="produto")
-//	@LazyCollection(LazyCollectionOption.FALSE)
 	@OrderBy("data asc")
-	private Set<Saida> listaSaida;
+	private Set<Movimentacao> listaMovimentacao;
 	
-	@OrderBy("data asc")
-	@OneToMany(mappedBy = "produto", fetch = FetchType.LAZY)
-//	@LazyCollection(LazyCollectionOption.FALSE)
-//	@IndexColumn(name="produto")
-	private Set<Entrada> listaEntrada;
+	//Listas usadas para separar as movimentacoes de entrada e saida
+	@Transient
+	private List<Movimentacao> movimentacaoEntrada;
+	@Transient
+	private List<Movimentacao> movimentacaoSaida;
 	
 	//mètodo responsavel em retornar o valor médio historico do produto em questão
 	public Float valorMedioProduto(){
@@ -79,6 +75,25 @@ public class Produto implements Serializable {
 		return NumeroUtil.DividirDinheiro(valorHistoricoTotal,quantidadeHistoricaTotal, 3);
 	}
 	
+	
+	public void montarListasEntradaSaida(){
+		List<Movimentacao> movimentacoes = new ArrayList<Movimentacao>(listaMovimentacao);
+		if (movimentacaoEntrada == null || movimentacaoSaida == null){
+			movimentacaoEntrada = new ArrayList<Movimentacao>();
+			movimentacaoSaida = new ArrayList<Movimentacao>();
+			for (Movimentacao movimentacao : movimentacoes) {
+				if (movimentacao.getTipoMovimentacaoEnum().equals(TipoMovimentacaoEnum.ENTRADA)){
+					movimentacaoEntrada.add(movimentacao);
+				}
+				else {
+					movimentacaoSaida.add(movimentacao);
+				}
+			}
+			
+		}
+		
+	}
+	
 	/**
 	 * Usado para retornoar a quantidade em estoque anterior.
 	 * Normalmente é obtido uma lista de produtos e cada produto tem um lista de entradas e saidas então é obitdo
@@ -86,61 +101,54 @@ public class Produto implements Serializable {
 	 * @return
 	 */
 	public Float quantidadeAnterior(){
-		if (listaEntrada != null && listaSaida != null){
-			List<Entrada> entradas = new ArrayList<Entrada>(listaEntrada);
-			List<Saida> saidas = new ArrayList<Saida>(listaSaida);
+		this.montarListasEntradaSaida();
+		
+		Movimentacao primeiraEntrada = null;
+		Movimentacao primeiraSaida = null;
 			
-			Entrada primeiraEntrada = null;
-			Saida primeiraSaida = null;
+		Date dataEntrada = null;
+		Date dataSaida = null;
 			
-			Date dataEntrada = null;
-			Date dataSaida = null;
+		if (movimentacaoEntrada.size() > 0){
+			primeiraEntrada = movimentacaoEntrada.get(0);
 			
-			if (entradas.size() > 0){
-				primeiraEntrada = entradas.get(0);
-				
-			}
+		}
 			
-			if (saidas.size() > 0){
-				primeiraSaida = saidas.get(0);
-				
-			}
+		if (movimentacaoSaida.size() > 0){
+			primeiraSaida = movimentacaoSaida.get(0);
 			
-			if (primeiraEntrada != null){
-				dataEntrada = primeiraEntrada.getData();
-			} else {
-				if (primeiraSaida != null){
-					return primeiraSaida.getQuantidadeUltimo();
-				}
-			}
+		}
 			
-			
+		if (primeiraEntrada != null){
+			dataEntrada = primeiraEntrada.getData();
+		} else {
 			if (primeiraSaida != null){
-				dataSaida = primeiraSaida.getData();
-			}
-			else {
-					if (primeiraEntrada != null){
-						return primeiraEntrada.getQuantidadeUltimo();
-					}
-			}
-			
-			
-			if (dataEntrada == null && dataSaida == null){
-				return 0f;
-			}
-			
-			//caso todos os dois vierem com valores deve retornar o maior
-			
-			if (dataEntrada.before(dataSaida)){
-				return primeiraEntrada.getQuantidadeUltimo();
-			}
-			else {
 				return primeiraSaida.getQuantidadeUltimo();
 			}
+		}
 			
-		} else {
-			System.out.println("LISTA VAZIAS..");
-			return 0F;
+			
+		if (primeiraSaida != null){
+			dataSaida = primeiraSaida.getData();
+		}
+		else {
+			if (primeiraEntrada != null){
+				return primeiraEntrada.getQuantidadeUltimo();
+			}
+		}
+		
+			
+		if (dataEntrada == null && dataSaida == null){
+			return 0f;
+		}
+			
+		//caso todos os dois vierem com valores deve retornar o maior
+			
+		if (dataEntrada.before(dataSaida)){
+			return primeiraEntrada.getQuantidadeUltimo();
+		}
+		else {
+			return primeiraSaida.getQuantidadeUltimo();
 		}
 		
 	}
@@ -153,64 +161,53 @@ public class Produto implements Serializable {
 	 * @return
 	 */
 	public Float valorTotalAnterior(){
-		if (listaEntrada != null && listaSaida != null){
-
-			List<Entrada> entradas = new ArrayList<Entrada>(listaEntrada);
-			List<Saida> saidas = new ArrayList<Saida>(listaSaida);
+		this.montarListasEntradaSaida();
 			
+		Movimentacao primeiraEntrada = null;
+		Movimentacao primeiraSaida = null;
 			
-			Entrada primeiraEntrada = null;
-			Saida primeiraSaida = null;
+		if (movimentacaoEntrada.size() > 0){
+			primeiraEntrada = movimentacaoEntrada.get(0);
+		}
 			
-			if (entradas.size() > 0){
-				primeiraEntrada = entradas.get(0);
-				
-			}
+		if (movimentacaoSaida.size() > 0){
+			primeiraSaida = movimentacaoSaida.get(0);
+		}
 			
-			if (saidas.size() > 0){
-				primeiraSaida = saidas.get(0);
-				
-			}
+		Date dataEntrada = null;
+		Date dataSaida = null;
 			
-			Date dataEntrada = null;
-			Date dataSaida = null;
-			
-			if (primeiraEntrada != null){
-				dataEntrada = primeiraEntrada.getData();
-			} else {
-				if (primeiraSaida != null){
-					return primeiraSaida.getSaldoUltimo();
-				}
-			}
-			
-			
+		if (primeiraEntrada != null){
+			dataEntrada = primeiraEntrada.getData();
+		} else {
 			if (primeiraSaida != null){
-				dataSaida = primeiraSaida.getData();
-			}
-			else {
-					if (primeiraEntrada != null){
-						return primeiraEntrada.getSaldoUltimo();
-					}
-			}
-			
-			if (dataEntrada == null && dataSaida == null){
-				return 0f;
-			}
-			
-			//caso todos os dois vierem com valores deve retornar o maior
-		
-			if (dataEntrada.before(dataSaida)){
-				return primeiraEntrada.getSaldoUltimo();
-			}
-			else {
 				return primeiraSaida.getSaldoUltimo();
 			}
+		}
 			
-		} else {
-			System.out.println("LISTA VAZIAS..");
-			return 0F;
+			
+		if (primeiraSaida != null){
+			dataSaida = primeiraSaida.getData();
+		}
+		else {
+			if (primeiraEntrada != null){
+				return primeiraEntrada.getSaldoUltimo();
+			}
 		}
 		
+		if (dataEntrada == null && dataSaida == null){
+			return 0f;
+		}
+			
+		//caso todos os dois vierem com valores deve retornar o maior
+
+		if (dataEntrada.before(dataSaida)){
+			return primeiraEntrada.getSaldoUltimo();
+		}
+		else {
+			return primeiraSaida.getSaldoUltimo();
+		}
+			
 	}
 	
 	/**
@@ -220,61 +217,51 @@ public class Produto implements Serializable {
 	 * @return
 	 */
 	public Float quantidadeUltimo(){
-		if (listaEntrada != null && listaSaida != null){
-			List<Entrada> entradas = new ArrayList<Entrada>(listaEntrada);
-			List<Saida> saidas = new ArrayList<Saida>(listaSaida);
-			Saida ultimaSaida = null;
-			Entrada ultimaEntrada = null;
-			
-			if (entradas.size() > 0){
-				ultimaEntrada = entradas.get(entradas.size()-1);
-				
-			}
-			
-			if (saidas.size() > 0){
-				ultimaSaida = saidas.get(saidas.size()-1);
-				
-			}
+		this.montarListasEntradaSaida();
 		
+		Movimentacao ultimaSaida = null;
+		Movimentacao ultimaEntrada = null;
+		
+		if (movimentacaoEntrada.size() > 0){
+			ultimaEntrada = movimentacaoEntrada.get(movimentacaoEntrada.size()-1);
 			
-			Date dataEntrada = null;
-			Date dataSaida = null;
+		}
+		
+		if (movimentacaoSaida.size() > 0){
+			ultimaSaida = movimentacaoSaida.get(movimentacaoSaida.size()-1);
+		}
 			
-			if (ultimaEntrada != null){
-				dataEntrada = ultimaEntrada.getData();
-			} else {
-				if (ultimaSaida != null){
-					
-					return NumeroUtil.diminuirDinheiro(ultimaSaida.getQuantidadeUltimo(), ultimaSaida.getQuantidade(), 3);
-				}
-			}
-			
-			
+		Date dataEntrada = null;
+		Date dataSaida = null;
+		
+		if (ultimaEntrada != null){
+			dataEntrada = ultimaEntrada.getData();
+		} else {
 			if (ultimaSaida != null){
-				dataSaida = ultimaSaida.getData();
-			}
-			else {
-					if (ultimaEntrada != null){
-						return ultimaEntrada.getQuantidadeUltimo() + ultimaEntrada.getQuantidade();
-					}
-			}
-			
-			if (dataEntrada == null && dataSaida == null){
-				return 0f;
-			}
-			
-			//caso todos os dois vierem com valores deve retornar o maior
-		
-			if (dataEntrada.after(dataSaida)){
-				return ultimaEntrada.getQuantidadeUltimo() + ultimaEntrada.getQuantidade();
-			}
-			else {
 				return NumeroUtil.diminuirDinheiro(ultimaSaida.getQuantidadeUltimo(), ultimaSaida.getQuantidade(), 3);
 			}
+		}
 			
-		} else {
-			System.out.println("LISTA VAZIAS..");
-			return 0F;
+		if (ultimaSaida != null){
+			dataSaida = ultimaSaida.getData();
+		}
+		else {
+			if (ultimaEntrada != null){
+				return ultimaEntrada.getQuantidadeUltimo() + ultimaEntrada.getQuantidade();
+			}
+		}
+			
+		if (dataEntrada == null && dataSaida == null){
+			return 0f;
+		}
+			
+		//caso todos os dois vierem com valores deve retornar o maior
+		
+		if (dataEntrada.after(dataSaida)){
+			return ultimaEntrada.getQuantidadeUltimo() + ultimaEntrada.getQuantidade();
+		}
+		else {
+			return NumeroUtil.diminuirDinheiro(ultimaSaida.getQuantidadeUltimo(), ultimaSaida.getQuantidade(), 3);
 		}
 		
 	}
@@ -287,60 +274,53 @@ public class Produto implements Serializable {
 	 * @return
 	 */
 	public Float valorTotalUltimoUltimo(){
-		if (listaEntrada != null && listaSaida != null){
-			List<Entrada> entradas = new ArrayList<Entrada>(listaEntrada);
-			List<Saida> saidas = new ArrayList<Saida>(listaSaida);
-			Saida ultimaSaida = null;
-			Entrada ultimaEntrada = null;
-			
-			if (entradas.size() > 0){
-				ultimaEntrada = entradas.get(entradas.size()-1);
-				
-			}
-			
-			if (saidas.size() > 0){
-				ultimaSaida = saidas.get(saidas.size()-1);
-				
-			}
+		this.montarListasEntradaSaida();
 		
+		Movimentacao ultimaSaida = null;
+		Movimentacao ultimaEntrada = null;
 			
-			Date dataEntrada = null;
-			Date dataSaida = null;
+		if (movimentacaoEntrada.size() > 0){
+			ultimaEntrada = movimentacaoEntrada.get(movimentacaoEntrada.size()-1);
+				
+		}
 			
-			if (ultimaEntrada != null){
-				dataEntrada = ultimaEntrada.getData();
-			} else {
-				if (ultimaSaida != null){
-					
-					return ultimaSaida.getSaldoUltimo()+ultimaSaida.getValorMediaUltimo();
-				}
-			}
+		if (movimentacaoSaida.size() > 0){
+			ultimaSaida = movimentacaoSaida.get(movimentacaoSaida.size()-1);
 			
+		}
 			
-			if (ultimaSaida != null){
-				dataSaida = ultimaSaida.getData();
-			}
-			else {
-					if (ultimaEntrada != null){
-						return ultimaEntrada.getSaldoUltimo() + ultimaEntrada.getValor();
-					}
-			}
+		Date dataEntrada = null;
+		Date dataSaida = null;
 			
-			if (dataEntrada == null && dataSaida == null){
-				return 0f;
-			}
-			//caso todos os dois vierem com valores deve retornar o maior
-		
-			if (dataEntrada.after(dataSaida)){
-				return ultimaEntrada.getSaldoUltimo() + ultimaEntrada.getValor();
-			}
-			else {
-				return ultimaSaida.getSaldoUltimo() - (NumeroUtil.multiplicarDinheiro(ultimaSaida.getValorMediaUltimo(), ultimaSaida.getQuantidade(), 3));
-			}
-			
+		if (ultimaEntrada != null){
+			dataEntrada = ultimaEntrada.getData();
 		} else {
-			System.out.println("LISTA VAZIAS..");
-			return 0F;
+			if (ultimaSaida != null){
+				
+				return ultimaSaida.getSaldoUltimo()+ultimaSaida.getValorMediaUltimo();
+			}
+		}
+			
+			
+		if (ultimaSaida != null){
+			dataSaida = ultimaSaida.getData();
+		}
+		else {
+			if (ultimaEntrada != null){
+				return ultimaEntrada.getSaldoUltimo() + ultimaEntrada.getValor();
+				}
+		}
+			
+		if (dataEntrada == null && dataSaida == null){
+			return 0f;
+		}
+		//caso todos os dois vierem com valores deve retornar o maior
+		
+		if (dataEntrada.after(dataSaida)){
+			return ultimaEntrada.getSaldoUltimo() + ultimaEntrada.getValor();
+		}
+		else {
+			return ultimaSaida.getSaldoUltimo() - (NumeroUtil.multiplicarDinheiro(ultimaSaida.getValorMediaUltimo(), ultimaSaida.getQuantidade(), 3));
 		}
 		
 	}
@@ -409,22 +389,28 @@ public class Produto implements Serializable {
 		this.valorHistoricoTotal = valorHistoricoTotal;
 	}
 
-	public Set<Saida> getListaSaida() {
-		return listaSaida;
+	public Set<Movimentacao> getListaMovimentacao() {
+		return listaMovimentacao;
 	}
 
-	public void setListaSaida(Set<Saida> listaSaida) {
-		this.listaSaida = listaSaida;
+	public void setListaMovimentacao(Set<Movimentacao> listaMovimentacao) {
+		this.listaMovimentacao = listaMovimentacao;
 	}
 
-	public Set<Entrada> getListaEntrada() {
-		return listaEntrada;
+	public List<Movimentacao> getMovimentacaoEntrada() {
+		return movimentacaoEntrada;
 	}
 
-	public void setListaEntrada(Set<Entrada> listaEntrada) {
-		this.listaEntrada = listaEntrada;
+	public void setMovimentacaoEntrada(List<Movimentacao> movimentacaoEntrada) {
+		this.movimentacaoEntrada = movimentacaoEntrada;
 	}
 
+	public List<Movimentacao> getMovimentacaoSaida() {
+		return movimentacaoSaida;
+	}
 
+	public void setMovimentacaoSaida(List<Movimentacao> movimentacaoSaida) {
+		this.movimentacaoSaida = movimentacaoSaida;
+	}
 
 }

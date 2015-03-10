@@ -6,21 +6,28 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="loteEntrada",schema="estoque")
-public class LoteEntrada implements Serializable{
+@Table(name="loteMovimentacao",schema="estoque")
+public class LoteMovimentacao implements Serializable{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 8996466788745786863L;
-
+	
+	@SequenceGenerator(name = "LOTEMOVIMENTACAO_ID", sequenceName = "id_lotemovimentacao_seq", schema="estoque",allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "LOTEMOVIMENTACAO_ID")
 	@Id
+	private Integer codigo;
+	
 	private String numeroEntrada;
 	
 	//Esses atribtutos serão populados de acordo com o tipo de doador
@@ -75,6 +82,14 @@ public class LoteEntrada implements Serializable{
 
 	public void setData(Date data) {
 		this.data = data;
+	}
+
+	public Integer getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(Integer codigo) {
+		this.codigo = codigo;
 	}
 
 	

@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.inject.Inject;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,27 +17,15 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="saida",schema="estoque")
-public class Saida implements Serializable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8996467323444586863L;
+@Table(name="movimentacao",schema="estoque")
+public class Movimentacao implements Serializable{
+	
+	private static final long serialVersionUID = 8996467323445786863L;
 	@Id
-	@SequenceGenerator(name = "SAIDA_ID", sequenceName = "id_saida_seq", schema="estoque",allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "SAIDA_ID")
+	@SequenceGenerator(name = "MOVIMENTACAO_ID", sequenceName = "id_movimentacao_seq", schema="estoque",allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "MOVIMENTACAO_ID")
 	@Column(name = "id")
 	private Integer id;
-	
-	@Inject
-	@ManyToOne
-	private Produto produto;
-	
-	private Float quantidade;
-	
-	@Column(name = "data") 
-	@Temporal(value=TemporalType.TIMESTAMP)
-	private Date data;
 	
 	@ManyToOne
 	private Campanha campanha;
@@ -59,6 +48,30 @@ public class Saida implements Serializable{
 	
 //	Atributo que define qual era o saldo em valor essa saída foi efetuda
 	private Float saldoUltimo;
+	
+	@Inject
+	@ManyToOne
+	private Produto produto;
+	
+	//Definir qual lote essa entrada faz parte
+	@ManyToOne
+	@Inject
+	private LoteMovimentacao loteMovimentacao;
+	
+	private Float quantidade;
+	
+	private Float valor;
+	
+	private String numeroNF;
+	
+	private String descricaoNota;
+	
+	@Temporal(value=TemporalType.TIMESTAMP )
+	@Column(name="data")
+	private Date data;
+	
+	@Enumerated
+	private TipoMovimentacaoEnum tipoMovimentacaoEnum;
 
 	public Integer getId() {
 		return id;
@@ -66,30 +79,6 @@ public class Saida implements Serializable{
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public Produto getProduto() {
-		return produto;
-	}
-
-	public void setProduto(Produto produto) {
-		this.produto = produto;
-	}
-
-	public Float getQuantidade() {
-		return quantidade;
-	}
-
-	public void setQuantidade(Float quantidade) {
-		this.quantidade = quantidade;
-	}
-
-	public Date getData() {
-		return data;
-	}
-
-	public void setData(Date data) {
-		this.data = data;
 	}
 
 	public Campanha getCampanha() {
@@ -148,5 +137,70 @@ public class Saida implements Serializable{
 		this.saldoUltimo = saldoUltimo;
 	}
 
+	public Produto getProduto() {
+		return produto;
+	}
+
+	public void setProduto(Produto produto) {
+		this.produto = produto;
+	}
+
+	public LoteMovimentacao getLoteMovimentacao() {
+		return loteMovimentacao;
+	}
+
+	public void setLoteMovimentacao(LoteMovimentacao loteMovimentacao) {
+		this.loteMovimentacao = loteMovimentacao;
+	}
+
+	public Float getQuantidade() {
+		return quantidade;
+	}
+
+	public void setQuantidade(Float quantidade) {
+		this.quantidade = quantidade;
+	}
+
+	public Float getValor() {
+		return valor;
+	}
+
+	public void setValor(Float valor) {
+		this.valor = valor;
+	}
+
+	public String getNumeroNF() {
+		return numeroNF;
+	}
+
+	public void setNumeroNF(String numeroNF) {
+		this.numeroNF = numeroNF;
+	}
+
+	public String getDescricaoNota() {
+		return descricaoNota;
+	}
+
+	public void setDescricaoNota(String descricaoNota) {
+		this.descricaoNota = descricaoNota;
+	}
+
+	public Date getData() {
+		return data;
+	}
+
+	public void setData(Date data) {
+		this.data = data;
+	}
+
+	public TipoMovimentacaoEnum getTipoMovimentacaoEnum() {
+		return tipoMovimentacaoEnum;
+	}
+
+	public void setTipoMovimentacaoEnum(TipoMovimentacaoEnum tipoMovimentacaoEnum) {
+		this.tipoMovimentacaoEnum = tipoMovimentacaoEnum;
+	}
+	
+	
 	
 }
