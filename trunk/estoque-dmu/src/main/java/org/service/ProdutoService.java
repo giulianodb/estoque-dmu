@@ -43,8 +43,7 @@ public class ProdutoService {
 	public List<Produto> pesquisarProdutoComMovimentacoes(Produto produto, Date dataInicio, Date dataFim) throws ApplicationException{
 		try {
 			StringBuilder sb = new StringBuilder("SELECT distinct p FROM Produto p ");		
-			sb.append(" LEFT JOIN FETCH p.listaEntrada entrada ");
-			sb.append(" LEFT JOIN FETCH p.listaSaida saida ");
+			sb.append(" LEFT JOIN FETCH p.listaMovimentacao movimentacao ");
 			
 			
 			sb.append(" WHERE ");
@@ -53,32 +52,27 @@ public class ProdutoService {
 				sb.append(" p.id = :id AND ");
 			}
 //			
-//			if (dataInicio != null) {
-//				sb.append(" (entrada.loteEntrada.data >= :dataInicial AND entrada.loteEntrada.data <= :dataFim) OR ");
-//			}
-//			
-//			if (dataInicio != null) {
-////				sb.append(" saida.loteSaida.data => :dataFim AND ");
-////				sb.append(" saida.data <= :dataFim AND ");
-//				sb.append(" (saida.data >= :dataInicial AND saida.data <= :dataFim) AND ");
-//			}
-//			
+			
+			if (dataInicio != null) {
+				sb.append(" (movimentacao.data >= :dataInicial AND movimentacao.data <= :dataFim) AND ");
+			}
+			
 			sb.append(" 1 = 1 ");
 			TypedQuery<Produto> query = em.createQuery(sb.toString(),Produto.class);
 			
 			if (produto !=null && produto.getId() != null){
 				query.setParameter( "id",produto.getId());
 			}
-//			if (dataInicio != null) {
-//				query.setParameter( "dataInicial", dataInicio);
-//			}
-//			
-//			if (dataInicio != null) {
-////				sb.append(" saida.loteSaida.data => :dataFim AND ");
-//				query.setParameter("dataFim", dataFim);
-//			}
+			if (dataInicio != null) {
+				query.setParameter( "dataInicial", dataInicio);
+			}
 			
-			sb.append("ORDER BY p.nome ,entrada.loteEntrada.data DESC , saida.data DESC ");
+			if (dataFim != null) {
+//				sb.append(" saida.loteSaida.data => :dataFim AND ");
+				query.setParameter("dataFim", dataFim);
+			}
+			
+			sb.append("ORDER BY p.nome  ");
 			
 			return query.getResultList();
 		} catch(Exception e) {

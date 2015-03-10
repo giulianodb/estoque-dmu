@@ -10,18 +10,6 @@ import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
-import org.dto.EntradaDTO;
-import org.dto.EstoqueSinteticoDTO;
-import org.dto.RelatorioEntradaProdutoDTO;
-import org.entity.Entrada;
-import org.entity.Produto;
-import org.entity.Saida;
-import org.exception.ApplicationException;
-import org.util.DateUtil;
-import org.util.NumeroUtil;
-import org.util.PropertiesLoaderImpl;
-
-import converter.MoedaConverter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -29,40 +17,47 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
+import org.dto.EntradaDTO;
+import org.dto.EstoqueSinteticoDTO;
+import org.dto.RelatorioEntradaProdutoDTO;
+import org.entity.Movimentacao;
+import org.entity.Produto;
+import org.exception.ApplicationException;
+import org.util.DateUtil;
+import org.util.NumeroUtil;
+import org.util.PropertiesLoaderImpl;
+
+import converter.MoedaConverter;
+
 
 @Stateless
 public class RelatorioService {
 	
 	@EJB
-	private EntradaService entradaService;
-	
-	@EJB
 	private ProdutoService produtoService;
 	
 	@EJB
-	private SaidaService saidaService;
+	private MovimentacaoService movimentacaoService;
 	
 	public ByteArrayOutputStream relatorioEntrada(Date dataInicio, Date dataFim, Produto produto) throws ApplicationException{
 		
-		List<Entrada> listaEntrada = entradaService.pesquisarEntrada(produto, null,null, 1, 50);
+		List<Movimentacao> listaMovimentacao = movimentacaoService.pesquisarMovimentacao(produto, null,null, 1, 50);
 		
 		RelatorioEntradaProdutoDTO jasper = new RelatorioEntradaProdutoDTO();
 		jasper.setNomeProduto("Carrinho");
 		
-
-		
 		List<EntradaDTO> lista = new ArrayList<EntradaDTO>();
 		
-		for (Entrada entrada : listaEntrada) {
-			EntradaDTO entrada1 = new EntradaDTO();
-			entrada1.setData(entrada.getLoteEntrada().getData());
-			entrada1.setDescricaoNota(entrada.getDescricaoNota());
-			entrada1.setNomeDoador(entrada.getLoteEntrada().getInstituicao().getNome());
-			entrada1.setQuantidade(entrada.getQuantidade());
-			entrada1.setNotaFiscal(entrada.getNumeroNF());
-			entrada1.setNomeProduto(entrada.getProduto().getNome());
+		for (Movimentacao movimentacao : listaMovimentacao) {
+			EntradaDTO movimentacao1 = new EntradaDTO();
+			movimentacao1.setData(movimentacao.getData());
+			movimentacao1.setDescricaoNota(movimentacao.getDescricaoNota());
+			movimentacao1.setNomeDoador(movimentacao.getLoteMovimentacao().getInstituicao().getNome());
+			movimentacao1.setQuantidade(movimentacao.getQuantidade());
+			movimentacao1.setNotaFiscal(movimentacao.getNumeroNF());
+			movimentacao1.setNomeProduto(movimentacao.getProduto().getNome());
 			
-			lista.add(entrada1);
+			lista.add(movimentacao1);
 			
 		}
 		
@@ -141,12 +136,12 @@ public class RelatorioService {
 			dto.setLocal("Núcleo");
 			dto.setUnidadeMedida(produto.getTipoMedida().name());
 			
-			for (Entrada entrada : produto.getListaEntrada()) {
+			for (Movimentacao entrada : produto.getMovimentacaoEntrada()) {
 				quantidadeTotalEntrada = NumeroUtil.somarDinheiro(quantidadeTotalEntrada, entrada.getQuantidade(), 3);
 				valorTotalEntrada = NumeroUtil.somarDinheiro(valorTotalEntrada, entrada.getValor(), 3);
 			}
 			
-			for (Saida saida : produto.getListaSaida()) {
+			for (Movimentacao saida : produto.getMovimentacaoSaida()) {
 				quantidadeTotalSaida = NumeroUtil.somarDinheiro(quantidadeTotalSaida, saida.getQuantidade(), 3);
 				valorTotalSaida = NumeroUtil.somarDinheiro(valorTotalSaida, (NumeroUtil.multiplicarDinheiro(saida.getValorMediaUltimo(), saida.getQuantidade(), 3)), 3);
 			}
@@ -246,12 +241,12 @@ public ByteArrayOutputStream relatorioEstoqueAnalitico(Produto produto, Date dat
 			dto.setLocal("Núcleo");
 			dto.setUnidadeMedida(produto.getTipoMedida().name());
 			
-			for (Entrada entrada : produto.getListaEntrada()) {
+			for (Movimentacao entrada : produto.getMovimentacaoEntrada()) {
 				quantidadeTotalEntrada = NumeroUtil.somarDinheiro(quantidadeTotalEntrada, entrada.getQuantidade(), 3);
 				valorTotalEntrada = NumeroUtil.somarDinheiro(valorTotalEntrada, entrada.getValor(), 3);
 			}
 			
-			for (Saida saida : produto.getListaSaida()) {
+			for (Movimentacao saida : produto.getMovimentacaoSaida()) {
 				quantidadeTotalSaida = NumeroUtil.somarDinheiro(quantidadeTotalSaida, saida.getQuantidade(), 3);
 				valorTotalSaida = NumeroUtil.somarDinheiro(valorTotalSaida, saida.getValorMediaUltimo(), 3);
 			}
