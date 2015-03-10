@@ -213,10 +213,10 @@
 					<datasetRun subDataset="Table Dataset 1" uuid="0c1cd312-f2ff-4f94-8bdf-0b8d0e808375">
 						<dataSourceExpression><![CDATA[$P{zabumba}]]></dataSourceExpression>
 					</datasetRun>
-					<jr:columnGroup width="334" uuid="1f37ec3e-bb7b-4983-a4c1-4807edb0af17">
+					<jr:columnGroup width="324" uuid="1f37ec3e-bb7b-4983-a4c1-4807edb0af17">
 						<jr:columnHeader style="table" height="23" rowSpan="1">
 							<staticText>
-								<reportElement uuid="ae23becf-4e27-4714-baf2-d50f46c06878" x="0" y="0" width="334" height="23"/>
+								<reportElement uuid="ae23becf-4e27-4714-baf2-d50f46c06878" x="0" y="0" width="324" height="23"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<text><![CDATA[INFORMAÇÔES]]></text>
 							</staticText>
@@ -282,10 +282,10 @@
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="95" uuid="32db8c58-56a8-4fb9-ad5e-1ecca7639e8c">
+						<jr:column width="85" uuid="32db8c58-56a8-4fb9-ad5e-1ecca7639e8c">
 							<jr:columnHeader style="table 1_TH" height="25" rowSpan="1">
 								<staticText>
-									<reportElement uuid="7a7ba580-6986-4034-b230-480b89f89889" x="0" y="0" width="95" height="25"/>
+									<reportElement uuid="7a7ba580-6986-4034-b230-480b89f89889" x="0" y="0" width="74" height="25"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle"/>
 									<text><![CDATA[Local]]></text>
 								</staticText>
@@ -293,7 +293,7 @@
 							<jr:detailCell style="table" height="30" rowSpan="1">
 								<box leftPadding="2"/>
 								<textField>
-									<reportElement uuid="806766ea-f96c-4754-a072-76af90a0af48" x="0" y="0" width="85" height="30"/>
+									<reportElement uuid="806766ea-f96c-4754-a072-76af90a0af48" x="0" y="0" width="74" height="30"/>
 									<textElement verticalAlignment="Middle">
 										<paragraph lineSpacing="Single"/>
 									</textElement>
@@ -302,18 +302,18 @@
 							</jr:detailCell>
 						</jr:column>
 					</jr:columnGroup>
-					<jr:columnGroup width="94" uuid="868a118b-a594-4608-9067-6aa700cfd096">
+					<jr:columnGroup width="115" uuid="868a118b-a594-4608-9067-6aa700cfd096">
 						<jr:columnHeader style="table" height="23" rowSpan="1">
 							<staticText>
-								<reportElement uuid="93fe7725-e307-48d8-8ca2-7d823064237e" x="0" y="0" width="94" height="23"/>
+								<reportElement uuid="93fe7725-e307-48d8-8ca2-7d823064237e" x="0" y="0" width="115" height="23"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[SALDO ALTERIOR]]></text>
+								<text><![CDATA[SALDO ANTERIOR]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:column width="40" uuid="275bf7bb-0a89-485b-b889-398d07d67e47">
+						<jr:column width="51" uuid="275bf7bb-0a89-485b-b889-398d07d67e47">
 							<jr:columnHeader style="table 1_TH" height="25" rowSpan="1">
 								<staticText>
-									<reportElement uuid="5b655090-0bbc-4bbb-8725-342d30686dc0" x="0" y="0" width="40" height="25"/>
+									<reportElement uuid="5b655090-0bbc-4bbb-8725-342d30686dc0" x="0" y="0" width="51" height="25"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle"/>
 									<text><![CDATA[Qtde]]></text>
 								</staticText>
@@ -321,7 +321,7 @@
 							<jr:detailCell style="table" height="30" rowSpan="1">
 								<box leftPadding="2"/>
 								<textField>
-									<reportElement uuid="c1e7b110-51bd-40ca-b048-6a270a6a64de" x="0" y="0" width="28" height="30"/>
+									<reportElement uuid="c1e7b110-51bd-40ca-b048-6a270a6a64de" x="0" y="0" width="41" height="30"/>
 									<textElement verticalAlignment="Middle">
 										<paragraph lineSpacing="Single"/>
 									</textElement>
@@ -329,7 +329,7 @@
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="54" uuid="e0a756e9-bc0d-47e0-abe1-244e735257fd">
+						<jr:column width="64" uuid="e0a756e9-bc0d-47e0-abe1-244e735257fd">
 							<jr:columnHeader style="table 1_TH" height="25" rowSpan="1">
 								<staticText>
 									<reportElement uuid="cf0d1038-e457-4526-8105-7d10de0bc033" x="0" y="0" width="54" height="25"/>
@@ -396,18 +396,18 @@
 							</jr:detailCell>
 						</jr:column>
 					</jr:columnGroup>
-					<jr:columnGroup width="100" uuid="b20d21a8-eecb-48ab-b7b0-5a05799457ab">
+					<jr:columnGroup width="111" uuid="b20d21a8-eecb-48ab-b7b0-5a05799457ab">
 						<jr:columnHeader style="table" height="23" rowSpan="1">
 							<staticText>
-								<reportElement uuid="cf47b749-059e-4177-9bfd-2a81de519bfd" x="0" y="0" width="100" height="23"/>
+								<reportElement uuid="cf47b749-059e-4177-9bfd-2a81de519bfd" x="0" y="0" width="111" height="23"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<text><![CDATA[SAÍDAS]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:column width="43" uuid="6bdfea45-9442-4124-9348-7d63ac8f8f6c">
+						<jr:column width="54" uuid="6bdfea45-9442-4124-9348-7d63ac8f8f6c">
 							<jr:columnHeader style="table 1_TH" height="25" rowSpan="1">
 								<staticText>
-									<reportElement uuid="5e15976a-b701-4fc8-8142-2e367fc51461" x="0" y="0" width="43" height="25"/>
+									<reportElement uuid="5e15976a-b701-4fc8-8142-2e367fc51461" x="0" y="0" width="54" height="25"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle"/>
 									<text><![CDATA[Qtde]]></text>
 								</staticText>
@@ -415,7 +415,7 @@
 							<jr:detailCell style="table" height="30" rowSpan="1">
 								<box leftPadding="2"/>
 								<textField>
-									<reportElement uuid="ca5f832f-c7f7-4d46-9d53-9640cbe875d7" x="0" y="0" width="33" height="30"/>
+									<reportElement uuid="ca5f832f-c7f7-4d46-9d53-9640cbe875d7" x="0" y="0" width="42" height="30"/>
 									<textElement verticalAlignment="Middle">
 										<paragraph lineSpacing="Single"/>
 									</textElement>
@@ -434,7 +434,7 @@
 							<jr:detailCell style="table" height="30" rowSpan="1">
 								<box leftPadding="2"/>
 								<textField>
-									<reportElement uuid="0654fec5-7d2c-4b08-adb5-64fc9e658800" x="0" y="0" width="41" height="30"/>
+									<reportElement uuid="0654fec5-7d2c-4b08-adb5-64fc9e658800" x="0" y="0" width="46" height="30"/>
 									<textElement verticalAlignment="Middle">
 										<paragraph lineSpacing="Single"/>
 									</textElement>
@@ -443,7 +443,7 @@
 							</jr:detailCell>
 						</jr:column>
 					</jr:columnGroup>
-					<jr:columnGroup width="157" uuid="f41ae2fd-b778-47c2-8f19-17a3c5f12b42">
+					<jr:columnGroup width="160" uuid="f41ae2fd-b778-47c2-8f19-17a3c5f12b42">
 						<jr:columnHeader style="table" height="23" rowSpan="1">
 							<staticText>
 								<reportElement uuid="97577f22-6be9-4d36-9f44-7ee31d502e45" x="0" y="0" width="157" height="23"/>
@@ -451,7 +451,7 @@
 								<text><![CDATA[SALDO ATUAL]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:column width="45" uuid="258bf127-74f3-4b2f-95c1-1831f2e69043">
+						<jr:column width="48" uuid="258bf127-74f3-4b2f-95c1-1831f2e69043">
 							<jr:columnHeader style="table 1_TH" height="25" rowSpan="1">
 								<staticText>
 									<reportElement uuid="37362eff-e89a-46c7-bcf9-f7b37dbf05a6" x="0" y="0" width="45" height="25"/>
@@ -462,7 +462,7 @@
 							<jr:detailCell style="table" height="30" rowSpan="1">
 								<box leftPadding="2"/>
 								<textField>
-									<reportElement uuid="6ce998f4-5759-4772-b693-bc2d1646d4df" x="0" y="0" width="34" height="30"/>
+									<reportElement uuid="6ce998f4-5759-4772-b693-bc2d1646d4df" x="0" y="0" width="45" height="30"/>
 									<textElement verticalAlignment="Middle">
 										<paragraph lineSpacing="Single"/>
 									</textElement>
