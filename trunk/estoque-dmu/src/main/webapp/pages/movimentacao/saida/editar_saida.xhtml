@@ -65,7 +65,7 @@
 									<f:selectItems value="#{saidaController.listaFamiliaCombo}" var="s" itemLabel="#{s.nomeResponsavel}" itemValue="#{s.id}" />
 								</p:selectOneMenu >
 	
-								
+								 
 								<p:selectOneMenu value="#{saidaController.saida.instituicao.id}" filter="true" id="comboInstituicao" required="true" rendered="#{saidaController.mostrarComboInstituicao}">
 									<f:selectItem itemLabel="Selecione" itemValue="" />
 									<f:selectItems value="#{saidaController.listaInstituicaoCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
