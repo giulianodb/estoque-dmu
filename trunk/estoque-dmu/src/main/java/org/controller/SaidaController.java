@@ -11,19 +11,19 @@ import javax.inject.Named;
 import javax.inject.Provider;
 
 import org.apache.myfaces.extensions.cdi.core.api.scope.conversation.ViewAccessScoped;
-import org.controller.model.SaidaDataModel;
+import org.controller.model.MovimentacaoDataModel;
 import org.entity.Campanha;
-import org.entity.Saida;
 import org.entity.Familia;
 import org.entity.Instituicao;
+import org.entity.Movimentacao;
 import org.entity.Produto;
 import org.entity.TipoParceiroEnum;
 import org.exception.ApplicationException;
 import org.exception.ControllerExceptionHandler;
 import org.service.CampanhaService;
-import org.service.SaidaService;
 import org.service.FamiliaService;
 import org.service.InstituicaoService;
+import org.service.MovimentacaoService;
 import org.service.ProdutoService;
 import org.util.Message;
 
@@ -35,13 +35,13 @@ public class SaidaController implements Serializable  {
 	private static final long serialVersionUID = 1L;
 	
 	@Inject
-	private SaidaDataModel saidaDataModel;
+	private MovimentacaoDataModel saidaDataModel;
 	
 	@Inject
-	private Saida saida;
+	private Movimentacao saida;
 	
 	@Inject
-	private SaidaService saidaService;
+	private MovimentacaoService saidaService;
 	
 	@Inject
 	private CampanhaService campanhaService;
@@ -53,7 +53,7 @@ public class SaidaController implements Serializable  {
 	private InstituicaoService instituicaoService;
 	
 	@Inject
-	private Provider<Saida> saidaProvider;
+	private Provider<Movimentacao> movimentacaoProvider;
 	
 	private List<Produto> listProdutoCombo;
 	
@@ -83,12 +83,12 @@ public class SaidaController implements Serializable  {
 	
 	public String iniciarPesquisaSaida(){
 		
-		return "/pages/saida/listar_saida";
+		return "/pages/movimentacao/listar_movimentacao";
 	}
 	
-	public String iniciarIncluirSaida() throws ApplicationException{
+	public String iniciarIncluirMovimentacaoSaida() throws ApplicationException{
 		
-		saida = saidaProvider.get();
+		saida = movimentacaoProvider.get();
 		valorMedioProduto = 0f;
 		//carregando combos iniciais
 		listProdutoCombo = produtoService.pesquisarProduto(new Produto(), 0, 0);
@@ -100,7 +100,7 @@ public class SaidaController implements Serializable  {
 		
 		saida.setData(new Date());
 		
-		return "/pages/saida/editar_saida";
+		return "/pages/movimentacao/saida/editar_saida";
 	}
 	
 	public String excluirSaida(){
@@ -122,7 +122,7 @@ public class SaidaController implements Serializable  {
 	}
 	
 	public String alterarSaida(){
-		return "/pages/saida/listar_saida";
+		return "/pages/movimentacao/saida/listar_saida";
 	}
 	
 	public void listenerAlterarTipoReceptor() throws ApplicationException{
@@ -185,22 +185,6 @@ public class SaidaController implements Serializable  {
 		valorMedioProduto = (saida.getProduto().valorMedioProduto());
 	}
 	
-	public SaidaDataModel getSaidaDataModel() {
-		return saidaDataModel;
-	}
-
-	public void setSaidaDataModel(SaidaDataModel saidaDataModel) {
-		this.saidaDataModel = saidaDataModel;
-	}
-
-	public Saida getSaida() {
-		return saida;
-	}
-
-	public void setSaida(Saida saida) {
-		this.saida = saida;
-	}
-
 	public List<Produto> getListProdutoCombo() {
 		return listProdutoCombo;
 	}
@@ -288,6 +272,14 @@ public class SaidaController implements Serializable  {
 
 	public void setMostrarComboFamiliaCampanha(Boolean mostrarComboFamiliaCampanha) {
 		this.mostrarComboFamiliaCampanha = mostrarComboFamiliaCampanha;
+	}
+
+	public Movimentacao getSaida() {
+		return saida;
+	}
+
+	public void setSaida(Movimentacao saida) {
+		this.saida = saida;
 	}
 
 }

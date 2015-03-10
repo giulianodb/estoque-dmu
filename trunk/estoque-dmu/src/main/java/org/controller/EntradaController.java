@@ -11,19 +11,18 @@ import javax.inject.Named;
 import javax.inject.Provider;
 
 import org.apache.myfaces.extensions.cdi.core.api.scope.conversation.ViewAccessScoped;
-import org.controller.model.EntradaDataModel;
 import org.entity.Campanha;
 import org.entity.Doador;
-import org.entity.Entrada;
 import org.entity.Instituicao;
+import org.entity.Movimentacao;
 import org.entity.Produto;
 import org.entity.TipoParceiroEnum;
 import org.exception.ApplicationException;
 import org.exception.ControllerExceptionHandler;
 import org.service.CampanhaService;
 import org.service.DoadorService;
-import org.service.EntradaService;
 import org.service.InstituicaoService;
+import org.service.MovimentacaoService;
 import org.service.ProdutoService;
 import org.util.Message;
 
@@ -35,13 +34,10 @@ public class EntradaController implements Serializable  {
 	private static final long serialVersionUID = 1L;
 	
 	@Inject
-	private EntradaDataModel entradaDataModel;
+	private Movimentacao entrada;
 	
 	@Inject
-	private Entrada entrada;
-	
-	@Inject
-	private EntradaService entradaService;
+	private MovimentacaoService entradaService;
 	
 	@Inject
 	private CampanhaService campanhaService;
@@ -53,7 +49,7 @@ public class EntradaController implements Serializable  {
 	private InstituicaoService instituicaoService;
 	
 	@Inject
-	private Provider<Entrada> entradaProvider;
+	private Provider<Movimentacao> movimentacaoProvider;
 	
 	private List<Produto> listProdutoCombo;
 	
@@ -81,12 +77,12 @@ public class EntradaController implements Serializable  {
 	
 	public String iniciarPesquisaEntrada(){
 		
-		return "/pages/entrada/listar_entrada";
+		return "/pages/movimentacao/listar_movimentacao";
 	}
 	
 	public String iniciarIncluirEntrada() throws ApplicationException{
 		
-		entrada = entradaProvider.get();
+		entrada = movimentacaoProvider.get();
 		valorMedioProduto = 0f;
 		//carregando combos iniciais
 		listProdutoCombo = produtoService.pesquisarProduto(new Produto(), 0, 0);
@@ -97,9 +93,9 @@ public class EntradaController implements Serializable  {
 		mostrarComboDoador = false;
 		mostrarComboInstituicao = false;
 		
-		entrada.getLoteEntrada().setData(new Date());
+		entrada.getLoteMovimentacao().setData(new Date());
 		
-		return "/pages/entrada/editar_entrada";
+		return "/pages/movimentacao/entrada/editar_entrada";
 	}
 	
 	public String excluirEntrada(){
@@ -121,7 +117,7 @@ public class EntradaController implements Serializable  {
 	}
 	
 	public String alterarEntrada(){
-		return "/pages/entrada/listar_entrada";
+		return "/pages/movimentacao/entrada/listar_entrada";
 	}
 	
 	public void listenerAlterarTipoDoador() throws ApplicationException{
@@ -130,9 +126,9 @@ public class EntradaController implements Serializable  {
 			if(listaCampanhaCombo == null || listaCampanhaCombo.size() == 0){
 				listaCampanhaCombo = campanhaService.pesquisarCampanha(new Campanha());
 			}
-			entrada.getLoteEntrada().setCampanha(new Campanha());
-			entrada.getLoteEntrada().setInstituicao(null);
-			entrada.getLoteEntrada().setDoador(null);
+			entrada.getLoteMovimentacao().setCampanha(new Campanha());
+			entrada.getLoteMovimentacao().setInstituicao(null);
+			entrada.getLoteMovimentacao().setDoador(null);
 			
 			mostrarComboCampanha = true;
 			mostrarComboDoador = false;
@@ -145,9 +141,9 @@ public class EntradaController implements Serializable  {
 				listaDoadorCombo = doadorService.pesquisarDoador(new Doador());
 			}
 			
-			entrada.getLoteEntrada().setDoador(new Doador());
-			entrada.getLoteEntrada().setInstituicao(null);
-			entrada.getLoteEntrada().setCampanha(null);
+			entrada.getLoteMovimentacao().setDoador(new Doador());
+			entrada.getLoteMovimentacao().setInstituicao(null);
+			entrada.getLoteMovimentacao().setCampanha(null);
 			
 			mostrarComboCampanha = false;
 			mostrarComboInstituicao = false;
@@ -159,9 +155,9 @@ public class EntradaController implements Serializable  {
 			mostrarComboCampanha = false;
 			mostrarComboDoador = false;
 			mostrarComboInstituicao = false;
-			entrada.getLoteEntrada().setInstituicao(null);
-			entrada.getLoteEntrada().setDoador(null);
-			entrada.getLoteEntrada().setCampanha(null);
+			entrada.getLoteMovimentacao().setInstituicao(null);
+			entrada.getLoteMovimentacao().setDoador(null);
+			entrada.getLoteMovimentacao().setCampanha(null);
 			
 			break;
 		}
@@ -169,9 +165,9 @@ public class EntradaController implements Serializable  {
 			if(listaInstituicaoCombo == null || listaInstituicaoCombo.size() == 0){
 				listaInstituicaoCombo = instituicaoService.pesquisarInstituicao(new Instituicao());
 			}
-			entrada.getLoteEntrada().setInstituicao(new Instituicao());
-			entrada.getLoteEntrada().setDoador(null);
-			entrada.getLoteEntrada().setCampanha(null);
+			entrada.getLoteMovimentacao().setInstituicao(new Instituicao());
+			entrada.getLoteMovimentacao().setDoador(null);
+			entrada.getLoteMovimentacao().setCampanha(null);
 			
 			mostrarComboCampanha = false;
 			mostrarComboDoador = false;
@@ -185,22 +181,6 @@ public class EntradaController implements Serializable  {
 	public void listenerObterPrecoMedio(){
 		entrada.setProduto(produtoService.obterProduto(entrada.getProduto().getId()));
 		valorMedioProduto = (entrada.getProduto().valorMedioProduto());
-	}
-	
-	public EntradaDataModel getEntradaDataModel() {
-		return entradaDataModel;
-	}
-
-	public void setEntradaDataModel(EntradaDataModel entradaDataModel) {
-		this.entradaDataModel = entradaDataModel;
-	}
-
-	public Entrada getEntrada() {
-		return entrada;
-	}
-
-	public void setEntrada(Entrada entrada) {
-		this.entrada = entrada;
 	}
 
 	public List<Produto> getListProdutoCombo() {
@@ -282,6 +262,14 @@ public class EntradaController implements Serializable  {
 
 	public void setValorMedioProduto(Float valorMedioProduto) {
 		this.valorMedioProduto = valorMedioProduto;
+	}
+
+	public Movimentacao getEntrada() {
+		return entrada;
+	}
+
+	public void setEntrada(Movimentacao entrada) {
+		this.entrada = entrada;
 	}
 
 }

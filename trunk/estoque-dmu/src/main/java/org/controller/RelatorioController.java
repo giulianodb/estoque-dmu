@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.myfaces.extensions.cdi.core.api.scope.conversation.ViewAccessScoped;
 import org.entity.Produto;
 import org.exception.ControllerExceptionHandler;
-import org.service.EntradaService;
 import org.service.RelatorioService;
 
 @Named
