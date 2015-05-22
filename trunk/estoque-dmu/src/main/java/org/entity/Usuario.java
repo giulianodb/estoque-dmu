@@ -4,17 +4,22 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="usuario",schema="estoque")
+@NamedQueries({ @NamedQuery(name = "obterPorLogin", query = "SELECT u FROM Usuario u WHERE u.loginUsuario = :login"),
+	@NamedQuery(name = "listarUsuario", query = "SELECT u FROM Usuario u ")
+})
 public class Usuario implements Serializable {
 	
 	/**
@@ -44,6 +49,10 @@ public class Usuario implements Serializable {
 	private Boolean participaExtra;
 	
 	private Float participacao;
+	
+	@Enumerated
+	@Column(name="status")
+	private StatusUsuario statusUsuario;
 
 	public Integer getIdUsuario() {
 		return idUsuario;
@@ -107,6 +116,14 @@ public class Usuario implements Serializable {
 
 	public void setParticipacao(Float participacao) {
 		this.participacao = participacao;
+	}
+
+	public StatusUsuario getStatusUsuario() {
+		return statusUsuario;
+	}
+
+	public void setStatusUsuario(StatusUsuario statusUsuario) {
+		this.statusUsuario = statusUsuario;
 	}
 	
 

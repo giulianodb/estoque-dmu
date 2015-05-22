@@ -64,6 +64,18 @@ public class FamiliaService {
 		}
 	
 	
+	public Familia obterFamilia(Integer cod) throws ApplicationException{
+		
+		try {
+			Familia f = em.find(Familia.class, cod);
+			
+			return f;
+		} catch(Exception e) {
+			throw new ApplicationException("br.gov.pr.celepar.exemplo.dao.MatriculaDAO.obterQtdPorAluno.ERRO", e);
+		}	
+	}
+
+	
 	public void incluirFamilia(Familia familia){
 		
 		em.persist(familia);

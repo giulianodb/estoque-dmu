@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
@@ -59,6 +62,8 @@ public class SaidaController implements Serializable  {
 	
 	private List<TipoParceiroEnum> listaTipoParceiroCombo;
 	
+	private List<TipoParceiroEnum> listaTipoParceiroCampanhaCombo;
+	
 	private List<Campanha> listaCampanhaCombo;
 	
 	private List<Instituicao> listaInstituicaoCombo;
@@ -67,13 +72,17 @@ public class SaidaController implements Serializable  {
 	
 	private TipoParceiroEnum tipoParceiroSelecionado;
 	
+	private TipoParceiroEnum tipoParceiroCampanhaSelecionado;
+	
 	private Boolean mostrarComboCampanha;
 	
 	private Boolean mostrarComboInstituicao;
 	
 	private Boolean mostrarComboFamilia;
 	
-	private Boolean mostrarComboFamiliaCampanha;
+	private Boolean mostrarComboFamiliaCampanha = false;
+	
+	private Boolean mostrarComboInstituicaoCampanha = false;
 	
 	private Float valorMedioProduto;
 	
@@ -93,12 +102,101 @@ public class SaidaController implements Serializable  {
 		//carregando combos iniciais
 		listProdutoCombo = produtoService.pesquisarProduto(new Produto(), 0, 0);
 		listaTipoParceiroCombo = new ArrayList<TipoParceiroEnum>(Arrays.asList(TipoParceiroEnum.values()));
+		listaTipoParceiroCampanhaCombo = new ArrayList<TipoParceiroEnum>();
+		
+		listaTipoParceiroCampanhaCombo.add(TipoParceiroEnum.FAMILIA);
+		listaTipoParceiroCampanhaCombo.add(TipoParceiroEnum.INSTITUICAO);
+//		
+//		saida.getLoteMovimentacao().setFamiliaCampanha(new Familia());
+//		saida.getLoteMovimentacao().setInstituicaoCampanha(new Instituicao());
+		
 		
 		mostrarComboCampanha = false;
 		mostrarComboFamilia = false;
 		mostrarComboInstituicao = false;
 		
 		saida.setData(new Date());
+		
+		return "/pages/movimentacao/saida/editar_saida";
+	}
+	
+	
+	public String iniciarAlterarMovimentacaoSaida() throws ApplicationException{
+		
+//		valorMedioProduto = 0f;
+		
+		//carregando combos iniciais
+		listProdutoCombo = produtoService.pesquisarProduto(new Produto(), 0, 0);
+		listaTipoParceiroCombo = new ArrayList<TipoParceiroEnum>(Arrays.asList(TipoParceiroEnum.values()));
+		listaTipoParceiroCampanhaCombo = new ArrayList<TipoParceiroEnum>();
+		
+		listaTipoParceiroCampanhaCombo.add(TipoParceiroEnum.FAMILIA);
+		listaTipoParceiroCampanhaCombo.add(TipoParceiroEnum.INSTITUICAO);
+//		
+//		saida.getLoteMovimentacao().setFamiliaCampanha(new Familia());
+//		saida.getLoteMovimentacao().setInstituicaoCampanha(new Instituicao());
+		
+		if (saida.getLoteMovimentacao().getCampanha() != null){
+			tipoParceiroSelecionado = TipoParceiroEnum.CAMPANHA;
+			mostrarComboCampanha = true;
+			mostrarComboInstituicao = false;
+			mostrarComboFamilia = false;
+			mostrarComboFamiliaCampanha = false;
+			
+			if(listaCampanhaCombo == null || listaCampanhaCombo.size() == 0){
+				listaCampanhaCombo = campanhaService.pesquisarCampanha(new Campanha());
+			}
+			
+			
+		} else if(saida.getLoteMovimentacao().getFamilia() != null){
+			tipoParceiroSelecionado = TipoParceiroEnum.FAMILIA;
+			mostrarComboCampanha = false;
+			mostrarComboInstituicao = false;
+			mostrarComboFamilia = true;
+			mostrarComboFamiliaCampanha = false;
+			if(listaFamiliaCombo == null || listaFamiliaCombo.size() == 0){
+				listaFamiliaCombo = familiaService.pesquisarFamilia(new Familia());
+			}
+		} else if(saida.getLoteMovimentacao().getInstituicao() != null){
+			tipoParceiroSelecionado = TipoParceiroEnum.INSTITUICAO;
+			mostrarComboCampanha = false;
+			mostrarComboInstituicao = true;
+			mostrarComboFamilia = false;
+			mostrarComboFamiliaCampanha = false;
+			if(listaInstituicaoCombo == null || listaInstituicaoCombo.size() == 0){
+				listaInstituicaoCombo = instituicaoService.pesquisarInstituicao(new Instituicao());
+			}
+		} else {
+			tipoParceiroSelecionado = TipoParceiroEnum.ANONIMO;
+			mostrarComboCampanha = false;
+			mostrarComboInstituicao = false;
+			mostrarComboFamilia = false;
+			mostrarComboFamiliaCampanha = false;
+		}
+		
+		
+		
+		
+		if (saida.getLoteMovimentacao().getFamiliaCampanha() != null){
+			tipoParceiroCampanhaSelecionado = TipoParceiroEnum.FAMILIA;
+			if(listaFamiliaCombo == null || listaFamiliaCombo.size() == 0){
+				listaFamiliaCombo = familiaService.pesquisarFamilia(new Familia());
+			}
+			mostrarComboInstituicaoCampanha = false;
+			mostrarComboFamiliaCampanha = true;
+		} else if(saida.getLoteMovimentacao().getInstituicaoCampanha() != null){
+			tipoParceiroCampanhaSelecionado = TipoParceiroEnum.INSTITUICAO;
+			if(listaInstituicaoCombo == null || listaInstituicaoCombo.size() == 0){
+				listaInstituicaoCombo = instituicaoService.pesquisarInstituicao(new Instituicao());
+			}
+			mostrarComboInstituicaoCampanha = true;
+			mostrarComboFamiliaCampanha = false;
+		}
+			
+
+	
+		listenerObterPrecoMedio();
+		
 		
 		return "/pages/movimentacao/saida/editar_saida";
 	}
@@ -110,11 +208,56 @@ public class SaidaController implements Serializable  {
 	
 	public String incluirSaida(){
 		try {
+			
+			if (saida.getLoteMovimentacao().getFamiliaCampanha() != null && saida.getLoteMovimentacao().getFamiliaCampanha().getId() != null){
+				saida.getLoteMovimentacao().setFamiliaCampanha(familiaService.obterFamilia(saida.getLoteMovimentacao().getFamiliaCampanha().getId()));
+				
+			}else {
+				saida.getLoteMovimentacao().setFamiliaCampanha(null);
+			}
+			
+			
+			if (saida.getLoteMovimentacao().getFamilia() != null && saida.getLoteMovimentacao().getFamilia().getId() != null){
+				saida.getLoteMovimentacao().setFamilia(familiaService.obterFamilia(saida.getLoteMovimentacao().getFamilia().getId()));
+				
+			}else {
+				saida.getLoteMovimentacao().setFamilia(null);
+			}
+			
+			
+			
+			if (saida.getLoteMovimentacao().getInstituicao() != null && saida.getLoteMovimentacao().getInstituicao().getId() != null){
+				saida.getLoteMovimentacao().setInstituicao(instituicaoService.obterInstituicao(saida.getLoteMovimentacao().getInstituicao().getId()));
+				
+			}else {
+				saida.getLoteMovimentacao().setInstituicao(null);
+			}
+			
+			
+			
+			if (saida.getLoteMovimentacao().getInstituicaoCampanha() != null && saida.getLoteMovimentacao().getInstituicaoCampanha().getId() != null){
+				saida.getLoteMovimentacao().setInstituicaoCampanha(instituicaoService.obterInstituicao(saida.getLoteMovimentacao().getInstituicaoCampanha().getId()));
+				
+			}else {
+				saida.getLoteMovimentacao().setInstituicaoCampanha(null);
+			}
+			
+			
+			if (saida.getLoteMovimentacao().getCampanha() != null && saida.getLoteMovimentacao().getCampanha().getId() != null){
+				saida.getLoteMovimentacao().setCampanha(campanhaService.obterCampanha(saida.getLoteMovimentacao().getCampanha().getId()));
+				
+			}else {
+				saida.getLoteMovimentacao().setCampanha(null);
+			}
+			
+			
+			
+//			
 			saidaService.incluirSaida(saida);
-			Message.setMessage("SUCESSO");
+			Message.setMessage("controller.incluirSaida.SUCESSO");
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			Message.setMessage("ERRO", FacesMessage.SEVERITY_ERROR);
 			e.printStackTrace();
 		}
 		
@@ -122,7 +265,18 @@ public class SaidaController implements Serializable  {
 	}
 	
 	public String alterarSaida(){
-		return "/pages/movimentacao/saida/listar_saida";
+		
+		try {
+			saidaService.alterarSaida1(saida);
+			
+			saidaService.alterarSaida2(saida);
+			Message.setMessage("controller.incluirSaida.SUCESSO");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			Message.setMessage("ERRO", FacesMessage.SEVERITY_ERROR);
+		}
+		return iniciarPesquisaSaida();
 	}
 	
 	public void listenerAlterarTipoReceptor() throws ApplicationException{
@@ -131,14 +285,19 @@ public class SaidaController implements Serializable  {
 			if(listaCampanhaCombo == null || listaCampanhaCombo.size() == 0){
 				listaCampanhaCombo = campanhaService.pesquisarCampanha(new Campanha());
 			}
-			saida.setCampanha(new Campanha());
+			saida.getLoteMovimentacao().setCampanha(new Campanha());
 			mostrarComboCampanha = true;
 			mostrarComboFamilia = false;
 			mostrarComboInstituicao = false;
-			mostrarComboFamiliaCampanha = true;
-			saida.setFamiliaCampanha(new Familia());
+			mostrarComboFamiliaCampanha = false;
+			saida.getLoteMovimentacao().setFamiliaCampanha(new Familia());
+			saida.getLoteMovimentacao().setInstituicaoCampanha(new Instituicao());
+			
 			if(listaFamiliaCombo == null || listaFamiliaCombo.size() == 0){
 				listaFamiliaCombo = familiaService.pesquisarFamilia(new Familia());
+			}
+			if(listaInstituicaoCombo == null || listaInstituicaoCombo.size() == 0){
+				listaInstituicaoCombo = instituicaoService.pesquisarInstituicao(new Instituicao());
 			}
 			
 			
@@ -149,7 +308,7 @@ public class SaidaController implements Serializable  {
 				listaFamiliaCombo = familiaService.pesquisarFamilia(new Familia());
 			}
 			
-			saida.setFamilia(new Familia());
+			saida.getLoteMovimentacao().setFamilia(new Familia());
 			mostrarComboCampanha = false;
 			mostrarComboInstituicao = false;
 			mostrarComboFamilia = true;
@@ -168,7 +327,7 @@ public class SaidaController implements Serializable  {
 			if(listaInstituicaoCombo == null || listaInstituicaoCombo.size() == 0){
 				listaInstituicaoCombo = instituicaoService.pesquisarInstituicao(new Instituicao());
 			}
-			saida.setInstituicao(new Instituicao());
+			saida.getLoteMovimentacao().setInstituicao(new Instituicao());
 			
 			mostrarComboCampanha = false;
 			mostrarComboFamilia = false;
@@ -179,6 +338,36 @@ public class SaidaController implements Serializable  {
 		
 		}
 	}
+	
+	public void listenerAlterarTipoReceptorCampanha() throws ApplicationException{
+		switch (tipoParceiroCampanhaSelecionado.ordinal()) {
+	
+		case 1: {
+			if(listaFamiliaCombo == null || listaFamiliaCombo.size() == 0){
+				listaFamiliaCombo = familiaService.pesquisarFamilia(new Familia());
+			}
+			
+			saida.getLoteMovimentacao().setFamiliaCampanha(new Familia());
+			mostrarComboInstituicaoCampanha = false;
+			mostrarComboFamiliaCampanha = true;
+			break;
+		}
+		
+
+		case 3: {
+			if(listaInstituicaoCombo == null || listaInstituicaoCombo.size() == 0){
+				listaInstituicaoCombo = instituicaoService.pesquisarInstituicao(new Instituicao());
+			}
+			saida.getLoteMovimentacao().setInstituicaoCampanha(new Instituicao());
+			
+			mostrarComboInstituicaoCampanha = true;
+			mostrarComboFamiliaCampanha = false;
+			break;
+		}
+		
+		}
+	}
+	
 	
 	public void listenerObterPrecoMedio(){
 		saida.setProduto(produtoService.obterProduto(saida.getProduto().getId()));
@@ -280,6 +469,33 @@ public class SaidaController implements Serializable  {
 
 	public void setSaida(Movimentacao saida) {
 		this.saida = saida;
+	}
+
+	public Boolean getMostrarComboInstituicaoCampanha() {
+		return mostrarComboInstituicaoCampanha;
+	}
+
+	public void setMostrarComboInstituicaoCampanha(
+			Boolean mostrarComboInstituicaoCampanha) {
+		this.mostrarComboInstituicaoCampanha = mostrarComboInstituicaoCampanha;
+	}
+
+	public TipoParceiroEnum getTipoParceiroCampanhaSelecionado() {
+		return tipoParceiroCampanhaSelecionado;
+	}
+
+	public void setTipoParceiroCampanhaSelecionado(
+			TipoParceiroEnum tipoParceiroCampanhaSelecionado) {
+		this.tipoParceiroCampanhaSelecionado = tipoParceiroCampanhaSelecionado;
+	}
+
+	public List<TipoParceiroEnum> getListaTipoParceiroCampanhaCombo() {
+		return listaTipoParceiroCampanhaCombo;
+	}
+
+	public void setListaTipoParceiroCampanhaCombo(
+			List<TipoParceiroEnum> listaTipoParceiroCampanhaCombo) {
+		this.listaTipoParceiroCampanhaCombo = listaTipoParceiroCampanhaCombo;
 	}
 
 }

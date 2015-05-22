@@ -20,7 +20,7 @@
 	<h:form id="celMenubar">
 	<ul class="page-sidebar-menu">
 		<li class="sidebar-toggler-wrapper">
-          <div class="sidebar-toggler-nome">Bem vindo: Giuliano</div>
+          <div class="sidebar-toggler-nome">Bem vindo: #{usuarioLogadoControl.usuario.nome}</div>
           <div class="sidebar-toggler hidden-phone"></div>
         </li>
 		<li id="inicial" class="start"><p:commandLink action="/pages/templates/initial.jsf" ajax="false"> <i
@@ -38,7 +38,7 @@
 			</ul>
 		</li>
 		<li id="produto">
-			<a href="javascript:;"> <i class="fa fa-user"></i> <span
+			<a href="javascript:;"> <i class="fa fa-shopping-cart"></i> <span
 				class="title">Produto</span></a>
 			<ul class="sub-menu">
 				<li>
@@ -60,7 +60,7 @@
 				
 					<li>
 					<p:commandLink action="#{saidaController.iniciarIncluirMovimentacaoSaida()}" ajax="false">
-						Saida produto
+						Saída produto
 					</p:commandLink>
 				</li>
 				<li>
@@ -68,11 +68,17 @@
 						Pesquisar movimentação
 					</p:commandLink>
 				</li>
+				
+				<li>
+					<p:commandLink action="#{loteController.iniciarPesquisaReceibo()}" ajax="false">
+						Pesquisar recibo
+					</p:commandLink>
+				</li>
 			</ul>
 		</li>
 		
 	  <li id="campanha">
-			<a href="javascript:;"> <i class="fa fa-user"></i> <span
+			<a href="javascript:;"> <i class="fa fa-flag-o"></i> <span
 				class="title">Campanha</span></a>
 			<ul class="sub-menu">
 				<li>
@@ -89,7 +95,7 @@
 		</li>
 		
 	  <li id="instituicao">
-			<a href="javascript:;"> <i class="fa fa-user"></i> <span
+			<a href="javascript:;"> <i class="fa fa-building"></i> <span
 				class="title">Instituição</span></a>
 			<ul class="sub-menu">
 				<li>
@@ -106,7 +112,7 @@
 		</li>
 		
 		  <li id="familia">
-			<a href="javascript:;"> <i class="fa fa-user"></i> <span
+			<a href="javascript:;"> <i class="fa fa-group"></i> <span
 				class="title">Família</span></a>
 			<ul class="sub-menu">
 				<li>
@@ -141,13 +147,39 @@
 		</li>
 		
 		<li id="relatorio">
-			<a href="javascript:;"> <i class="fa fa-user"></i> <span
+			<a href="javascript:;"> <i class="fa fa-file-text"></i> <span
 				class="title">Relatórios</span></a>
 			<ul class="sub-menu">
 				<li>
 					<p:commandLink action="#{relatorioController.paginaRelatorioEstoqueSintetico()}" ajax="false">
-						Todos produtos
+						Sintético
 					</p:commandLink>
+				</li>
+				<li>
+					<p:commandLink action="#{relatorioController.paginaRelatorioEstoqueAnalitico()}" ajax="false">
+						Analítico
+					</p:commandLink>
+				</li>
+				<li>
+					<p:commandLink action="#{relatorioController.paginaRelatorioCampanha()}" ajax="false">
+						Campanhas
+					</p:commandLink>
+					</li>
+				<li>
+						<p:commandLink action="#{relatorioController.paginaRelatorioFamilia()}" ajax="false">
+						Saída para Família
+					</p:commandLink>
+					</li>
+				<li>
+						<p:commandLink action="#{relatorioController.paginaRelatorioInstituicao()}" ajax="false">
+						Saída para Instituição
+					</p:commandLink>
+					</li>
+				<li>
+						<p:commandLink action="#{relatorioController.paginaRelatorioAnonimo()}" ajax="false">
+						Saída para Anônimo
+					</p:commandLink>
+					
 				</li>
 			</ul>
 		</li>

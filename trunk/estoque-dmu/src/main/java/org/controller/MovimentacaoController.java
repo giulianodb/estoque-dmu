@@ -2,13 +2,18 @@ package org.controller;
 
 import java.io.Serializable;
 
+import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.myfaces.extensions.cdi.core.api.scope.conversation.ViewAccessScoped;
 import org.controller.model.MovimentacaoDataModel;
 import org.entity.Movimentacao;
+import org.exception.ApplicationException;
 import org.exception.ControllerExceptionHandler;
+import org.service.MovimentacaoService;
+import org.util.Message;
 
 @Named
 @ViewAccessScoped
@@ -23,6 +28,9 @@ public class MovimentacaoController implements Serializable  {
 	@Inject
 	private MovimentacaoDataModel movimentacaoDataModel;
 	
+	@EJB
+	private MovimentacaoService movimentacaoService;
+	
 	
 	public String iniciarPesquisaMovimentacao(){
 		
@@ -33,8 +41,18 @@ public class MovimentacaoController implements Serializable  {
 	
 	
 	public String excluirEntrada(){
+		try {
+			movimentacaoService.excluirMovimentacao(movimentacao);
+			Message.setMessage("controller.excluirMovimentacao.SUCESSO");
+			
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			Message.setMessage("controller.incluirMovimentacao.ERRO", FacesMessage.SEVERITY_ERROR);
+			e.printStackTrace();
+		}
 		
-		return null;
+		
+		return "/pages/movimentacao/listar_movimentacao";
 	}
 
 

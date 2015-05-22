@@ -27,7 +27,7 @@
 				 		<h:panelGrid columns="2">
 				 			
 				 			<p:outputLabel for="produto" value="Produto:" />
-							<p:selectOneMenu value="#{entradaController.entrada.produto.id}" id="produto" required="true">
+							<p:selectOneMenu value="#{entradaController.entrada.produto.id}" id="produto" required="true" filter="true">
 								<f:selectItem itemLabel="Selecione" itemValue="" />
 								<f:selectItems value="#{entradaController.listProdutoCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
 								<p:ajax partialSubmit="true" listener="#{entradaController.listenerObterPrecoMedio()}" update="valorMedio" ></p:ajax>
@@ -38,20 +38,21 @@
 							<p:calendar
 								value="#{entradaController.entrada.loteMovimentacao.data}"
 								id="data" required="true" 
-								locale="pt" pattern="dd/MM/yyyy" maxlength="10" size="20">
+								locale="pt" pattern="dd/MM/yyyy" maxlength="10" size="8">
 							</p:calendar> 
 				 			
 				 			<p:outputLabel for="quantidade" value="Quantidade:" />
-				 			<p:inputText value="#{entradaController.entrada.quantidade}" id="quantidade" label="Quantidade" maxlength="60" size="50">
+				 			<p:inputText value="#{entradaController.entrada.quantidade}" id="quantidade" label="Quantidade" maxlength="8" size="8">
+								<f:converter converterId="converter.MoedaConverter"></f:converter>
 							</p:inputText>
 							
 							<p:outputLabel for="valorMedio" value="Valor médio:" />
-				 			<p:inputText value="#{entradaController.valorMedioProduto}" readonly="true" id="valorMedio" label="Valor" maxlength="60" size="50" >
+				 			<p:outputLabel value="#{entradaController.valorMedioProduto}" id="valorMedio" label="Valor" maxlength="8" size="8" >
 								<f:converter converterId="converter.MoedaConverter"></f:converter>
-							</p:inputText> 
+							</p:outputLabel> 
 														
-							<p:outputLabel for="valor" value="Valor:" />
-				 			<p:inputText value="#{entradaController.entrada.valor}" id="valor" label="Valor" maxlength="60" size="50" >
+							<p:outputLabel for="valor" value="Valor unitário:" />
+				 			<p:inputText value="#{entradaController.valorUnitarioController}" id="valor" label="Valor" maxlength="8" size="8" >
 				 				<f:converter converterId="converter.MoedaConverter"></f:converter>
 							</p:inputText>
 							

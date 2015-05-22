@@ -9,6 +9,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.entity.Campanha;
+import org.entity.Instituicao;
 import org.exception.ApplicationException;
 
 @Stateless
@@ -51,6 +52,18 @@ public class CampanhaService {
 		
 		em.persist(campanha);
 	}
+	
+	public Campanha obterCampanha(Integer cod) throws ApplicationException{
+		
+		try {
+			Campanha f = em.find(Campanha.class, cod);
+			
+			return f;
+		} catch(Exception e) {
+			throw new ApplicationException("br.gov.pr.celepar.exemplo.dao.MatriculaDAO.obterQtdPorAluno.ERRO", e);
+		}	
+	}
+
 
 
 }

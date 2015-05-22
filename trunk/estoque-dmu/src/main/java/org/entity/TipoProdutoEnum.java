@@ -8,6 +8,9 @@ public enum TipoProdutoEnum {
 	ALIMENTO("Alimento"),
 	BRINQUEDO("Brinquedo"),
 	ESCRITORIO("Escritório"),
+	LIMPEZA_HIGIENE("Limpeza e higiene"),
+	VESTUARIO("Vestuário"),
+	CAMA_MESA("Cama, mesa e banho"),
 	OUTROS("Outros");
 	
 	

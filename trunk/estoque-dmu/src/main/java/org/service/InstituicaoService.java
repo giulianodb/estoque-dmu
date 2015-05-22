@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.entity.Familia;
 import org.entity.Instituicao;
 import org.exception.ApplicationException;
 
@@ -66,6 +67,17 @@ public class InstituicaoService {
 	public void incluirInstituicao(Instituicao instituicao){
 		
 		em.persist(instituicao);
+	}
+	
+	public Instituicao obterInstituicao(Integer cod) throws ApplicationException{
+		
+		try {
+			Instituicao f = em.find(Instituicao.class, cod);
+			
+			return f;
+		} catch(Exception e) {
+			throw new ApplicationException("br.gov.pr.celepar.exemplo.dao.MatriculaDAO.obterQtdPorAluno.ERRO", e);
+		}	
 	}
 
 

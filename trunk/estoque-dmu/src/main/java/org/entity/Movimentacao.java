@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,20 +28,6 @@ public class Movimentacao implements Serializable{
 	@Column(name = "id")
 	private Integer id;
 	
-	@ManyToOne
-	private Campanha campanha;
-	
-	@ManyToOne
-	private Instituicao instituicao;
-	
-	@ManyToOne
-	private Familia familia;
-	
-	//Caso a saída for de campanha essa é a família que irá receber a saída de estqoue
-	@ManyToOne
-	private Familia familiaCampanha;
-	
-	//Atributo que define qual é o ultimo valor medio quando essa saída foi efetuda
 	private Float valorMediaUltimo;
 	
 //	Atributo que define qual é a quantidade quando essa saída foi efetuda
@@ -50,7 +37,7 @@ public class Movimentacao implements Serializable{
 	private Float saldoUltimo;
 	
 	@Inject
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	private Produto produto;
 	
 	//Definir qual lote essa entrada faz parte
@@ -79,38 +66,6 @@ public class Movimentacao implements Serializable{
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public Campanha getCampanha() {
-		return campanha;
-	}
-
-	public void setCampanha(Campanha campanha) {
-		this.campanha = campanha;
-	}
-
-	public Instituicao getInstituicao() {
-		return instituicao;
-	}
-
-	public void setInstituicao(Instituicao instituicao) {
-		this.instituicao = instituicao;
-	}
-
-	public Familia getFamilia() {
-		return familia;
-	}
-
-	public void setFamilia(Familia familia) {
-		this.familia = familia;
-	}
-
-	public Familia getFamiliaCampanha() {
-		return familiaCampanha;
-	}
-
-	public void setFamiliaCampanha(Familia familiaCampanha) {
-		this.familiaCampanha = familiaCampanha;
 	}
 
 	public Float getValorMediaUltimo() {
@@ -201,6 +156,15 @@ public class Movimentacao implements Serializable{
 		this.tipoMovimentacaoEnum = tipoMovimentacaoEnum;
 	}
 	
+	public boolean movimentacaoIsEntrada(){
+		if (tipoMovimentacaoEnum.equals(TipoMovimentacaoEnum.ENTRADA)){
+			return true;
+		}
+		else {
+			return false;
+		}
+		
+	}
 	
 	
 }

@@ -6,5 +6,5 @@
 	<interceptors>
     	<class>org.exception.ControllerExceptionHandlerInterceptor</class>
 	</interceptors>	
-	
+	  
 </beans>

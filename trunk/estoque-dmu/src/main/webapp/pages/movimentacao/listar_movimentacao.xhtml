@@ -26,7 +26,7 @@
 					<p:focus context="pgCampos" />
 					<h:panelGrid columns="2" >		
 						<p:outputLabel for="nomeProduto" value="Nome produto:" />
-						<p:inputText value="#{movimentacaoController.movimentacaoDataModel.movimentacaoPesquisa.produto.nome}" 
+						<p:inputText value="#{movimentacaoController.movimentacaoDataModel.movimentacaoPesquisa.produto.nomeSemAcento}" 
 							id="nomeProduto" label="Nome Produto"
 							maxlength="60" size="50">
 						</p:inputText> 
@@ -39,7 +39,7 @@
 							value="Pesquisa"
 						 	title="Pesquisar Entrada"
 							action="#{movimentacaoController.iniciarPesquisaMovimentacao()}"						 		
-							ajax="false"></p:commandButton>
+							ajax="true"></p:commandButton>
 							
 					</h:panelGrid>
 				</p:panel>
@@ -90,8 +90,10 @@
 		    	        <p:outputLabel value="#{movimentacao.loteMovimentacao.campanha.nome}" rendered="#{!empty movimentacao.loteMovimentacao.campanha}"/>
 		        	
 		    	        <p:outputLabel value="#{movimentacao.loteMovimentacao.instituicao.nome}" rendered="#{!empty movimentacao.loteMovimentacao.instituicao}"/>
+		    	        
+		    	         <p:outputLabel value="#{movimentacao.loteMovimentacao.familia.nomeResponsavel}" rendered="#{!empty movimentacao.loteMovimentacao.familia.nomeResponsavel}"/>
 		        	
-		    	        <p:outputLabel value="Anônimo" rendered="#{empty movimentacao.loteMovimentacao.instituicao and empty movimentacao.loteMovimentacao.campanha and empty movimentacao.loteMovimentacao.instituicao}"/>
+		    	        <p:outputLabel value="Anônimo" rendered="#{empty movimentacao.loteMovimentacao.instituicao and empty movimentacao.loteMovimentacao.campanha and empty movimentacao.loteMovimentacao.instituicao and empty movimentacao.loteMovimentacao.familia.nomeResponsavel}"/>
 		        	</p:column>
 		        	
 		        	
@@ -102,13 +104,39 @@
 					 		title="Excluir Entrada"	
 					 		ajax="true"
 							action="#{movimentacaoController.excluirEntrada()}">
+							<p:confirm header="Confirmação" message="Você tem certeza que deseja excluir a movimentação?" icon="ui-icon-alert" />
 							<f:setPropertyActionListener target="#{movimentacaoController.movimentacao}" value="#{movimentacao}"/> 		 	 
-						</p:commandButton>			            
+						</p:commandButton>
+						
+						 <p:commandButton id="cmdAlterarEntrada" icon="ui-icon-pencil"									 	 
+					 		update=":gridForm :entradaForm"
+					 		title="Alterar Entrada"	
+					 		ajax="false"
+							action="#{entradaController.iniciarAlterarEntrada()}"
+							rendered="#{movimentacao.movimentacaoIsEntrada()}" >
+								<f:setPropertyActionListener target="#{entradaController.entrada}" value="#{movimentacao}"/> 		 	 
+						</p:commandButton>
+						
+							 <p:commandButton id="cmdAlterarSaida" icon="ui-icon-pencil"									 	 
+					 		update=":gridForm :entradaForm"
+					 		title="Alterar Saída"	
+					 		ajax="false"
+							action="#{saidaController.iniciarAlterarMovimentacaoSaida()}"
+							rendered="#{movimentacao.movimentacaoIsEntrada() == false}" >
+								<f:setPropertyActionListener target="#{saidaController.saida}" value="#{movimentacao}"/> 		 	 
+						</p:commandButton>	
+						
+							            
 				    </p:column>
 			        <f:facet name="footer">  
 						#{movimentacaoController.movimentacaoDataModel.getRowCount()} #{appMessages['message.datatable.records']}
 					</f:facet>	
 				</p:dataTable>
+				
+				  <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+       				 <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+        			<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+    			</p:confirmDialog>
 			</h:form>		
 		</ui:define>
 	</ui:composition>

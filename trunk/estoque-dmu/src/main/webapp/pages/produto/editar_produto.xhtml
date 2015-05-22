@@ -49,8 +49,8 @@
 						
 						<p:separator id="separator"/>
 						<h:panelGrid columns="3" cellpadding="3">
-							<p:commandButton action="#{produtoController.alterarProduto}" value="Alterar" rendered="#{!empty produtoController.produto.id}" ajax="false" icon="ui-icon-disk"/>
-							<p:commandButton action="#{produtoController.incluirProduto}" value="Incluir" rendered="#{empty produtoController.produto.id}" ajax="false" icon="ui-icon-disk" />
+							<p:commandButton action="#{produtoController.alterarProduto()}" value="Alterar" rendered="#{!empty produtoController.produto.id}" ajax="false" icon="ui-icon-disk"/>
+							<p:commandButton action="#{produtoController.incluirProduto()}" value="Incluir" rendered="#{empty produtoController.produto.id}" ajax="false" icon="ui-icon-disk" />
 							<p:commandButton action="#{produtoController.iniciarPesquisaProduto()}" value="Voltar" immediate="true" ajax="false" icon="ui-icon-arrowreturnthick-1-w" />
 						</h:panelGrid>
 					</p:panel>

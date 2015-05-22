@@ -41,6 +41,8 @@ public class Produto implements Serializable {
 	@Size(max=50)
 	private String nome;
 	
+	private String nomeSemAcento;
+	
 	@Enumerated
 	private TipoProdutoEnum tipoProduto;
 	
@@ -48,6 +50,8 @@ public class Produto implements Serializable {
 	private TipoMedidaEnum tipoMedida;
 	
 	private Float quantidadeEstoque;
+	
+//	private Float saldoEstoque;
 	
 	//Campo para obter a média do produto quando necessário sem a necessidade de percorrer o banco sempre
 	private Float quantidadeHistoricaTotal;
@@ -411,6 +415,26 @@ public class Produto implements Serializable {
 
 	public void setMovimentacaoSaida(List<Movimentacao> movimentacaoSaida) {
 		this.movimentacaoSaida = movimentacaoSaida;
+	}
+
+
+//	public Float getSaldoEstoque() {
+//		return saldoEstoque;
+//	}
+//
+//
+//	public void setSaldoEstoque(Float saldoEstoque) {
+//		this.saldoEstoque = saldoEstoque;
+//	}
+
+
+	public String getNomeSemAcento() {
+		return nomeSemAcento;
+	}
+
+
+	public void setNomeSemAcento(String nomeSemAcento) {
+		this.nomeSemAcento = nomeSemAcento;
 	}
 
 }

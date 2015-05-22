@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
@@ -21,10 +22,12 @@ import org.exception.ApplicationException;
 import org.exception.ControllerExceptionHandler;
 import org.service.CampanhaService;
 import org.service.DoadorService;
+import org.service.FamiliaService;
 import org.service.InstituicaoService;
 import org.service.MovimentacaoService;
 import org.service.ProdutoService;
 import org.util.Message;
+import org.util.NumeroUtil;
 
 @Named
 @ViewAccessScoped
@@ -51,6 +54,9 @@ public class EntradaController implements Serializable  {
 	@Inject
 	private Provider<Movimentacao> movimentacaoProvider;
 	
+	@EJB
+	private FamiliaService familiaService;
+	
 	private List<Produto> listProdutoCombo;
 	
 	private List<TipoParceiroEnum> listaTipoParceiroCombo;
@@ -71,7 +77,10 @@ public class EntradaController implements Serializable  {
 	
 	private Float valorMedioProduto;
 	
-	@Inject
+	//usado para definir o valor unitario...
+	private Float valorUnitarioController;
+	
+	@EJB
 	private ProdutoService produtoService;
 	
 	
@@ -87,7 +96,13 @@ public class EntradaController implements Serializable  {
 		//carregando combos iniciais
 		listProdutoCombo = produtoService.pesquisarProduto(new Produto(), 0, 0);
 		listaTipoParceiroCombo = new ArrayList<TipoParceiroEnum>(Arrays.asList(TipoParceiroEnum.values()));
+//		listaTipoParceiroCombo.add(TipoParceiroEnum.ANONIMO);
+//		listaTipoParceiroCombo.add(TipoParceiroEnum.INSTITUICAO);
+//		listaTipoParceiroCombo.add(TipoParceiroEnum.PESSOA);
+		
+		
 		listaTipoParceiroCombo.remove(1);
+		listaTipoParceiroCombo.remove(0);
 		
 		mostrarComboCampanha = false;
 		mostrarComboDoador = false;
@@ -98,6 +113,54 @@ public class EntradaController implements Serializable  {
 		return "/pages/movimentacao/entrada/editar_entrada";
 	}
 	
+	
+	public String iniciarAlterarEntrada() throws ApplicationException{
+		
+		listenerObterPrecoMedio();
+		//carregando combos iniciais
+		listProdutoCombo = produtoService.pesquisarProduto(new Produto(), 0, 0);
+		listaTipoParceiroCombo = new ArrayList<TipoParceiroEnum>(Arrays.asList(TipoParceiroEnum.values()));
+		listaTipoParceiroCombo.remove(1);
+		listaTipoParceiroCombo.remove(0);
+		valorUnitarioController = NumeroUtil.DividirDinheiro(entrada.getValor(), entrada.getQuantidade(), 3);
+		
+		if (entrada.getLoteMovimentacao().getCampanha() != null){
+			if(listaCampanhaCombo == null || listaCampanhaCombo.size() == 0){
+				listaCampanhaCombo = campanhaService.pesquisarCampanha(new Campanha());
+			}
+			tipoParceiroSelecionado = TipoParceiroEnum.CAMPANHA;
+			mostrarComboCampanha = true;
+			mostrarComboDoador = false;
+			mostrarComboInstituicao = false;
+			
+		} else if(entrada.getLoteMovimentacao().getInstituicao() != null){
+			if(listaInstituicaoCombo == null || listaInstituicaoCombo.size() == 0){
+				listaInstituicaoCombo = instituicaoService.pesquisarInstituicao(new Instituicao());
+			}
+			tipoParceiroSelecionado = TipoParceiroEnum.INSTITUICAO;
+			mostrarComboCampanha = false;
+			mostrarComboDoador = false;
+			mostrarComboInstituicao = true;
+		} else if(entrada.getLoteMovimentacao().getDoador() != null){
+			if(listaDoadorCombo == null || listaDoadorCombo.size() == 0){
+				listaDoadorCombo = doadorService.pesquisarDoador(new Doador());
+			}
+			tipoParceiroSelecionado = TipoParceiroEnum.PESSOA;
+			mostrarComboCampanha = false;
+			mostrarComboDoador = true;
+			mostrarComboInstituicao = false;
+		} else {
+			tipoParceiroSelecionado = TipoParceiroEnum.ANONIMO;
+			mostrarComboCampanha = false;
+			mostrarComboDoador = false;
+			mostrarComboInstituicao = false;
+		}
+		
+		return "/pages/movimentacao/entrada/editar_entrada";
+	}
+	
+	
+	
 	public String excluirEntrada(){
 		
 		return null;
@@ -105,19 +168,79 @@ public class EntradaController implements Serializable  {
 	
 	public String incluirEntrada(){
 		try {
+			
+			entrada.setValor(NumeroUtil.multiplicarDinheiro(valorUnitarioController, entrada.getQuantidade(), 3));
+			
+			if (entrada.getLoteMovimentacao().getFamiliaCampanha() != null && entrada.getLoteMovimentacao().getFamiliaCampanha().getId() != null){
+				entrada.getLoteMovimentacao().setFamiliaCampanha(familiaService.obterFamilia(entrada.getLoteMovimentacao().getFamiliaCampanha().getId()));
+				
+			}else {
+				entrada.getLoteMovimentacao().setFamiliaCampanha(null);
+			}
+			if (entrada.getLoteMovimentacao().getFamilia() != null && entrada.getLoteMovimentacao().getFamilia().getId() != null){
+				entrada.getLoteMovimentacao().setFamilia(familiaService.obterFamilia(entrada.getLoteMovimentacao().getFamilia().getId()));
+				
+			}else {
+				entrada.getLoteMovimentacao().setFamilia(null);
+			}
+			
+			
+			if (entrada.getLoteMovimentacao().getInstituicao() != null && entrada.getLoteMovimentacao().getInstituicao().getId() != null){
+				entrada.getLoteMovimentacao().setInstituicao(instituicaoService.obterInstituicao(entrada.getLoteMovimentacao().getInstituicao().getId()));
+				
+			}else {
+				entrada.getLoteMovimentacao().setInstituicao(null);
+			}
+			
+			
+			
+			if (entrada.getLoteMovimentacao().getInstituicaoCampanha() != null && entrada.getLoteMovimentacao().getInstituicaoCampanha().getId() != null){
+				entrada.getLoteMovimentacao().setInstituicaoCampanha(instituicaoService.obterInstituicao(entrada.getLoteMovimentacao().getInstituicaoCampanha().getId()));
+				
+			}else {
+				entrada.getLoteMovimentacao().setInstituicaoCampanha(null);
+			}
+			
+			
+			if (entrada.getLoteMovimentacao().getCampanha() != null && entrada.getLoteMovimentacao().getCampanha().getId() != null){
+				entrada.getLoteMovimentacao().setCampanha(campanhaService.obterCampanha(entrada.getLoteMovimentacao().getCampanha().getId()));
+				
+			}else {
+				entrada.getLoteMovimentacao().setCampanha(null);
+			}
+			
+			
+			
 			entradaService.incluirEntrada(entrada);
-			Message.setMessage("SUCESSO");
+			Message.setMessage("controller.incluirEntrada.SUCESSO");
 			
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-		
+//		entrada = movimentacaoProvider.get();
 		return iniciarPesquisaEntrada();
 	}
 	
 	public String alterarEntrada(){
-		return "/pages/movimentacao/entrada/listar_entrada";
+		
+		
+		try {
+			entradaService.alterarEntrada1(entrada);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
+		
+		try {
+			entradaService.alterarEntrada2(entrada);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return iniciarPesquisaEntrada();
 	}
 	
 	public void listenerAlterarTipoDoador() throws ApplicationException{
@@ -270,6 +393,14 @@ public class EntradaController implements Serializable  {
 
 	public void setEntrada(Movimentacao entrada) {
 		this.entrada = entrada;
+	}
+
+	public Float getValorUnitarioController() {
+		return valorUnitarioController;
+	}
+
+	public void setValorUnitarioController(Float valorUnitarioController) {
+		this.valorUnitarioController = valorUnitarioController;
 	}
 
 }

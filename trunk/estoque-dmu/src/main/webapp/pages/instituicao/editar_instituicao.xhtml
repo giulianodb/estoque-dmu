@@ -30,7 +30,7 @@
 							</p:inputText>
 							
 							<p:outputLabel for="cnpj" value="CNPJ:" />
-				 			<p:inputText value="#{instituicaoController.instituicao.cnpj}" id="cnpj" label="CNPJ" maxlength="60" size="50">
+				 			<p:inputText value="#{instituicaoController.instituicao.cnpj}" id="cnpj" label="CNPJ" maxlength="16" size="16" required="true" >
 							</p:inputText> 
 							
 							<p:outputLabel for="nomeContato" value="Nome contato:" />
@@ -38,7 +38,7 @@
 							</p:inputText> 
 							
 							<p:outputLabel for="telefone" value="Telefone:" />
-				 			<p:inputText value="#{instituicaoController.instituicao.telefone}" id="telefone" label="Telefone" maxlength="60" size="50">
+				 			<p:inputText value="#{instituicaoController.instituicao.telefone}" id="telefone" label="Telefone" maxlength="14" size="14">
 							</p:inputText> 
 							
 							<p:outputLabel for="email" value="Email:" />

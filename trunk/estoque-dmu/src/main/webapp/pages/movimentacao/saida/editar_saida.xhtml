@@ -27,7 +27,7 @@
 				 		<h:panelGrid columns="2">
 				 			
 				 			<p:outputLabel for="produto" value="Produto:" />
-							<p:selectOneMenu value="#{saidaController.saida.produto.id}" id="produto" required="true">
+							<p:selectOneMenu value="#{saidaController.saida.produto.id}" filter="true" id="produto" required="true">
 								<f:selectItem itemLabel="Selecione" itemValue="" />
 								<f:selectItems value="#{saidaController.listProdutoCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
 							</p:selectOneMenu>
@@ -37,51 +37,97 @@
 							<p:calendar
 								value="#{saidaController.saida.loteMovimentacao.data}"
 								id="data" required="true" 
-								locale="pt" pattern="dd/MM/yyyy" maxlength="10" size="20">
+								locale="pt" pattern="dd/MM/yyyy" maxlength="10" size="8">
 							</p:calendar> 
 				 			
 				 			<p:outputLabel for="quantidade" value="Quantidade:" />
-				 			<p:inputText value="#{saidaController.saida.quantidade}" id="quantidade" label="Quantidade" maxlength="60" size="50">
+				 			<p:inputText value="#{saidaController.saida.quantidade}" id="quantidade" label="Quantidade" maxlength="8" size="8">
+				 				<f:converter converterId="converter.MoedaConverter"></f:converter>
 							</p:inputText>
 															
 							<p:outputLabel for="tipoReceptor" value="Tipo receptor:" />
 							<p:selectOneMenu value="#{saidaController.tipoParceiroSelecionado}" id="tipoReceptor" required="true" >
 								<f:selectItem itemLabel="Selecione" itemValue="" />
 								<f:selectItems value="#{saidaController.listaTipoParceiroCombo}" var="s" itemLabel="#{s.descricao}" itemValue="#{s}" />
-								<p:ajax partialSubmit="true" listener="#{saidaController.listenerAlterarTipoReceptor()}" update="pgPanel,panel2,panel3" ></p:ajax>
+								<p:ajax partialSubmit="true" listener="#{saidaController.listenerAlterarTipoReceptor()}" update="lblReceptorInstituicao,cbReceptorInstituicao,lblReceptorFamilia,cbReceptorFamilia,lblReceptorCampanha,cbReceptorCampanha,lblDestinoCampanha,cbDestinoCampanha,lblPara,cbPara" ></p:ajax>
 							</p:selectOneMenu >
 							
-							<p:outputLabel id="labelCampanha" value="Receptor:"/>
 							
-							<h:panelGroup id="pgPanel" > 
-								
-								<p:selectOneMenu value="#{saidaController.saida.campanha.id}" filter="true" id="comboCampanha" required="true" rendered="#{saidaController.mostrarComboCampanha}">
+							
+							<h:panelGroup layout="block" id="lblReceptorInstituicao">
+								<p:outputLabel id="labelInsti" value="Receptor:" rendered="#{saidaController.mostrarComboInstituicao}"/>
+							</h:panelGroup>
+							
+							<h:panelGroup layout="block" id="cbReceptorInstituicao" > 
+								<p:selectOneMenu value="#{saidaController.saida.loteMovimentacao.instituicao.id}" filter="true" id="comboInstituicao" required="true" rendered="#{saidaController.mostrarComboInstituicao}">
 									<f:selectItem itemLabel="Selecione" itemValue="" />
-									<f:selectItems value="#{saidaController.listaCampanhaCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
+									<f:selectItems value="#{saidaController.listaInstituicaoCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
 								</p:selectOneMenu >
-								
-								<p:selectOneMenu value="#{saidaController.saida.familia.id}" filter="true" id="comboFamilia" required="true" rendered="#{saidaController.mostrarComboFamilia}">
+							</h:panelGroup>
+							
+							
+							
+							
+							<h:panelGroup layout="block" id="lblReceptorFamilia">
+								<p:outputLabel id="labelFam" value="Receptor:" rendered="#{saidaController.mostrarComboFamilia}"/>
+							</h:panelGroup>
+							
+							<h:panelGroup layout="block" id="cbReceptorFamilia" > 
+								<p:selectOneMenu value="#{saidaController.saida.loteMovimentacao.familia.id}" filter="true" id="comboFamilia" required="true" rendered="#{saidaController.mostrarComboFamilia}">
 									<f:selectItem itemLabel="Selecione" itemValue="" />
 									<f:selectItems value="#{saidaController.listaFamiliaCombo}" var="s" itemLabel="#{s.nomeResponsavel}" itemValue="#{s.id}" />
 								</p:selectOneMenu >
-	
-								 
-								<p:selectOneMenu value="#{saidaController.saida.instituicao.id}" filter="true" id="comboInstituicao" required="true" rendered="#{saidaController.mostrarComboInstituicao}">
+							</h:panelGroup>
+							
+							
+							
+							<h:panelGroup layout="block" id="lblReceptorCampanha">
+									<p:outputLabel id="labelCam" value="Campanha:" rendered="#{saidaController.mostrarComboCampanha}"/>
+							</h:panelGroup>
+							
+							<h:panelGroup layout="block" id="cbReceptorCampanha">
+								<p:selectOneMenu value="#{saidaController.saida.loteMovimentacao.campanha.id}" filter="true" id="comboCampanha" required="true" rendered="#{saidaController.mostrarComboCampanha}">
+									<f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{saidaController.listaCampanhaCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
+								</p:selectOneMenu >
+							</h:panelGroup>
+							
+							
+								<h:panelGroup layout="block" id="lblDestinoCampanha">
+									<p:outputLabel value="Para:" rendered="#{saidaController.mostrarComboCampanha}" />
+								</h:panelGroup>
+								
+								<h:panelGroup layout="block" id="cbDestinoCampanha">
+									<p:selectOneMenu value="#{saidaController.tipoParceiroCampanhaSelecionado}" id="tipoReceptorCampanha" required="true" rendered="#{saidaController.mostrarComboCampanha}"  >
+										<f:selectItem itemLabel="Selecione" itemValue="" />
+										<f:selectItems value="#{saidaController.listaTipoParceiroCampanhaCombo}" var="s" itemLabel="#{s.descricao}" itemValue="#{s}" />
+										<p:ajax partialSubmit="true" listener="#{saidaController.listenerAlterarTipoReceptorCampanha()}" update="lblReceptorInstituicao,cbReceptorInstituicao,lblReceptorFamilia,cbReceptorFamilia,lblReceptorCampanha,lblDestinoCampanha,cbDestinoCampanha,lblPara,cbPara" ></p:ajax>
+									</p:selectOneMenu >
+							
+								</h:panelGroup>
+							
+							
+							
+							<h:panelGroup layout="block" id="lblPara">
+								<p:outputLabel id="labelPara" value="Família:" rendered="#{saidaController.mostrarComboFamiliaCampanha}" />
+								<p:outputLabel id="labelPara2" value="Instituição:" rendered="#{saidaController.mostrarComboInstituicaoCampanha}" />
+							</h:panelGroup>
+							
+							
+							
+							<h:panelGroup layout="block" id="cbPara">
+								<p:selectOneMenu value="#{saidaController.saida.loteMovimentacao.familiaCampanha.id}" filter="true" id="comboFamiliaCampanha"  rendered="#{saidaController.mostrarComboFamiliaCampanha}">
+									<f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{saidaController.listaFamiliaCombo}" var="s" itemLabel="#{s.nomeResponsavel}" itemValue="#{s.id}" />
+								</p:selectOneMenu >
+								
+								<p:selectOneMenu value="#{saidaController.saida.loteMovimentacao.instituicaoCampanha.id}" filter="true" id="comboInstituicaoCampanha"  rendered="#{saidaController.mostrarComboInstituicaoCampanha}">
 									<f:selectItem itemLabel="Selecione" itemValue="" />
 									<f:selectItems value="#{saidaController.listaInstituicaoCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
 								</p:selectOneMenu >
 							
-							</h:panelGroup>
 							
-							<h:panelGroup layout="block" id="panel2">
-								<p:outputLabel id="labelPara" value="Para:" rendered="#{saidaController.mostrarComboFamiliaCampanha}" />
-							</h:panelGroup>
 							
-							<h:panelGroup layout="block" id="panel3">
-							<p:selectOneMenu value="#{saidaController.saida.familiaCampanha.id}" filter="true" id="comboFamiliaCampanha"  rendered="#{saidaController.mostrarComboFamiliaCampanha}">
-									<f:selectItem itemLabel="Selecione" itemValue="" />
-									<f:selectItems value="#{saidaController.listaFamiliaCombo}" var="s" itemLabel="#{s.nomeResponsavel}" itemValue="#{s.id}" />
-							</p:selectOneMenu >
 							</h:panelGroup>
 									
 						</h:panelGrid>

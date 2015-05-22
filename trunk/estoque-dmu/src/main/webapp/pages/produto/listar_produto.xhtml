@@ -26,7 +26,7 @@
 					<p:focus context="pgCampos" />
 					<h:panelGrid columns="2" >		
 						<p:outputLabel for="nomeProduto" value="Nome Produto:" />
-						<p:inputText value="#{produtoController.produtoDataModel.produtoPesquisa.nome}" 
+						<p:inputText value="#{produtoController.produtoDataModel.produtoPesquisa.nomeSemAcento}" 
 							id="nomeProduto" label="Nome Produto"
 							maxlength="60" size="50">
 						</p:inputText> 
@@ -39,7 +39,8 @@
 							value="Pesquisa"
 						 	title="Pesquisar Produto"
 							action="#{produtoController.iniciarPesquisaProduto()}"						 		
-							ajax="false"></p:commandButton>
+							ajax="true"></p:commandButton>
+							
 							<p:commandButton icon="ui-icon-disk" 
 							
 							value="Novo produto"
@@ -92,14 +93,14 @@
 							<f:setPropertyActionListener target="#{produtoController.produto}" value="#{produto}"/> 		 	 
 						</p:commandButton>
 						
-						
-						     <p:commandButton id="relatorio" icon="ui-icon-direction"									 	 
+						 <p:commandButton id="cmdAlterarProduto" icon="ui-icon-pencil"									 	 
 					 		update=":gridForm :produtoForm"
-					 		title="Relatorio"	
+					 		title="Alterar Produto"	
 					 		ajax="false"
-							action="#{relatorioController.gerarRelatorioFaturaExito(produto)}">
+							action="#{produtoController.iniciarAlterarProduto()}">
 							<f:setPropertyActionListener target="#{produtoController.produto}" value="#{produto}"/> 		 	 
-						</p:commandButton>	
+						</p:commandButton>
+						
 							            
 				    </p:column>
 			        <f:facet name="footer">  

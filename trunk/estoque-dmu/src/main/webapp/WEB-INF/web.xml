@@ -1,83 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
- <display-name>pr-jee6-exemplo</display-name>
- 
-	<session-config>
-		<!-- Tempo de sessao - em minutos -->
-		<session-timeout>8</session-timeout>
-	</session-config>
- 
- 	<!-- JSF Config -->
-	<!-- Parametro necessario para tratar erro na requisicao de pagina JSF/PrimeFace. 
-		Mensagem do erro que estava sendo exibido 'cannot create a session after the response has been committed primefaces' -->
-	<context-param>
-		<param-name>com.sun.faces.writeStateAtFormEnd</param-name>   
-		<param-value>false</param-value>   
-	</context-param> 
-	<!--  Caso o parâmetro de contexto 'com.sun.faces.writeStateAtFormEnd' esteja setado, para false, e continue a ocorrer 
-		o erro 'cannot create a session after the response has been committed primefaces' 
-		deve-se ajustar o responseBufferSize da aplicação. Default (no jboss7): 1024 bytes. --> 
-	<!-- 
-	<context-param> 	
-		<param-name>com.sun.faces.responseBufferSize</param-name>
-		<param-value>500000</param-value>
-	</context-param>
-	-->  
-	<context-param>
-		<param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
-		<param-value>true</param-value>
-	</context-param>
-	<context-param>
-		<param-name>javax.faces.PROJECT_STAGE</param-name>
-		<param-value>Development</param-value>
-	</context-param>
-	<context-param>
-		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
-		<param-value>server</param-value>
-	</context-param>
-	<!--<context-param>
-        <param-name>javax.faces.PROJECT_STAGE</param-name>
-        <param-value>Production</param-value>
-    </context-param -->
-	<context-param>
-		<param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
-		<param-value>6LfwZwoAAAAAAEhRyntKF1PBzysAJLzqp2v-GMRR</param-value>
-	</context-param>
-	<context-param>
-		<param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
-		<param-value>6LfwZwoAAAAAAI-oUHpdvRnkMfu9fXQHxc0P7IBu</param-value>
-	</context-param>
-	<context-param>
-		<param-name>primefaces.THEME</param-name>
-		<!-- param-value>#{guestPreferences.theme}</param-value-->
-		<param-value>bootstrap</param-value>
-	</context-param>
-	<servlet>
-		<servlet-name>Faces Servlet</servlet-name>
-		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet> 
-	<servlet-mapping>
-		<servlet-name>Faces Servlet</servlet-name>
-		<url-pattern>*.jsf</url-pattern>
-	</servlet-mapping>
-
-	<!-- Quartz -->
-	<servlet>
-		<servlet-name>QuartzInitializer</servlet-name>
-		<servlet-class>org.quartz.ee.servlet.QuartzInitializerServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-
-	<!-- Página de entrada -->
-	<welcome-file-list>
-		<welcome-file>pages/templates/initial.jsf</welcome-file>
-	</welcome-file-list>
- 
-	<!-- Controle de Exceções da camada View -->
-	<error-page>
-		<error-code>500</error-code>
-		<location>/pages/templates/error_generic.jsf</location>
-	</error-page> 
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
+  <display-name>pr-jee6-exemplo</display-name>
+  <session-config>
+    <session-timeout>50</session-timeout>
+  </session-config>
+  <context-param>
+    <param-name>com.sun.faces.writeStateAtFormEnd</param-name>
+    <param-value>false</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.PROJECT_STAGE</param-name>
+    <param-value>Development</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+    <param-value>server</param-value>
+  </context-param>
+  <context-param>
+    <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
+    <param-value>6LfwZwoAAAAAAEhRyntKF1PBzysAJLzqp2v-GMRR</param-value>
+  </context-param>
+  <context-param>
+    <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
+    <param-value>6LfwZwoAAAAAAI-oUHpdvRnkMfu9fXQHxc0P7IBu</param-value>
+  </context-param>
+  <context-param>
+    <param-name>primefaces.THEME</param-name>
+    <param-value>bootstrap</param-value>
+  </context-param>
+  <servlet>
+    <servlet-name>Faces Servlet</servlet-name>
+    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.jsf</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>QuartzInitializer</servlet-name>
+    <servlet-class>org.quartz.ee.servlet.QuartzInitializerServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <security-constraint>
+    <display-name>Sistema</display-name>
+    <web-resource-collection>
+      <web-resource-name>Sistema</web-resource-name>
+      <url-pattern>/pages/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>Administrador</role-name>
+    </auth-constraint>
+  </security-constraint>
+  <login-config>
+    <auth-method>FORM</auth-method>
+    <form-login-config>
+      <form-login-page>/login.jsf</form-login-page>
+      <form-error-page>/login_error.jsf</form-error-page>
+    </form-login-config>
+  </login-config>
+  <security-role>
+    <description>Quando usuario estiver logado</description>
+    <role-name>Administrador</role-name>
+  </security-role>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/pages/templates/error_generic.jsf</location>
+  </error-page>
 </web-app>

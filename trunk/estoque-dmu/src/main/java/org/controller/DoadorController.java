@@ -53,7 +53,7 @@ public class DoadorController implements Serializable  {
 	public String incluirDoador(){
 		try {
 			doadorService.incluirDoador(doador);
-			Message.setMessage("SUCESSO");
+			Message.setMessage("controller.incluirDoador.SUCESSO");
 			
 		} catch (Exception e) {
 			// TODO: handle exception

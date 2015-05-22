@@ -26,19 +26,19 @@
 						<p:focus context="pgCampos" />
 				 		<h:panelGrid columns="2">
 				 			<p:outputLabel for="nomeResponsavelFamilia" value="Nome responsável:" />
-				 			<p:inputText value="#{familiaController.familia.nomeResponsavel}" id="nomeResponsavelFamilia" label="Nome Responsável Família" maxlength="60" size="50">
+				 			<p:inputText value="#{familiaController.familia.nomeResponsavel}" id="nomeResponsavelFamilia" label="Nome Responsável Família" maxlength="60" size="50" required="true">
 							</p:inputText>
 							
 							<p:outputLabel for="cpf" value="CPF:" />
-				 			<p:inputText value="#{familiaController.familia.cpfResponsavel}" id="cpf" label="CPF" maxlength="60" size="50">
+				 			<p:inputText value="#{familiaController.familia.cpfResponsavel}" id="cpf" label="CPF" maxlength="14" size="14">
 							</p:inputText> 
 							
 							<p:outputLabel for="estado" value="Estado:" />
-				 			<p:inputText value="#{familiaController.familia.estado}" id="estado" label="Estado" maxlength="60" size="50">
+				 			<p:inputText value="#{familiaController.familia.estado}" id="estado" label="Estado" maxlength="3" size="3">
 							</p:inputText> 
 							
 							<p:outputLabel for="cidade" value="Cidade:" />
-				 			<p:inputText value="#{familiaController.familia.cidade}" id="cidade" label="Cidade" maxlength="60" size="50">
+				 			<p:inputText value="#{familiaController.familia.cidade}" id="cidade" label="Cidade" maxlength="30" size="30">
 							</p:inputText> 
 							
 							<p:outputLabel for="bairro" value="Bairro:" />
@@ -50,11 +50,11 @@
 							</p:inputText> 
 							
 							<p:outputLabel for="telefone" value="Telefone:" />
-				 			<p:inputText value="#{familiaController.familia.telefone}" id="telefone" label="Telefone" maxlength="60" size="50">
+				 			<p:inputText value="#{familiaController.familia.telefone}" id="telefone" label="Telefone" maxlength="14" size="14">
 							</p:inputText> 
 							
 							<p:outputLabel for="celular" value="Celular:" />
-				 			<p:inputText value="#{familiaController.familia.celular}" id="celular" label="Celular" maxlength="60" size="50">
+				 			<p:inputText value="#{familiaController.familia.celular}" id="celular" label="Celular" maxlength="14" size="14">
 							</p:inputText> 
 							
 							<p:outputLabel for="email" value="Email:" />
