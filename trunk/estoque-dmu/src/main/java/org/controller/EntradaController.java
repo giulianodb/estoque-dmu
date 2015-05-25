@@ -303,7 +303,7 @@ public class EntradaController implements Serializable  {
 	
 	public void listenerObterPrecoMedio(){
 		entrada.setProduto(produtoService.obterProduto(entrada.getProduto().getId()));
-		valorMedioProduto = (entrada.getProduto().valorMedioProduto());
+		valorMedioProduto = (entrada.getProduto().valorMedioHistoricoProduto());
 	}
 
 	public List<Produto> getListProdutoCombo() {

@@ -417,6 +417,15 @@ public class MovimentacaoService {
 		
 		Produto produto = produtoService.obterProduto(entrada.getProduto().getId());
 		
+		//TIRAR TODO
+		
+		
+		if (produto.getId().equals(21)){
+			System.out.println("AQUIIIIIIIIIIIIIIIIII");
+		}
+		
+		
+		
 		//Verifica se o produto não possui movimentacoes posteriores, caso não existir realiza padrão, porém se existir deve "andar" os valores médios históricos
 		
 		List<Movimentacao> movimentacoesPosterioes =  movimentacaoService.pesquisarMovimentacao(produto, entrada.getData());
@@ -424,10 +433,10 @@ public class MovimentacaoService {
 		arrumarMovimentacoesPosteriores(entrada, produto, movimentacoesPosterioes);
 		
 		//atualizando valores para historico e média 
-		produto.setQuantidadeEstoque(NumeroUtil.somarDinheiro(produto.getQuantidadeEstoque(), entrada.getQuantidade(), 3));
-		produto.setQuantidadeHistoricaTotal(NumeroUtil.somarDinheiro(produto.getQuantidadeHistoricaTotal(), entrada.getQuantidade(), 3));
-		produto.setValorHistoricoTotal(NumeroUtil.somarDinheiro(produto.getValorHistoricoTotal(), entrada.getValor(), 3));
-//		produto.setSaldoEstoque(NumeroUtil.somarDinheiro(produto.getSaldoEstoque(), entrada.getValor(), 3));
+		produto.setQuantidadeEstoque(NumeroUtil.somarDinheiro(produto.getQuantidadeEstoque(), entrada.getQuantidade(), 10));
+		produto.setQuantidadeHistoricaTotal(NumeroUtil.somarDinheiro(produto.getQuantidadeHistoricaTotal(), entrada.getQuantidade(), 10));
+		produto.setValorHistoricoTotal(NumeroUtil.somarDinheiro(produto.getValorHistoricoTotal(), entrada.getValor(), 10));
+		produto.setSaldoEstoque(NumeroUtil.somarDinheiro(produto.getSaldoEstoque(), entrada.getValor(), 10));
 		
 		produtoService.alterarProduto(produto);
 		
@@ -435,20 +444,23 @@ public class MovimentacaoService {
 	}
 
 
-	private void arrumarMovimentacoesPosteriores(Movimentacao movimentacao, Produto produto, List<Movimentacao> movimentacoesPosterioes) {
+	private void arrumarMovimentacoesPosteriores(Movimentacao movimentacao, Produto produto, List<Movimentacao> movimentacoesPosterioes) throws ApplicationException {
 		
 		
 		if (movimentacoesPosterioes == null || movimentacoesPosterioes.size() == 0){
 			
 			if (movimentacao.getTipoMovimentacaoEnum().equals(TipoMovimentacaoEnum.SAIDA)){
-				movimentacao.setValor(NumeroUtil.multiplicarDinheiro(produto.valorMedioProduto(), movimentacao.getQuantidade(), 3));
+				movimentacao.setValor(NumeroUtil.multiplicarDinheiro(produto.valorMedioAtualProduto(), movimentacao.getQuantidade(), 10));
 			}
 			
-			movimentacao.setValorMediaUltimo(produto.valorMedioProduto());
+			if (produto.getQuantidadeEstoque() > 0){
+				movimentacao.setValorMediaUltimo(NumeroUtil.DividirDinheiro(produto.getSaldoEstoque(), produto.getQuantidadeEstoque(), 10));
+			}
+			else {
+				movimentacao.setValorMediaUltimo(0f);
+			}
 			movimentacao.setQuantidadeUltimo(produto.getQuantidadeEstoque());
-			movimentacao.setSaldoUltimo(NumeroUtil.multiplicarDinheiro(produto.getQuantidadeEstoque(), produto.valorMedioProduto(), 10));
-		
-			
+			movimentacao.setSaldoUltimo(produto.getSaldoEstoque());
 			
 		}
 		else{
@@ -484,6 +496,13 @@ public class MovimentacaoService {
 					}
 					
 //				}
+					
+					
+					if (movimentacoesPosterioes.get(i).getQuantidadeUltimo() < 0){
+						//lançar exption..
+						System.out.println("FICOU COM SALDO NEGATIVO........");
+//						throw new ApplicationException("service.movimentacao.saldoNegativo.ERRO",new String[]{DateUtil.dataToString(movimentacoesPosterioes.get(i).getData())});
+					}
 				
 				em.merge(movimentacoesPosterioes.get(i));
 			}
@@ -569,6 +588,7 @@ public class MovimentacaoService {
 		myCal.set(Calendar.SECOND, Calendar.getInstance().get(Calendar.SECOND));
 		
 		saida.setData(myCal.getTime());
+		 
 		
 		
 		List<Movimentacao> movimentacoesPosterioes =  movimentacaoService.pesquisarMovimentacao(produto, saida.getData());
@@ -578,8 +598,18 @@ public class MovimentacaoService {
 		
 		//atualizando valores para historico e média 
 		
-		produto.setQuantidadeEstoque(NumeroUtil.diminuirDinheiro(produto.getQuantidadeEstoque(), saida.getQuantidade(), 3));
-//		produto.setSaldoEstoque(NumeroUtil.diminuirDinheiro(produto.getSaldoEstoque(), saida.getValor(), 3));
+		produto.setQuantidadeEstoque(NumeroUtil.diminuirDinheiro(produto.getQuantidadeEstoque(), saida.getQuantidade(), 10));
+		if (produto.getQuantidadeEstoque() < 0){
+			if (produto.getId().equals(101)){
+				System.out.println("CAGOU AQUI.....");
+			}
+			//lançar exption
+			throw new ApplicationException("service.movimentacao.saldoNegativo.ERRO", new String[]{produto.getQuantidadeEstoque().toString()});
+		}
+		
+			produto.setSaldoEstoque(NumeroUtil.diminuirDinheiro(produto.getSaldoEstoque(), saida.getValor(), 10));
+			
+		
 		
 		produtoService.alterarProduto(produto);
 		em.merge(saida);
@@ -675,7 +705,7 @@ public class MovimentacaoService {
 			movimentacaoService.excluirMovimentacao(movOriginal);
 	}
 	
-	public void alterarSaida2(Movimentacao movimentacao) throws ApplicationException{
+	public void alterarSaida2(Movimentacao movimentacao) throws Exception{
 		movimentacao.setId(null);
 		movimentacao.getLoteMovimentacao().setCodigo(null);
 		

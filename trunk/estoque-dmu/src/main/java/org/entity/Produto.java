@@ -51,7 +51,7 @@ public class Produto implements Serializable {
 	
 	private Float quantidadeEstoque;
 	
-//	private Float saldoEstoque;
+	private Float saldoEstoque;
 	
 	//Campo para obter a média do produto quando necessário sem a necessidade de percorrer o banco sempre
 	private Float quantidadeHistoricaTotal;
@@ -72,11 +72,18 @@ public class Produto implements Serializable {
 	private List<Movimentacao> movimentacaoSaida;
 	
 	//mètodo responsavel em retornar o valor médio historico do produto em questão
-	public Float valorMedioProduto(){
+	public Float valorMedioHistoricoProduto(){
 		if (quantidadeHistoricaTotal == null || quantidadeHistoricaTotal < 1){
 			return 0f;
 		}
 		return NumeroUtil.DividirDinheiro(valorHistoricoTotal,quantidadeHistoricaTotal, 3);
+	}
+	
+	public Float valorMedioAtualProduto(){
+		if (quantidadeEstoque == null || saldoEstoque < 1){
+			return 0f;
+		}
+		return NumeroUtil.DividirDinheiro(saldoEstoque,quantidadeEstoque, 10);
 	}
 	
 	
@@ -435,6 +442,16 @@ public class Produto implements Serializable {
 
 	public void setNomeSemAcento(String nomeSemAcento) {
 		this.nomeSemAcento = nomeSemAcento;
+	}
+
+
+	public Float getSaldoEstoque() {
+		return saldoEstoque;
+	}
+
+
+	public void setSaldoEstoque(Float saldoEstoque) {
+		this.saldoEstoque = saldoEstoque;
 	}
 
 }

@@ -195,7 +195,7 @@ public class SaidaController implements Serializable  {
 			
 
 	
-		listenerObterPrecoMedio();
+//		listenerObterPrecoMedio();
 		
 		
 		return "/pages/movimentacao/saida/editar_saida";
@@ -206,8 +206,7 @@ public class SaidaController implements Serializable  {
 		return null;
 	}
 	
-	public String incluirSaida(){
-		try {
+	public String incluirSaida() throws ApplicationException{
 			
 			if (saida.getLoteMovimentacao().getFamiliaCampanha() != null && saida.getLoteMovimentacao().getFamiliaCampanha().getId() != null){
 				saida.getLoteMovimentacao().setFamiliaCampanha(familiaService.obterFamilia(saida.getLoteMovimentacao().getFamiliaCampanha().getId()));
@@ -256,10 +255,7 @@ public class SaidaController implements Serializable  {
 			saidaService.incluirSaida(saida);
 			Message.setMessage("controller.incluirSaida.SUCESSO");
 			
-		} catch (Exception e) {
-			Message.setMessage("ERRO", FacesMessage.SEVERITY_ERROR);
-			e.printStackTrace();
-		}
+		
 		
 		return iniciarPesquisaSaida();
 	}
@@ -369,10 +365,10 @@ public class SaidaController implements Serializable  {
 	}
 	
 	
-	public void listenerObterPrecoMedio(){
-		saida.setProduto(produtoService.obterProduto(saida.getProduto().getId()));
-		valorMedioProduto = (saida.getProduto().valorMedioProduto());
-	}
+//	public void listenerObterPrecoMedio(){
+//		saida.setProduto(produtoService.obterProduto(saida.getProduto().getId()));
+//		valorMedioProduto = (saida.getProduto().valorMedioProduto());
+//	}
 	
 	public List<Produto> getListProdutoCombo() {
 		return listProdutoCombo;

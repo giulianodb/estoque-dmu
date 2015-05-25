@@ -3,6 +3,7 @@ package org.controller;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -116,6 +117,13 @@ public class RelatorioController implements Serializable {
 		try {
 			listProdutoCombo = produtoService.pesquisarProduto(new Produto(),
 					0, 0);
+			
+			String sData = "01/01/2012";  
+			SimpleDateFormat dataNascimento = new SimpleDateFormat("dd/MM/yyyy");   
+			dataInicialPesquisa = dataNascimento.parse(sData); 
+			
+			dataFinalPesquisa = new Date();
+			
 			return "/pages/relatorio/analitico";
 		} catch (Exception e) {
 			e.printStackTrace();
