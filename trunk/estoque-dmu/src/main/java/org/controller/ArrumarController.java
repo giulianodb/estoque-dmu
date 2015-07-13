@@ -49,4 +49,14 @@ public class ArrumarController implements Serializable{
 		
 		return null;
 	}
+	
+	public String arrumarSegundos(){
+		
+		arrumarService.adicionarUmSegundoMovimentacoes();
+		
+		
+		return null;
+		
+		
+	}
 }

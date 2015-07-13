@@ -13,6 +13,10 @@ public class RelatorioCampanhaDTO implements Serializable {
 	private String quantidadeProduto;
 	private String valorTotal;
 	private String tipoMovimentacao;
+	
+	private Float quantidadeProdutoF;
+	
+	private Float valorTotalF;
 	public Integer getCodigoProduto() {
 		return codigoProduto;
 	}
@@ -42,6 +46,18 @@ public class RelatorioCampanhaDTO implements Serializable {
 	}
 	public void setTipoMovimentacao(String tipoMovimentacao) {
 		this.tipoMovimentacao = tipoMovimentacao;
+	}
+	public Float getQuantidadeProdutoF() {
+		return quantidadeProdutoF;
+	}
+	public void setQuantidadeProdutoF(Float quantidadeProdutoF) {
+		this.quantidadeProdutoF = quantidadeProdutoF;
+	}
+	public Float getValorTotalF() {
+		return valorTotalF;
+	}
+	public void setValorTotalF(Float valorTotalF) {
+		this.valorTotalF = valorTotalF;
 	}
 
 	

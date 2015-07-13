@@ -11,6 +11,7 @@ import javax.persistence.TypedQuery;
 
 import org.entity.Produto;
 import org.exception.ApplicationException;
+import org.util.DateUtil;
 import org.util.StringUtil;
 
 @Stateless
@@ -54,6 +55,10 @@ public class ProdutoService {
 	
 	public List<Produto> pesquisarProdutoComMovimentacoes(Produto produto, Date dataInicio, Date dataFim) throws ApplicationException{
 		try {
+			
+			dataInicio = DateUtil.adicionarHoraInicio(dataInicio);
+			dataFim = DateUtil.adicionarHoraFim(dataFim);
+			
 			StringBuilder sb = new StringBuilder("SELECT distinct p FROM Produto p ");		
 			sb.append(" LEFT JOIN FETCH p.listaMovimentacao movimentacao ");
 			

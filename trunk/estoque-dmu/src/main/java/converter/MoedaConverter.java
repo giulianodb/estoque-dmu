@@ -1,5 +1,7 @@
 package converter;
 
+import java.text.DecimalFormat;
+
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -27,12 +29,23 @@ public class MoedaConverter implements Converter{
 	@Override
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object arg2) {
 		String moeda = "";
+		
+		DecimalFormat formatCampo = new DecimalFormat("###,###,###,###.##");
+		
 		if (arg2 != null) {
-			moeda = arg2.toString().replace(".", ",");
+			Float teste = (Float) arg2;
+			arg2 = formatCampo.format(teste);
+			
+			
+			moeda = arg2.toString();
 			
 		}
 			
 		String[] moedaSplit = moeda.split(",");
+		
+		if (moedaSplit.length == 1){
+			moeda = moeda + ",00";
+		}
 		
 		if (moedaSplit.length >= 2 && moedaSplit[1].length() == 1){
 			moeda = moeda + "0";

@@ -152,6 +152,17 @@ public class Produto implements Serializable {
 		if (dataEntrada == null && dataSaida == null){
 			return 0f;
 		}
+		
+		// verifica se são iguais, caso for retorna id menor
+		if (dataEntrada.equals(dataSaida)){
+			if (primeiraEntrada.getId() < primeiraSaida.getId()){
+				return primeiraEntrada.getQuantidadeUltimo();
+			}
+			else {
+				return primeiraSaida.getQuantidadeUltimo();
+			}
+				
+		}
 			
 		//caso todos os dois vierem com valores deve retornar o maior
 			
@@ -210,6 +221,18 @@ public class Produto implements Serializable {
 			return 0f;
 		}
 			
+		//Verifica se possuem datas iguais, se tiver datas iguais retorna id menor.
+		
+		if (dataEntrada.equals(dataSaida)){
+			if (primeiraEntrada.getId() < primeiraSaida.getId()){
+				return primeiraEntrada.getSaldoUltimo();
+			}
+			else {
+				return primeiraSaida.getSaldoUltimo();
+			}
+				
+		}
+		
 		//caso todos os dois vierem com valores deve retornar o maior
 
 		if (dataEntrada.before(dataSaida)){
@@ -249,7 +272,7 @@ public class Produto implements Serializable {
 			dataEntrada = ultimaEntrada.getData();
 		} else {
 			if (ultimaSaida != null){
-				return NumeroUtil.diminuirDinheiro(ultimaSaida.getQuantidadeUltimo(), ultimaSaida.getQuantidade(), 3);
+				return NumeroUtil.diminuirDinheiro(ultimaSaida.getQuantidadeUltimo(), ultimaSaida.getQuantidade(), 6);
 			}
 		}
 			
@@ -258,7 +281,7 @@ public class Produto implements Serializable {
 		}
 		else {
 			if (ultimaEntrada != null){
-				return ultimaEntrada.getQuantidadeUltimo() + ultimaEntrada.getQuantidade();
+				return NumeroUtil.somarDinheiro(ultimaEntrada.getQuantidadeUltimo(), ultimaEntrada.getQuantidade(), 6) ;
 			}
 		}
 			
@@ -266,13 +289,26 @@ public class Produto implements Serializable {
 			return 0f;
 		}
 			
+		
+	//Verifica se possuem datas iguais, se tiver datas iguais retorna id menor.
+		
+		if (dataEntrada.equals(dataSaida)){
+			if (ultimaEntrada.getId() > ultimaSaida.getId()){
+				return NumeroUtil.somarDinheiro(ultimaEntrada.getQuantidadeUltimo(), ultimaEntrada.getQuantidade(), 6) ;
+			}
+			else {
+				return NumeroUtil.diminuirDinheiro(ultimaSaida.getQuantidadeUltimo(), ultimaSaida.getQuantidade(), 6);
+			}
+				
+		}
+		
 		//caso todos os dois vierem com valores deve retornar o maior
 		
 		if (dataEntrada.after(dataSaida)){
-			return ultimaEntrada.getQuantidadeUltimo() + ultimaEntrada.getQuantidade();
+			return NumeroUtil.somarDinheiro(ultimaEntrada.getQuantidadeUltimo(), ultimaEntrada.getQuantidade(), 6) ;
 		}
 		else {
-			return NumeroUtil.diminuirDinheiro(ultimaSaida.getQuantidadeUltimo(), ultimaSaida.getQuantidade(), 3);
+			return NumeroUtil.diminuirDinheiro(ultimaSaida.getQuantidadeUltimo(), ultimaSaida.getQuantidade(), 6);
 		}
 		
 	}
@@ -308,7 +344,7 @@ public class Produto implements Serializable {
 		} else {
 			if (ultimaSaida != null){
 				
-				return ultimaSaida.getSaldoUltimo()+ultimaSaida.getValorMediaUltimo();
+				return NumeroUtil.diminuirDinheiro(ultimaSaida.getSaldoUltimo(), ultimaSaida.getValor(), 6);
 			}
 		}
 			
@@ -318,20 +354,108 @@ public class Produto implements Serializable {
 		}
 		else {
 			if (ultimaEntrada != null){
-				return ultimaEntrada.getSaldoUltimo() + ultimaEntrada.getValor();
+				return NumeroUtil.somarDinheiro(ultimaEntrada.getSaldoUltimo(), ultimaEntrada.getValor(), 6);
 				}
 		}
 			
 		if (dataEntrada == null && dataSaida == null){
 			return 0f;
 		}
+		
+		
+	//Verifica se possuem datas iguais, se tiver datas iguais retorna id menor.
+		
+		if (dataEntrada.equals(dataSaida)){
+			if (ultimaEntrada.getId() > ultimaSaida.getId()){
+				return NumeroUtil.somarDinheiro(ultimaEntrada.getSaldoUltimo(), ultimaEntrada.getValor(), 6) ;
+			}
+			else {
+				Float result = NumeroUtil.diminuirDinheiro(ultimaSaida.getSaldoUltimo(), ultimaSaida.getValor(), 6);
+				return NumeroUtil.deixarFloatDuasCasasSimplificado(result);
+			}
+				
+		}
+		
+		
 		//caso todos os dois vierem com valores deve retornar o maior
 		
 		if (dataEntrada.after(dataSaida)){
-			return ultimaEntrada.getSaldoUltimo() + ultimaEntrada.getValor();
+			return NumeroUtil.somarDinheiro(ultimaEntrada.getSaldoUltimo(), ultimaEntrada.getValor(), 6) ;
 		}
 		else {
-			return ultimaSaida.getSaldoUltimo() - (NumeroUtil.multiplicarDinheiro(ultimaSaida.getValorMediaUltimo(), ultimaSaida.getQuantidade(), 3));
+			Float result = NumeroUtil.diminuirDinheiro(ultimaSaida.getSaldoUltimo(), ultimaSaida.getValor(), 6);
+			return NumeroUtil.deixarFloatDuasCasasSimplificado(result);
+//			return NumeroUtil.diminuirDinheiro(ultimaSaida.getSaldoUltimo(), ultimaSaida.getValor(), 6);
+			
+//			return ultimaSaida.getSaldoUltimo() - (NumeroUtil.multiplicarDinheiro(ultimaSaida.getValorMediaUltimo(), ultimaSaida.getQuantidade(), 3));
+		}
+		
+	}
+	
+	
+	/**
+	 * Usado para retornoar o saldo do estoque anterior.
+	 * Normalmente é obtido uma lista de produtos e cada produto tem um lista de entradas e saidas então é obitdo
+	 * a entrada/saida mais antiga e retorna qual o sanldo anterior- USADO PARA RELATORIOS
+	 * @return
+	 */
+	public Float saldoUltimo(){
+		this.montarListasEntradaSaida();
+		
+		Movimentacao ultimaSaida = null;
+		Movimentacao ultimaEntrada = null;
+		
+		if (movimentacaoEntrada.size() > 0){
+			ultimaEntrada = movimentacaoEntrada.get(movimentacaoEntrada.size()-1);
+			
+		}
+		
+		if (movimentacaoSaida.size() > 0){
+			ultimaSaida = movimentacaoSaida.get(movimentacaoSaida.size()-1);
+		}
+			
+		Date dataEntrada = null;
+		Date dataSaida = null;
+		
+		if (ultimaEntrada != null){
+			dataEntrada = ultimaEntrada.getData();
+		} else {
+			if (ultimaSaida != null){
+				return NumeroUtil.diminuirDinheiro(ultimaSaida.getSaldoUltimo(), ultimaSaida.getValor(), 3);
+			}
+		}
+			
+		if (ultimaSaida != null){
+			dataSaida = ultimaSaida.getData();
+		}
+		else {
+			if (ultimaEntrada != null){
+				return NumeroUtil.somarDinheiro(ultimaEntrada.getSaldoUltimo(), ultimaEntrada.getValor(), 6) ;
+			}
+		}
+			
+		if (dataEntrada == null && dataSaida == null){
+			return 0f;
+		}
+		
+		
+		if (dataEntrada.equals(dataSaida)){
+			if (ultimaEntrada.getId() > ultimaSaida.getId()){
+				return NumeroUtil.somarDinheiro(ultimaEntrada.getSaldoUltimo(), ultimaEntrada.getValor(), 6) ;
+			}
+			else {
+				return NumeroUtil.diminuirDinheiro(ultimaSaida.getSaldoUltimo(), ultimaSaida.getValor(), 3);
+			}
+				
+		}
+			
+		//caso todos os dois vierem com valores deve retornar o maior
+		
+		if (dataEntrada.after(dataSaida)){
+			return NumeroUtil.somarDinheiro(ultimaEntrada.getSaldoUltimo(), ultimaEntrada.getValor(), 6) ;
+		}
+		else {
+			return NumeroUtil.diminuirDinheiro(ultimaSaida.getSaldoUltimo(), ultimaSaida.getValor(), 3);
 		}
 		
 	}
@@ -452,6 +576,31 @@ public class Produto implements Serializable {
 
 	public void setSaldoEstoque(Float saldoEstoque) {
 		this.saldoEstoque = saldoEstoque;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Produto other = (Produto) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 
 }

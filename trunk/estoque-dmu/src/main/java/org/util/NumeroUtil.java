@@ -2,6 +2,7 @@ package org.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class NumeroUtil {
@@ -36,6 +37,14 @@ public class NumeroUtil {
 		else {
 			return numero;
 		}
+	}
+	
+	public static Float deixarFloatDuasCasasSimplificado(Float numero){
+		
+		DecimalFormat df = new DecimalFormat("#.##");
+		String resulta = df.format(numero);
+		resulta = resulta.replaceAll(",", ".");
+		return Float.valueOf(resulta);  
 	}
 	
 	

@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -54,6 +55,12 @@ public class RelatorioService {
 	
 	@EJB
 	private LoteService loteService;
+	
+	@EJB
+	private InstituicaoService instituicaoService;
+	
+	@EJB
+	private FamiliaService familiaService;
 	
 	
 	public ByteArrayOutputStream relatorioEntrada(Date dataInicio, Date dataFim, Produto produto) throws ApplicationException{
@@ -127,6 +134,50 @@ public class RelatorioService {
 	public ByteArrayOutputStream relatorioEstoqueSintetico(Date dataInicio, Date dataFim) throws ApplicationException{
 		 
 		List<Produto> listaProdutos = produtoService.pesquisarProdutoComMovimentacoes(null, dataInicio, dataFim);
+		
+		//
+		List<Produto> todosProdutos = produtoService.pesquisarProduto(null, null, null);
+		List<Produto> produtosTratamentoDiferente = new ArrayList<Produto>();
+		
+		
+		for (Produto produto : todosProdutos) {
+			if(!listaProdutos.contains(produto)){
+				
+				Movimentacao movimentacaoFake = new Movimentacao();
+				Movimentacao ultimaMov = movimentacaoService.pesquisarUltimaMovimentacao(produto, dataInicio);
+					if (ultimaMov != null){
+						
+						System.out.println("===============================");
+						System.out.println("Codigo produto: " + produto.getId());
+						System.out.println("Codigo ultimov: " + ultimaMov.getId());
+						System.out.println("===============================");
+						movimentacaoFake.setValor(0f);
+						movimentacaoFake.setTipoMovimentacaoEnum(TipoMovimentacaoEnum.ENTRADA);
+						movimentacaoFake.setQuantidade(0f);
+						
+						if (ultimaMov.getTipoMovimentacaoEnum().equals(TipoMovimentacaoEnum.ENTRADA)){
+							movimentacaoFake.setQuantidadeUltimo(NumeroUtil.somarDinheiro(ultimaMov.getQuantidadeUltimo(), ultimaMov.getQuantidade(), 6));
+							movimentacaoFake.setSaldoUltimo(NumeroUtil.somarDinheiro(ultimaMov.getSaldoUltimo(), ultimaMov.getValor(), 6));
+						}
+						else {
+							movimentacaoFake.setQuantidadeUltimo(NumeroUtil.diminuirDinheiro(ultimaMov.getQuantidadeUltimo(), ultimaMov.getQuantidade(), 6));
+							movimentacaoFake.setSaldoUltimo(NumeroUtil.diminuirDinheiro(ultimaMov.getSaldoUltimo(), ultimaMov.getValor(), 6));
+						}
+						
+						
+						List<Movimentacao> listaTemp = new ArrayList<Movimentacao>();
+						listaTemp.add(movimentacaoFake);
+						produto.setMovimentacaoEntrada(listaTemp);
+						produto.setMovimentacaoSaida(new ArrayList<Movimentacao>());
+						
+						produto.setListaMovimentacao(new HashSet<Movimentacao>());
+						produtosTratamentoDiferente.add(produto);
+					}
+					
+			}
+		}
+		listaProdutos.addAll(produtosTratamentoDiferente);
+		
 		List<EstoqueSinteticoDTO> estoqueSintetico = new ArrayList<EstoqueSinteticoDTO>();
 		
 		//variaveis para o somatorio final
@@ -138,12 +189,20 @@ public class RelatorioService {
 		Float quantidadeFinal = 0f;
 		Float valorFinal = 0f;
 		
+		Float quantidadeAnterior = 0f;
+		Float valorAnterior = 0f;
+		
 		
 		for (Produto produto : listaProdutos) {
 			EstoqueSinteticoDTO dto = new EstoqueSinteticoDTO();
-			
+			if (produto.getId().equals(18)){
+				System.out.println("ATENCAO");
+			}
 			Float quantidadeSaldoAnterior = produto.quantidadeAnterior();
 			Float valorTotalAnterior = produto.valorTotalAnterior();
+			
+			quantidadeAnterior = NumeroUtil.somarDinheiro(quantidadeAnterior, quantidadeSaldoAnterior, 6);
+			valorAnterior = NumeroUtil.somarDinheiro(valorAnterior, valorTotalAnterior, 6);
 			
 			Float quantidadeSaldoAtual = produto.quantidadeUltimo();
 			Float valorTotalAtual = produto.valorTotalUltimoUltimo();
@@ -164,13 +223,13 @@ public class RelatorioService {
 			dto.setUnidadeMedida(produto.getTipoMedida().name());
 			
 			for (Movimentacao entrada : produto.getMovimentacaoEntrada()) {
-				quantidadeTotalEntrada = NumeroUtil.somarDinheiro(quantidadeTotalEntrada, entrada.getQuantidade(), 3);
-				valorTotalEntrada = NumeroUtil.somarDinheiro(valorTotalEntrada, entrada.getValor(), 3);
+				quantidadeTotalEntrada = NumeroUtil.somarDinheiro(quantidadeTotalEntrada, entrada.getQuantidade(), 8);
+				valorTotalEntrada = NumeroUtil.somarDinheiro(valorTotalEntrada, entrada.getValor(), 8);
 			}
 			
 			for (Movimentacao saida : produto.getMovimentacaoSaida()) {
-				quantidadeTotalSaida = NumeroUtil.somarDinheiro(quantidadeTotalSaida, saida.getQuantidade(), 3);
-				valorTotalSaida = NumeroUtil.somarDinheiro(valorTotalSaida, (NumeroUtil.multiplicarDinheiro(saida.getValorMediaUltimo(), saida.getQuantidade(), 3)), 3);
+				quantidadeTotalSaida = NumeroUtil.somarDinheiro(quantidadeTotalSaida, saida.getQuantidade(), 8);
+				valorTotalSaida = NumeroUtil.somarDinheiro(valorTotalSaida, (NumeroUtil.multiplicarDinheiro(saida.getValorMediaUltimo(), saida.getQuantidade(), 8)), 8);
 			}
 			MoedaConverter mc = new MoedaConverter();
 			
@@ -193,7 +252,7 @@ public class RelatorioService {
 			
 			dto.setUnidadeMedida(produto.getTipoMedida().getAbreviatura());
 			
-			quantidadeEntrada = NumeroUtil.somarDinheiro(quantidadeEntrada, quantidadeTotalEntrada, 3);
+			quantidadeEntrada = NumeroUtil.somarDinheiro(quantidadeEntrada, quantidadeTotalEntrada, 8);
 			quantidadeSaida = NumeroUtil.somarDinheiro(quantidadeSaida,quantidadeTotalSaida,3);
 			valorEntrada = NumeroUtil.somarDinheiro(valorEntrada,valorTotalEntrada,3);
 			valorSaida = NumeroUtil.somarDinheiro(valorSaida,valorTotalSaida,3);
@@ -224,9 +283,16 @@ public class RelatorioService {
 		mapa.put("quantidadeSaida", mc.getAsString(null, null, quantidadeSaida));
 		mapa.put("valorEntrada", mc.getAsString(null, null, valorEntrada));
 		mapa.put("valorSaida", mc.getAsString(null, null,valorSaida ));
+		
+		quantidadeFinal = NumeroUtil.somarDinheiro(quantidadeAnterior, quantidadeFinal, 6);
+		valorFinal = NumeroUtil.somarDinheiro(valorAnterior, valorFinal, 6);
+		
 		mapa.put("quantidadeFinal", mc.getAsString(null, null, quantidadeFinal));
 		mapa.put("valorFinal", mc.getAsString(null, null, valorFinal));
-
+		
+		mapa.put("quantidadeAnterior", mc.getAsString(null, null, quantidadeAnterior));
+		mapa.put("valorAnterior", mc.getAsString(null, null, valorAnterior));
+		
 		
 		JasperReport report;
 		try {
@@ -489,6 +555,10 @@ public class RelatorioService {
 			dto.setNomeProduto(movimentacao.getProduto().getNome());
 			dto.setQuantidadeProduto(mc.getAsString(null,null,movimentacao.getQuantidade()));
 			dto.setValorTotal(mc.getAsString(null, null, movimentacao.getValor()));
+			
+			dto.setQuantidadeProdutoF(movimentacao.getQuantidade());
+			dto.setValorTotalF(movimentacao.getValor());
+			
 			//não há necessidade desse cara pois sempre será de saída.
 			dto.setTipoMovimentacao(movimentacao.getTipoMovimentacaoEnum().getDescricao());
 			
@@ -499,7 +569,33 @@ public class RelatorioService {
 			
 		}
 		
-		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(listaRelatorioCampanhaDTO);
+		
+		//uni os produtos e movimentacoes
+		
+		List<RelatorioCampanhaDTO> listaUnificada = new ArrayList<RelatorioCampanhaDTO>();
+		Map<Integer , RelatorioCampanhaDTO> mapaTemp = new HashMap<Integer, RelatorioCampanhaDTO>();
+		
+		
+		for (RelatorioCampanhaDTO relatorioCampanhaDTO : listaRelatorioCampanhaDTO) {
+			if (mapaTemp.containsKey(relatorioCampanhaDTO.getCodigoProduto() )){
+				
+				RelatorioCampanhaDTO dto =	mapaTemp.get(relatorioCampanhaDTO.getCodigoProduto());
+				dto.setQuantidadeProdutoF(NumeroUtil.somarDinheiro(dto.getQuantidadeProdutoF(), relatorioCampanhaDTO.getQuantidadeProdutoF(), 6));
+				dto.setValorTotalF(NumeroUtil.somarDinheiro(dto.getValorTotalF(), relatorioCampanhaDTO.getValorTotalF(), 6));
+				
+				dto.setQuantidadeProduto(mc.getAsString(null,null,dto.getQuantidadeProdutoF()));
+				dto.setValorTotal(mc.getAsString(null, null, dto.getValorTotalF()));
+				
+			} else {
+				mapaTemp.put(relatorioCampanhaDTO.getCodigoProduto(), relatorioCampanhaDTO);
+				
+			}
+			
+		}
+		listaUnificada.addAll(mapaTemp.values());
+		
+		
+		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(listaUnificada);
 		
 		Map<String, Object> mapa = new HashMap<String, Object>();
 		mapa.put("data", DateUtil.dataToString(dataInicial) + " - "+ DateUtil.dataToString(dataFinam));
@@ -646,7 +742,7 @@ public ByteArrayOutputStream relatorioEstoqueAnalitico(Produto produto, Date dat
 			dto.setQuantidadeSaida(mc.getAsString(null, null, movimentacao.getQuantidade()));
 			dto.setValorMedioSaida("");
 			dto.setValorTotalSaida(mc.getAsString(null, null, movimentacao.getValor()));
-			
+			dto.setCodProduto(movimentacao.getProduto().getId());
 			lista.add(dto);
 			
 			saldo = NumeroUtil.somarDinheiro(saldo, movimentacao.getValor(), 6);
@@ -655,7 +751,33 @@ public ByteArrayOutputStream relatorioEstoqueAnalitico(Produto produto, Date dat
 		}
 		
 		
-		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(lista);
+		
+		//uni os produtos e movimentacoes
+		
+		List<EstoqueEspecificoDTO> listaUnificada = new ArrayList<EstoqueEspecificoDTO>();
+		Map<Integer , EstoqueEspecificoDTO> mapaTemp = new HashMap<Integer, EstoqueEspecificoDTO>();
+		
+		
+		for (EstoqueEspecificoDTO relatorioFamiliaDTO : lista) {
+			if (mapaTemp.containsKey(relatorioFamiliaDTO.getCodigo() )){
+				
+				EstoqueEspecificoDTO dto =	mapaTemp.get(relatorioFamiliaDTO.getCodigo());
+				dto.setQuantidadeProdutoF(NumeroUtil.somarDinheiro(dto.getQuantidadeProdutoF(), relatorioFamiliaDTO.getQuantidadeProdutoF(), 6));
+				dto.setValorTotalF(NumeroUtil.somarDinheiro(dto.getValorTotalF(), relatorioFamiliaDTO.getValorTotalF(), 6));
+				
+				dto.setQuantidadeSaida(mc.getAsString(null,null,dto.getQuantidadeProdutoF()));
+				dto.setValorTotalSaida(mc.getAsString(null, null, dto.getValorTotalF()));
+				
+			} else {
+				mapaTemp.put(relatorioFamiliaDTO.getCodProduto(), relatorioFamiliaDTO);
+				
+			}
+			
+		}
+		listaUnificada.addAll(mapaTemp.values());
+		
+		
+		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(listaUnificada);
 		
 		Map<String, Object> mapa = new HashMap<String, Object>();
 		mapa.put("titulo", "Relatório doações para famílias");
@@ -666,6 +788,17 @@ public ByteArrayOutputStream relatorioEstoqueAnalitico(Produto produto, Date dat
 		mapa.put("totalQuantidadeSaidas", mc.getAsString(null, null, quantidade));
 		mapa.put("totalSaldoSaidas", mc.getAsString(null, null, saldo));
 		
+		String descricao = ""; 
+		
+		if (familia == null || familia.getId() == null || familia.getId().equals(0)){
+			descricao = "Família: Todas";
+		} else{
+			familia = familiaService.obterFamilia(familia.getId());
+			descricao = "Responsável Família: "+ familia.getNomeResponsavel();
+		}
+		
+		
+		mapa.put("descricao", descricao);
 		//ESSE Atributo está indo para a tabela...
 		mapa.put("zabumba", beanColDataSource);
 		
@@ -756,6 +889,19 @@ public ByteArrayOutputStream relatorioEstoqueAnalitico(Produto produto, Date dat
 		mapa.put("totalQuantidadeSaidas", mc.getAsString(null, null, quantidade));
 		mapa.put("totalSaldoSaidas", mc.getAsString(null, null, saldo));
 		
+		String descricao = ""; 
+		
+		if (instituicao == null || instituicao.getId() == null || instituicao.getId().equals(0)){
+			descricao = "Instituição: Todas";
+		} else{
+			instituicao = instituicaoService.obterInstituicao(instituicao.getId());
+			descricao = "Instituição: "+ instituicao.getNome();
+		}
+		
+		
+		mapa.put("descricao", descricao);
+		
+		
 		//ESSE Atributo está indo para a tabela...
 		mapa.put("zabumba", beanColDataSource);
 		
@@ -838,6 +984,10 @@ public ByteArrayOutputStream relatorioEstoqueAnalitico(Produto produto, Date dat
 		mapa.put("totalQuantidadeSaidas", mc.getAsString(null, null, quantidade));
 		mapa.put("totalSaldoSaidas", mc.getAsString(null, null, saldo));
 		
+		String descricao = "Anônimo"; 
+		
+		
+		mapa.put("descricao", descricao);
 		//ESSE Atributo está indo para a tabela...
 		mapa.put("zabumba", beanColDataSource);
 		

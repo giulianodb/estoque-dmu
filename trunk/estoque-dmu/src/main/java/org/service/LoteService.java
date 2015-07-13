@@ -17,6 +17,7 @@ import org.entity.LoteMovimentacao;
 import org.entity.Movimentacao;
 import org.entity.Produto;
 import org.exception.ApplicationException;
+import org.util.DateUtil;
 
 @Stateless
 public class LoteService {
@@ -56,6 +57,9 @@ public class LoteService {
 	
 	public List<LoteMovimentacao> pesquisarLoteMovimentacao(Produto produto, Date dataInicial, Date dataFinal, int primeiroRegistro, int tamanhoPagina) throws ApplicationException{
 		try {
+			
+			dataInicial = DateUtil.adicionarHoraInicio(dataInicial);
+			dataFinal = DateUtil.adicionarHoraFim(dataFinal);
 			StringBuilder sb = new StringBuilder("SELECT lote FROM LoteMovimentacao lote ");	
 			
 			TypedQuery<LoteMovimentacao> query = em.createQuery(sb.toString(),LoteMovimentacao.class);
@@ -119,6 +123,10 @@ public class LoteService {
 	 */
 	public List<LoteMovimentacao> pesquisarLotePorCampanha(Campanha campanha, Date dataInicial, Date dataFinal) throws ApplicationException{
 		try {
+			
+			dataInicial = DateUtil.adicionarHoraInicio(dataInicial);
+			dataFinal = DateUtil.adicionarHoraFim(dataFinal);
+			
 			StringBuilder sb = new StringBuilder("SELECT lote FROM LoteMovimentacao lote ");	
 			sb.append(" LEFT JOIN FETCH lote.campanha campanha  ");
 			

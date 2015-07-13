@@ -187,6 +187,7 @@
 	<parameter name="dataFinalPeriodo" class="java.lang.String"/>
 	<parameter name="titulo" class="java.lang.String"/>
 	<parameter name="totalQuantidadeSaidas" class="java.lang.String"/>
+	<parameter name="descricao" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -226,15 +227,20 @@
 				<textFieldExpression><![CDATA[$P{dataEmissao}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="bdce18e5-f4ee-4bb1-9a33-4dd66f68c509" x="120" y="39" width="154" height="20"/>
+				<reportElement uuid="bdce18e5-f4ee-4bb1-9a33-4dd66f68c509" x="120" y="34" width="154" height="20"/>
 				<textElement textAlignment="Left" verticalAlignment="Top"/>
 				<textFieldExpression><![CDATA[$P{data}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="78c77c62-447f-4ee2-b758-34f4c2280a14" x="10" y="39" width="110" height="20"/>
+				<reportElement uuid="78c77c62-447f-4ee2-b758-34f4c2280a14" x="10" y="34" width="110" height="20"/>
 				<textElement/>
 				<text><![CDATA[Período do relatório:]]></text>
 			</staticText>
+			<textField>
+				<reportElement uuid="1ae42041-8a40-49eb-a20d-422340fc78d3" x="10" y="62" width="328" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{descricao}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<lastPageFooter>

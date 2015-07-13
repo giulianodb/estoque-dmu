@@ -1,5 +1,6 @@
 package org.service;
 
+import java.util.Calendar;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -108,5 +109,44 @@ public class ArrumarService {
 			em.merge(produto);
 			
 		}
+	}
+	
+	public void adicionarUmSegundoMovimentacoes(){
+		try {
+			StringBuilder sb = new StringBuilder("SELECT movimentacao FROM Movimentacao movimentacao ");	
+			
+			sb.append("ORDER BY movimentacao.data DESC, movimentacao.id DESC");
+			
+			TypedQuery<Movimentacao> query = em.createQuery(sb.toString(),Movimentacao.class);
+			
+			
+			
+			//Delimita o num de registro para a pagina a ser recuperada
+//	        query.setFirstResult(primeiroRegistro);
+//	        query.setMaxResults(tamanhoPagina);	
+			
+			List<Movimentacao> lista =  query.getResultList();
+			
+			for (int i = 0; i < lista.size(); i++) {
+				Movimentacao m = lista.get(i);
+				Calendar calendar = Calendar.getInstance();  
+			      
+			    calendar.setTime(m.getData()); //colocando o objeto Date no Calendar  
+			    calendar.add(Calendar.SECOND, i); 
+			    
+			    System.out.println("ANTES...." + m.getData());
+				m.setData(calendar.getTime());
+				System.out.println("DEPOIS...." + m.getData());
+				
+				
+				em.merge(m);
+				
+				
+				
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

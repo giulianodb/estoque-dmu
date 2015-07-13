@@ -111,8 +111,65 @@ public class MovimentacaoService {
 	}
 	
 	
+
+	public Movimentacao pesquisarUltimaMovimentacao(Produto produto, Date data) throws ApplicationException{
+		try {
+			StringBuilder sb = new StringBuilder("SELECT movimentacao FROM Movimentacao movimentacao ");	
+			sb.append(" LEFT JOIN FETCH movimentacao.produto produto ");
+			sb.append(" LEFT JOIN FETCH movimentacao.loteMovimentacao lote ");
+			sb.append(" LEFT JOIN FETCH lote.campanha campanha  ");
+			sb.append(" LEFT JOIN FETCH lote.instituicao instituicao  ");
+			
+			if (produto.getId() != null){
+				sb.append(" WHERE produto.id = :id ");
+			}
+			
+			if (data != null){
+				sb.append("AND movimentacao.data < :data ");
+			}
+			
+			sb.append("ORDER BY movimentacao.id DESC ");
+			
+			TypedQuery<Movimentacao> query = em.createQuery(sb.toString(),Movimentacao.class);
+			
+			if (produto.getId() != null){
+				query.setParameter("id",produto.getId());
+			}
+			
+			if (data != null){
+				query.setParameter("data",data);
+			}
+			
+			
+		
+			
+			//Delimita o num de registro para a pagina a ser recuperada
+//	        query.setFirstResult(primeiroRegistro);
+//	        query.setMaxResults(tamanhoPagina);
+			
+			List<Movimentacao> lista = query.getResultList();
+			
+			if (lista.size() > 0){
+				return lista.get(0);
+			}
+			else {
+				return null;
+			}
+			
+		} catch(Exception e) {
+			throw new ApplicationException("br.gov.pr.celepar.exemplo.dao.MatriculaDAO.listarPorAlunoComRelacionamentos.ERRO", e);
+		}
+		
+	}
+	
+	
+	
 	public List<Movimentacao> pesquisarMovimentacaoPorCampanha(Campanha campanha, Date dataInicial, Date dataFinal) throws ApplicationException{
 		try {
+			
+			dataInicial = DateUtil.adicionarHoraInicio(dataInicial);
+			dataFinal = DateUtil.adicionarHoraFim(dataFinal);
+			
 			StringBuilder sb = new StringBuilder("SELECT movimentacao FROM Movimentacao movimentacao ");	
 			sb.append(" LEFT JOIN FETCH movimentacao.produto produto ");
 			sb.append(" LEFT JOIN FETCH movimentacao.loteMovimentacao lote ");
@@ -165,6 +222,10 @@ public class MovimentacaoService {
 	
 	public List<Movimentacao> pesquisarMovimentacaoPorFamilia(Familia familia, Date dataInicial, Date dataFinal, TipoMovimentacaoEnum tipoMovimentacao) throws ApplicationException{
 		try {
+			
+			dataInicial = DateUtil.adicionarHoraInicio(dataInicial);
+			dataFinal = DateUtil.adicionarHoraFim(dataFinal);
+			
 			StringBuilder sb = new StringBuilder("SELECT movimentacao FROM Movimentacao movimentacao ");	
 			sb.append(" LEFT JOIN FETCH movimentacao.produto produto ");
 			sb.append(" LEFT JOIN FETCH movimentacao.loteMovimentacao lote ");
@@ -224,6 +285,9 @@ public class MovimentacaoService {
 	
 	public List<Movimentacao> pesquisarMovimentacaoPorInstituicao(Instituicao inst, Date dataInicial, Date dataFinal,TipoMovimentacaoEnum tipoMovimentacao) throws ApplicationException{
 		try {
+			dataInicial = DateUtil.adicionarHoraInicio(dataInicial);
+			dataFinal = DateUtil.adicionarHoraFim(dataFinal);
+			
 			StringBuilder sb = new StringBuilder("SELECT DISTINCT movimentacao FROM Movimentacao movimentacao ");	
 			sb.append(" LEFT JOIN FETCH movimentacao.produto produto ");
 			sb.append(" LEFT JOIN FETCH movimentacao.loteMovimentacao lote ");
@@ -287,6 +351,9 @@ public class MovimentacaoService {
 	
 	public List<Movimentacao> pesquisarMovimentacaoPorAnonimo(Date dataInicial, Date dataFinal,TipoMovimentacaoEnum tipoMovimentacao) throws ApplicationException{
 		try {
+			dataInicial = DateUtil.adicionarHoraInicio(dataInicial);
+			dataFinal = DateUtil.adicionarHoraFim(dataFinal);
+			
 			StringBuilder sb = new StringBuilder("SELECT DISTINCT movimentacao FROM Movimentacao movimentacao ");	
 			sb.append(" LEFT JOIN FETCH movimentacao.produto produto ");
 			sb.append(" LEFT JOIN FETCH movimentacao.loteMovimentacao lote ");

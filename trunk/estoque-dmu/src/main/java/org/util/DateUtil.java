@@ -72,6 +72,28 @@ public class DateUtil {
 		return teste2.format(teste.getTime());
 	}
 	
+	public static Date adicionarHoraInicio(Date data){
+		Calendar calendar = Calendar.getInstance();  
+	      
+	    calendar.setTime(data); //colocando o objeto Date no Calendar  
+	    calendar.set(Calendar.HOUR_OF_DAY, 0); //zerando as horas, minuots e segundos..  
+	    calendar.set(Calendar.MINUTE, 0);  
+	    calendar.set(Calendar.SECOND, 0);
+	    
+	    return calendar.getTime();
+	}
+	
+	public static Date adicionarHoraFim(Date data){
+		Calendar calendar = Calendar.getInstance();  
+	      
+	    calendar.setTime(data); //colocando o objeto Date no Calendar  
+	    calendar.set(Calendar.HOUR_OF_DAY, 23); //zerando as horas, minuots e segundos..  
+	    calendar.set(Calendar.MINUTE, 59);  
+	    calendar.set(Calendar.SECOND, 59);
+	    
+	    return calendar.getTime();
+	}
+	
 	public enum MesesEnum{
 		JANEIRO("Janeiro"),
 		FEVEREIRO("Fevereiro"),

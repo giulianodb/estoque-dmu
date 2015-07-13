@@ -15,6 +15,12 @@ public class EstoqueEspecificoDTO {
 	private String nomeProduto;
 	
 	private String codigo;
+	
+	private Float quantidadeProdutoF;
+	
+	private Float valorTotalF;
+	
+	private Integer codProduto;
 
 	public String getData() {
 		return data;
@@ -70,6 +76,30 @@ public class EstoqueEspecificoDTO {
 
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
+	}
+
+	public Float getQuantidadeProdutoF() {
+		return quantidadeProdutoF;
+	}
+
+	public void setQuantidadeProdutoF(Float quantidadeProdutoF) {
+		this.quantidadeProdutoF = quantidadeProdutoF;
+	}
+
+	public Float getValorTotalF() {
+		return valorTotalF;
+	}
+
+	public void setValorTotalF(Float valorTotalF) {
+		this.valorTotalF = valorTotalF;
+	}
+
+	public Integer getCodProduto() {
+		return codProduto;
+	}
+
+	public void setCodProduto(Integer codProduto) {
+		this.codProduto = codProduto;
 	}
 
 }
