@@ -96,6 +96,11 @@
 		    	        <p:outputLabel value="Anônimo" rendered="#{empty movimentacao.loteMovimentacao.instituicao and empty movimentacao.loteMovimentacao.campanha and empty movimentacao.loteMovimentacao.instituicao and empty movimentacao.loteMovimentacao.familia.nomeResponsavel}"/>
 		        	</p:column>
 		        	
+		        	<p:column headerText="Recibo">
+		    	        <p:outputLabel value="#{movimentacao.loteMovimentacao.codigo}" >
+		    	        </p:outputLabel>
+		        	</p:column>
+		        	
 		        	
 		        	
 			        <p:column headerText="Selecionar" style="text-align: center;" >				                
@@ -107,24 +112,6 @@
 							<p:confirm header="Confirmação" message="Você tem certeza que deseja excluir a movimentação?" icon="ui-icon-alert" />
 							<f:setPropertyActionListener target="#{movimentacaoController.movimentacao}" value="#{movimentacao}"/> 		 	 
 						</p:commandButton>
-						
-						 <p:commandButton id="cmdAlterarEntrada" icon="ui-icon-pencil"									 	 
-					 		update=":gridForm :entradaForm"
-					 		title="Alterar Entrada"	
-					 		ajax="false"
-							action="#{entradaController.iniciarAlterarEntrada()}"
-							rendered="#{movimentacao.movimentacaoIsEntrada()}" >
-								<f:setPropertyActionListener target="#{entradaController.entrada}" value="#{movimentacao}"/> 		 	 
-						</p:commandButton>
-						
-							 <p:commandButton id="cmdAlterarSaida" icon="ui-icon-pencil"									 	 
-					 		update=":gridForm :entradaForm"
-					 		title="Alterar Saída"	
-					 		ajax="false"
-							action="#{saidaController.iniciarAlterarMovimentacaoSaida()}"
-							rendered="#{movimentacao.movimentacaoIsEntrada() == false}" >
-								<f:setPropertyActionListener target="#{saidaController.saida}" value="#{movimentacao}"/> 		 	 
-						</p:commandButton>	
 						
 							            
 				    </p:column>

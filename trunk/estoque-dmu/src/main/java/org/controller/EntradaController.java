@@ -15,8 +15,10 @@ import org.apache.myfaces.extensions.cdi.core.api.scope.conversation.ViewAccessS
 import org.entity.Campanha;
 import org.entity.Doador;
 import org.entity.Instituicao;
+import org.entity.LoteMovimentacao;
 import org.entity.Movimentacao;
 import org.entity.Produto;
+import org.entity.TipoMovimentacaoEnum;
 import org.entity.TipoParceiroEnum;
 import org.exception.ApplicationException;
 import org.exception.ControllerExceptionHandler;
@@ -38,6 +40,9 @@ public class EntradaController implements Serializable  {
 	
 	@Inject
 	private Movimentacao entrada;
+	
+	@Inject
+	private Movimentacao entradaDadosDoador;
 	
 	@Inject
 	private MovimentacaoService entradaService;
@@ -77,11 +82,19 @@ public class EntradaController implements Serializable  {
 	
 	private Float valorMedioProduto;
 	
+	private String descricaoQuantidade;
+	
 	//usado para definir o valor unitario...
 	private Float valorUnitarioController;
 	
 	@EJB
 	private ProdutoService produtoService;
+	
+	private List<Movimentacao> listaMovimentacao;
+	
+	private List<Movimentacao> listaMovimentacaoParaExcluir;
+	@Inject
+	private LoteController loteController;
 	
 	
 	public String iniciarPesquisaEntrada(){
@@ -91,8 +104,15 @@ public class EntradaController implements Serializable  {
 	
 	public String iniciarIncluirEntrada() throws ApplicationException{
 		
+		prepararIncluirEntrada();
+		
+		return "/pages/movimentacao/entrada/editar_entrada";
+	}
+
+	public void prepararIncluirEntrada() throws ApplicationException {
 		entrada = movimentacaoProvider.get();
 		valorMedioProduto = 0f;
+		descricaoQuantidade = "";
 		//carregando combos iniciais
 		listProdutoCombo = produtoService.pesquisarProduto(new Produto(), 0, 0);
 		listaTipoParceiroCombo = new ArrayList<TipoParceiroEnum>(Arrays.asList(TipoParceiroEnum.values()));
@@ -109,22 +129,24 @@ public class EntradaController implements Serializable  {
 		mostrarComboInstituicao = false;
 		
 		entrada.getLoteMovimentacao().setData(new Date());
-		
-		return "/pages/movimentacao/entrada/editar_entrada";
 	}
 	
 	
-	public String iniciarAlterarEntrada() throws ApplicationException{
+	public String iniciarAlterarEntrada(LoteMovimentacao lote) throws ApplicationException{
 		
-		listenerObterPrecoMedio();
+		
+		entradaDadosDoador = movimentacaoProvider.get();
+		entradaDadosDoador.setLoteMovimentacao(lote);
+		listaMovimentacao = lote.getListMovimentacao();
+		
 		//carregando combos iniciais
 		listProdutoCombo = produtoService.pesquisarProduto(new Produto(), 0, 0);
 		listaTipoParceiroCombo = new ArrayList<TipoParceiroEnum>(Arrays.asList(TipoParceiroEnum.values()));
 		listaTipoParceiroCombo.remove(1);
 		listaTipoParceiroCombo.remove(0);
-		valorUnitarioController = NumeroUtil.DividirDinheiro(entrada.getValor(), entrada.getQuantidade(), 3);
+//		valorUnitarioController = NumeroUtil.DividirDinheiro(entrada.getValor(), entrada.getQuantidade(), 3);
 		
-		if (entrada.getLoteMovimentacao().getCampanha() != null){
+		if (entradaDadosDoador.getLoteMovimentacao().getCampanha() != null){
 			if(listaCampanhaCombo == null || listaCampanhaCombo.size() == 0){
 				listaCampanhaCombo = campanhaService.pesquisarCampanha(new Campanha());
 			}
@@ -133,7 +155,7 @@ public class EntradaController implements Serializable  {
 			mostrarComboDoador = false;
 			mostrarComboInstituicao = false;
 			
-		} else if(entrada.getLoteMovimentacao().getInstituicao() != null){
+		} else if(entradaDadosDoador.getLoteMovimentacao().getInstituicao() != null){
 			if(listaInstituicaoCombo == null || listaInstituicaoCombo.size() == 0){
 				listaInstituicaoCombo = instituicaoService.pesquisarInstituicao(new Instituicao());
 			}
@@ -141,7 +163,7 @@ public class EntradaController implements Serializable  {
 			mostrarComboCampanha = false;
 			mostrarComboDoador = false;
 			mostrarComboInstituicao = true;
-		} else if(entrada.getLoteMovimentacao().getDoador() != null){
+		} else if(entradaDadosDoador.getLoteMovimentacao().getDoador() != null){
 			if(listaDoadorCombo == null || listaDoadorCombo.size() == 0){
 				listaDoadorCombo = doadorService.pesquisarDoador(new Doador());
 			}
@@ -161,57 +183,27 @@ public class EntradaController implements Serializable  {
 	
 	
 	
-	public String excluirEntrada(){
+	public void excluirEntrada(){
+		listaMovimentacao.remove(entrada);
 		
-		return null;
+		if (entrada.getId() != null){
+			if (listaMovimentacaoParaExcluir == null){
+				listaMovimentacaoParaExcluir = new ArrayList<Movimentacao>();
+			}
+			listaMovimentacaoParaExcluir.add(entrada);
+		}
+		entrada = movimentacaoProvider.get();
+		
 	}
 	
 	public String incluirEntrada(){
 		try {
 			
-			entrada.setValor(NumeroUtil.multiplicarDinheiro(valorUnitarioController, entrada.getQuantidade(), 3));
+			resolverDoador();
 			
-			if (entrada.getLoteMovimentacao().getFamiliaCampanha() != null && entrada.getLoteMovimentacao().getFamiliaCampanha().getId() != null){
-				entrada.getLoteMovimentacao().setFamiliaCampanha(familiaService.obterFamilia(entrada.getLoteMovimentacao().getFamiliaCampanha().getId()));
-				
-			}else {
-				entrada.getLoteMovimentacao().setFamiliaCampanha(null);
-			}
-			if (entrada.getLoteMovimentacao().getFamilia() != null && entrada.getLoteMovimentacao().getFamilia().getId() != null){
-				entrada.getLoteMovimentacao().setFamilia(familiaService.obterFamilia(entrada.getLoteMovimentacao().getFamilia().getId()));
-				
-			}else {
-				entrada.getLoteMovimentacao().setFamilia(null);
-			}
+//			entradaService.incluirEntrada(entrada);
 			
-			
-			if (entrada.getLoteMovimentacao().getInstituicao() != null && entrada.getLoteMovimentacao().getInstituicao().getId() != null){
-				entrada.getLoteMovimentacao().setInstituicao(instituicaoService.obterInstituicao(entrada.getLoteMovimentacao().getInstituicao().getId()));
-				
-			}else {
-				entrada.getLoteMovimentacao().setInstituicao(null);
-			}
-			
-			
-			
-			if (entrada.getLoteMovimentacao().getInstituicaoCampanha() != null && entrada.getLoteMovimentacao().getInstituicaoCampanha().getId() != null){
-				entrada.getLoteMovimentacao().setInstituicaoCampanha(instituicaoService.obterInstituicao(entrada.getLoteMovimentacao().getInstituicaoCampanha().getId()));
-				
-			}else {
-				entrada.getLoteMovimentacao().setInstituicaoCampanha(null);
-			}
-			
-			
-			if (entrada.getLoteMovimentacao().getCampanha() != null && entrada.getLoteMovimentacao().getCampanha().getId() != null){
-				entrada.getLoteMovimentacao().setCampanha(campanhaService.obterCampanha(entrada.getLoteMovimentacao().getCampanha().getId()));
-				
-			}else {
-				entrada.getLoteMovimentacao().setCampanha(null);
-			}
-			
-			
-			
-			entradaService.incluirEntrada(entrada);
+			entradaService.incluirEntradaLote(listaMovimentacao, entradaDadosDoador);
 			Message.setMessage("controller.incluirEntrada.SUCESSO");
 			
 		} catch (Exception e) {
@@ -221,9 +213,69 @@ public class EntradaController implements Serializable  {
 //		entrada = movimentacaoProvider.get();
 		return iniciarPesquisaEntrada();
 	}
+
+	private void resolverDoador() throws ApplicationException {
+		if (entradaDadosDoador.getLoteMovimentacao().getFamiliaCampanha() != null && entradaDadosDoador.getLoteMovimentacao().getFamiliaCampanha().getId() != null){
+			entradaDadosDoador.getLoteMovimentacao().setFamiliaCampanha(familiaService.obterFamilia(entradaDadosDoador.getLoteMovimentacao().getFamiliaCampanha().getId()));
+			
+		}else {
+			entradaDadosDoador.getLoteMovimentacao().setFamiliaCampanha(null);
+		}
+		if (entradaDadosDoador.getLoteMovimentacao().getFamilia() != null && entradaDadosDoador.getLoteMovimentacao().getFamilia().getId() != null){
+			entradaDadosDoador.getLoteMovimentacao().setFamilia(familiaService.obterFamilia(entradaDadosDoador.getLoteMovimentacao().getFamilia().getId()));
+			
+		}else {
+			entradaDadosDoador.getLoteMovimentacao().setFamilia(null);
+		}
+		
+		
+		if (entradaDadosDoador.getLoteMovimentacao().getInstituicao() != null && entradaDadosDoador.getLoteMovimentacao().getInstituicao().getId() != null){
+			entradaDadosDoador.getLoteMovimentacao().setInstituicao(instituicaoService.obterInstituicao(entradaDadosDoador.getLoteMovimentacao().getInstituicao().getId()));
+			
+		}else {
+			entradaDadosDoador.getLoteMovimentacao().setInstituicao(null);
+		}
+		
+		
+		
+		if (entradaDadosDoador.getLoteMovimentacao().getInstituicaoCampanha() != null && entradaDadosDoador.getLoteMovimentacao().getInstituicaoCampanha().getId() != null){
+			entradaDadosDoador.getLoteMovimentacao().setInstituicaoCampanha(instituicaoService.obterInstituicao(entradaDadosDoador.getLoteMovimentacao().getInstituicaoCampanha().getId()));
+			
+		}else {
+			entradaDadosDoador.getLoteMovimentacao().setInstituicaoCampanha(null);
+		}
+		
+		
+		if (entradaDadosDoador.getLoteMovimentacao().getCampanha() != null && entradaDadosDoador.getLoteMovimentacao().getCampanha().getId() != null){
+			entradaDadosDoador.getLoteMovimentacao().setCampanha(campanhaService.obterCampanha(entradaDadosDoador.getLoteMovimentacao().getCampanha().getId()));
+			
+		}else {
+			entradaDadosDoador.getLoteMovimentacao().setCampanha(null);
+		}
+	}
 	
 	public String alterarEntrada(){
 		
+		
+		try {
+			resolverDoador();
+			
+			entradaDadosDoador.setTipoMovimentacaoEnum(TipoMovimentacaoEnum.ENTRADA);
+			
+			entradaService.alterarMovimentacaoLote(listaMovimentacao, listaMovimentacaoParaExcluir , entradaDadosDoador);
+			
+			Message.setMessage("controller.alterarMovimentacao.SUCESSO");
+			
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Message.setMessage(e);
+			
+		}
+		
+		
+		
+		/*00000000000
 		
 		try {
 			entradaService.alterarEntrada1(entrada);
@@ -240,7 +292,9 @@ public class EntradaController implements Serializable  {
 			e.printStackTrace();
 		}
 		
-		return iniciarPesquisaEntrada();
+		*/
+		
+		return loteController.iniciarPesquisaReceibo();
 	}
 	
 	public void listenerAlterarTipoDoador() throws ApplicationException{
@@ -249,9 +303,9 @@ public class EntradaController implements Serializable  {
 			if(listaCampanhaCombo == null || listaCampanhaCombo.size() == 0){
 				listaCampanhaCombo = campanhaService.pesquisarCampanha(new Campanha());
 			}
-			entrada.getLoteMovimentacao().setCampanha(new Campanha());
-			entrada.getLoteMovimentacao().setInstituicao(null);
-			entrada.getLoteMovimentacao().setDoador(null);
+			entradaDadosDoador.getLoteMovimentacao().setCampanha(new Campanha());
+			entradaDadosDoador.getLoteMovimentacao().setInstituicao(null);
+			entradaDadosDoador.getLoteMovimentacao().setDoador(null);
 			
 			mostrarComboCampanha = true;
 			mostrarComboDoador = false;
@@ -264,9 +318,9 @@ public class EntradaController implements Serializable  {
 				listaDoadorCombo = doadorService.pesquisarDoador(new Doador());
 			}
 			
-			entrada.getLoteMovimentacao().setDoador(new Doador());
-			entrada.getLoteMovimentacao().setInstituicao(null);
-			entrada.getLoteMovimentacao().setCampanha(null);
+			entradaDadosDoador.getLoteMovimentacao().setDoador(new Doador());
+			entradaDadosDoador.getLoteMovimentacao().setInstituicao(null);
+			entradaDadosDoador.getLoteMovimentacao().setCampanha(null);
 			
 			mostrarComboCampanha = false;
 			mostrarComboInstituicao = false;
@@ -278,9 +332,9 @@ public class EntradaController implements Serializable  {
 			mostrarComboCampanha = false;
 			mostrarComboDoador = false;
 			mostrarComboInstituicao = false;
-			entrada.getLoteMovimentacao().setInstituicao(null);
-			entrada.getLoteMovimentacao().setDoador(null);
-			entrada.getLoteMovimentacao().setCampanha(null);
+			entradaDadosDoador.getLoteMovimentacao().setInstituicao(null);
+			entradaDadosDoador.getLoteMovimentacao().setDoador(null);
+			entradaDadosDoador.getLoteMovimentacao().setCampanha(null);
 			
 			break;
 		}
@@ -288,9 +342,9 @@ public class EntradaController implements Serializable  {
 			if(listaInstituicaoCombo == null || listaInstituicaoCombo.size() == 0){
 				listaInstituicaoCombo = instituicaoService.pesquisarInstituicao(new Instituicao());
 			}
-			entrada.getLoteMovimentacao().setInstituicao(new Instituicao());
-			entrada.getLoteMovimentacao().setDoador(null);
-			entrada.getLoteMovimentacao().setCampanha(null);
+			entradaDadosDoador.getLoteMovimentacao().setInstituicao(new Instituicao());
+			entradaDadosDoador.getLoteMovimentacao().setDoador(null);
+			entradaDadosDoador.getLoteMovimentacao().setCampanha(null);
 			
 			mostrarComboCampanha = false;
 			mostrarComboDoador = false;
@@ -304,8 +358,26 @@ public class EntradaController implements Serializable  {
 	public void listenerObterPrecoMedio(){
 		entrada.setProduto(produtoService.obterProduto(entrada.getProduto().getId()));
 		valorMedioProduto = (entrada.getProduto().valorMedioHistoricoProduto());
+		descricaoQuantidade = entrada.getProduto().getTipoMedida().getDescricao();
 	}
-
+	
+	public void adicionarEntradaLote() throws ApplicationException{
+		if (listaMovimentacao == null){
+			listaMovimentacao = new ArrayList<Movimentacao>();
+		}
+		
+		
+		entrada.setValor(NumeroUtil.multiplicarDinheiro(valorUnitarioController, entrada.getQuantidade(), 3));
+		
+		listaMovimentacao.add(this.entrada);
+		
+		entrada = movimentacaoProvider.get();
+		
+//		prepararIncluirEntrada();
+		
+		valorUnitarioController = 0f;
+	}
+	
 	public List<Produto> getListProdutoCombo() {
 		return listProdutoCombo;
 	}
@@ -401,6 +473,39 @@ public class EntradaController implements Serializable  {
 
 	public void setValorUnitarioController(Float valorUnitarioController) {
 		this.valorUnitarioController = valorUnitarioController;
+	}
+
+	public List<Movimentacao> getListaMovimentacao() {
+		return listaMovimentacao;
+	}
+
+	public void setListaMovimentacao(List<Movimentacao> listaMovimentacao) {
+		this.listaMovimentacao = listaMovimentacao;
+	}
+
+	public Movimentacao getEntradaDadosDoador() {
+		return entradaDadosDoador;
+	}
+
+	public void setEntradaDadosDoador(Movimentacao entradaDadosDoador) {
+		this.entradaDadosDoador = entradaDadosDoador;
+	}
+
+	public List<Movimentacao> getListaMovimentacaoParaExcluir() {
+		return listaMovimentacaoParaExcluir;
+	}
+
+	public void setListaMovimentacaoParaExcluir(
+			List<Movimentacao> listaMovimentacaoParaExcluir) {
+		this.listaMovimentacaoParaExcluir = listaMovimentacaoParaExcluir;
+	}
+
+	public String getDescricaoQuantidade() {
+		return descricaoQuantidade;
+	}
+
+	public void setDescricaoQuantidade(String descricaoQuantidade) {
+		this.descricaoQuantidade = descricaoQuantidade;
 	}
 
 }

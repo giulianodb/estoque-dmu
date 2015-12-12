@@ -1,9 +1,12 @@
 package org.util;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 public class DateUtil {
 	private DateUtil() {}
@@ -94,25 +97,42 @@ public class DateUtil {
 	    return calendar.getTime();
 	}
 	
+	public static String dataExtenso(String data){
+		
+		String[] dataSplit = data.split("/");
+		StringBuilder sb = new StringBuilder();
+		sb.append("Curitiba, ");
+		sb.append(dataSplit[0]);
+		sb.append(" de ");
+		sb.append(obterMes(dataSplit[1]));
+		sb.append(" de ");
+		sb.append(dataSplit[2]);
+		
+		
+		return sb.toString();
+	}
+	
 	public enum MesesEnum{
-		JANEIRO("Janeiro"),
-		FEVEREIRO("Fevereiro"),
-		MARCO("Março"),
-		ABRIL("Abril"),
-		MAIO("Maio"),
-		JUNHO("Junho"),
-		JULHO("Julho"),
-		AGOSTO("Agosto"),
-		SETEMBRO("Setembro"),
-		OUTUBRO("Outubro"),
-		NOVEMBRO("Novembro"),
-		DEZEMBRO("Dezembro");
+		JANEIRO("Janeiro",1),
+		FEVEREIRO("Fevereiro",2),
+		MARCO("Março",3),
+		ABRIL("Abril",4),
+		MAIO("Maio",5),
+		JUNHO("Junho",6),
+		JULHO("Julho",7),
+		AGOSTO("Agosto",8),
+		SETEMBRO("Setembro",9),
+		OUTUBRO("Outubro",10),
+		NOVEMBRO("Novembro",11),
+		DEZEMBRO("Dezembro",12);
 		
 		
 		private String descricao;
+		private int inteiro;
 		
-		private MesesEnum(String descricao) {
+		private MesesEnum(String descricao, int inteiro) {
 			this.descricao = descricao;
+			this.inteiro = inteiro;
 		}
 		
 		public String getDescricao() {
@@ -123,6 +143,28 @@ public class DateUtil {
 			this.descricao = descricao;
 		}
 		
+		public int getInteiro() {
+			return inteiro;
+		}
+
+		public void setInteiro(int inteiro) {
+			this.inteiro = inteiro;
+		}
+
+		
+	}
+	
+	
+		public static String obterMes(String numero){
+		int posicao = Integer.parseInt(numero);
+		List<MesesEnum> listaMeses = new ArrayList<MesesEnum>(Arrays.asList(MesesEnum.values()));
+		for (MesesEnum mesesEnum : listaMeses) {
+			if(mesesEnum.getInteiro() == posicao){
+				return mesesEnum.getDescricao();
+			}
+		}
+		
+		return "Janeiro";
 		
 	}
 }

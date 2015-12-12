@@ -24,9 +24,14 @@ import org.entity.Produto;
 import org.entity.TipoMovimentacaoEnum;
 import org.entity.TipoParceiroEnum;
 import org.exception.ApplicationException;
+import org.jfree.data.DataUtilities;
 import org.util.DateUtil;
 import org.util.NumeroUtil;
 import org.util.StringUtil;
+
+import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
+
+import converter.MoedaConverter;
 
 @Stateless
 public class MovimentacaoService {
@@ -460,6 +465,39 @@ public class MovimentacaoService {
 			}	
 		}
 	
+	/**
+	 * Faaz o cadastro com uma lsita de movimentacções
+	 * @param entrada
+	 * @throws ApplicationException
+	 */
+	public void incluirEntradaLote(List<Movimentacao> entradas, Movimentacao dados) throws ApplicationException{
+		
+		for (Movimentacao movimentacao : entradas) {
+			movimentacao.setData(dados.getLoteMovimentacao().getData());
+			movimentacao.setLoteMovimentacao(dados.getLoteMovimentacao());
+			
+			movimentacaoService.incluirEntrada(movimentacao);
+		}
+		
+	}
+	
+	
+	/**
+	 * Faaz o cadastro com uma lsita de movimentacções
+	 * @param entrada
+	 * @throws ApplicationException
+	 */
+	public void incluirSaidaLote(List<Movimentacao> saidas, Movimentacao dados) throws ApplicationException{
+		
+		for (Movimentacao movimentacao : saidas) {
+			movimentacao.setData(dados.getLoteMovimentacao().getData());
+			movimentacao.setLoteMovimentacao(dados.getLoteMovimentacao());
+			
+			movimentacaoService.incluirSaida(movimentacao);
+		}
+		
+	}
+	
 	
 	public void incluirEntrada(Movimentacao entrada) throws ApplicationException{
 		entrada.setTipoMovimentacaoEnum(TipoMovimentacaoEnum.ENTRADA);
@@ -568,7 +606,12 @@ public class MovimentacaoService {
 					if (movimentacoesPosterioes.get(i).getQuantidadeUltimo() < 0){
 						//lançar exption..
 						System.out.println("FICOU COM SALDO NEGATIVO........");
+						//estava comentado porém ACHO que precisa ficar descomentado.. assim que encontrar erro de saldo deve lançar erro!!!! Assim evita que no historico saldo fique negativo
 //						throw new ApplicationException("service.movimentacao.saldoNegativo.ERRO",new String[]{DateUtil.dataToString(movimentacoesPosterioes.get(i).getData())});
+						
+						
+						
+						throw new ApplicationException("service.movimentacao.saldoNegativo.ERRO", new String[]{movimentacoesPosterioes.get(i).getQuantidadeUltimo().toString(),produto.getNome(),DateUtil.dataToString(movimentacoesPosterioes.get(i).getData())});
 					}
 				
 				em.merge(movimentacoesPosterioes.get(i));
@@ -671,7 +714,7 @@ public class MovimentacaoService {
 				System.out.println("CAGOU AQUI.....");
 			}
 			//lançar exption
-			throw new ApplicationException("service.movimentacao.saldoNegativo.ERRO", new String[]{produto.getQuantidadeEstoque().toString()});
+			throw new ApplicationException("service.movimentacao.saldoNegativo.ERRO", new String[]{produto.getQuantidadeEstoque().toString(),produto.getNome(),DateUtil.dataToString(saida.getData())});
 		}
 		
 			produto.setSaldoEstoque(NumeroUtil.diminuirDinheiro(produto.getSaldoEstoque(), saida.getValor(), 10));
@@ -720,8 +763,37 @@ public class MovimentacaoService {
 						movimentacoesPosterioes.get(i).setValorMediaUltimo(NumeroUtil.DividirDinheiro(movimentacoesPosterioes.get(i).getSaldoUltimo(), movimentacoesPosterioes.get(i).getQuantidadeUltimo(), 3));
 					}
 					
+					
+					//Responsavel por verificar se está negativo as coisas..
+					
+					Float valorAposALteracoes = 0f;
+					
+					if (movimentacoesPosterioes.get(i).getTipoMovimentacaoEnum().equals(TipoMovimentacaoEnum.ENTRADA)){
+						valorAposALteracoes = NumeroUtil.somarDinheiro(movimentacoesPosterioes.get(i).getQuantidadeUltimo(), movimentacoesPosterioes.get(i).getQuantidade(), 4);
+					}
+					else {
+						valorAposALteracoes = NumeroUtil.diminuirDinheiro(movimentacoesPosterioes.get(i).getQuantidadeUltimo(), movimentacoesPosterioes.get(i).getQuantidade(), 4);
+					}
+					
+					
+					if (valorAposALteracoes < 0){
+						//lançar exption..
+						System.out.println("FICOU COM SALDO NEGATIVO........");
+						//estava comentado porém ACHO que precisa ficar descomentado.. assim que encontrar erro de saldo deve lançar erro!!!! Assim evita que no historico saldo fique negativo
+//						throw new ApplicationException("service.movimentacao.saldoNegativo.ERRO",new String[]{DateUtil.dataToString(movimentacoesPosterioes.get(i).getData())});
+						throw new ApplicationException("service.movimentacao.saldoNegativo.ERRO", new String[]{movimentacoesPosterioes.get(i).getQuantidadeUltimo().toString(),produto.getNome(),DateUtil.dataToString(movimentacoesPosterioes.get(i).getData())});
+					}
+					
+					
+					
+					
 					em.merge(movimentacoesPosterioes.get(i));
+					
+					
+					
 				}
+			
+			
 				
 			}
 		
@@ -749,13 +821,14 @@ public class MovimentacaoService {
 		
 	}
 	
-	
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void alterarEntrada1(Movimentacao movimentacao) throws ApplicationException{
 		Movimentacao movOriginal = movimentacaoService.obterMobiMovimentacaoById(movimentacao.getId());
 		
 			movimentacaoService.excluirMovimentacao(movOriginal);
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void alterarEntrada2(Movimentacao movimentacao) throws ApplicationException{
 		movimentacao.setId(null);
 		movimentacao.getLoteMovimentacao().setCodigo(null);
@@ -766,12 +839,19 @@ public class MovimentacaoService {
 	}
 	
 	
+	//Esses métodos eram usados em ordem:
+	//Primeiro era deletado a movimentacao
+	//depois de deletar o outro método setava null nas informacoes e inseria de novo com as alterações....
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void alterarSaida1(Movimentacao movimentacao) throws ApplicationException{
 		Movimentacao movOriginal = movimentacaoService.obterMobiMovimentacaoById(movimentacao.getId());
 		
 			movimentacaoService.excluirMovimentacao(movOriginal);
 	}
 	
+	//
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void alterarSaida2(Movimentacao movimentacao) throws Exception{
 		movimentacao.setId(null);
 		movimentacao.getLoteMovimentacao().setCodigo(null);
@@ -782,7 +862,131 @@ public class MovimentacaoService {
 		movimentacaoService.incluirSaida(movimentacao);
 		
 	}
-
+	
+	
+	//Vai obter a lista de movimentacoes para excluir e exclui todas e insere as novas
+	public void alterarMovimentacaoLote(List<Movimentacao> movimentacoes, List<Movimentacao> movimentacoesExcluir, Movimentacao dadosMovimentacao) throws ApplicationException{
+		try {
+			
+			//// Para não dar saldos negativos gerando error
+			if(dadosMovimentacao.getTipoMovimentacaoEnum().equals(TipoMovimentacaoEnum.SAIDA)){
+				//Exclui as mov a serem excluidas
+				if (movimentacoesExcluir != null){
+					for (Movimentacao movimentacao : movimentacoesExcluir) {
+						if(movimentacao.getId() != null ){
+							movimentacaoService.excluirMovimentacao(movimentacao);
+						}
+					}
+				}
+			}
+			
+			//Procurando a data anterior para verificar se ela foi alterada.
+			//Busca da lista para exclusão caso encontrar é o suficiente
+			
+			Movimentacao inicio = new Movimentacao();
+			
+			if (movimentacoesExcluir != null && movimentacoesExcluir.size() > 0){
+				inicio =  movimentacoesExcluir.get(0);
+			}
+			
+			//Caso não existir mov para excluir vasculha as movimentações em busca de uma que ficou sem alteração para saber qual a data estava marcada.
+			else {
+				for (Movimentacao movimentacao : movimentacoes) {
+					if (movimentacao.getId() > 0){
+						inicio = movimentacao;
+						break;
+					}
+				}
+			}
+			
+			
+			if (!inicio.getLoteMovimentacao().getData().equals(dadosMovimentacao.getLoteMovimentacao().getData())){
+				
+				for (Movimentacao mov : movimentacoes) {
+					
+					//Caso a movimentacao não tiver ID quer dizer que é uma nova
+					if (mov.getId() > 0){
+						
+						mov.setData(dadosMovimentacao .getLoteMovimentacao().getData());
+						mov.setLoteMovimentacao(dadosMovimentacao.getLoteMovimentacao());
+						
+						if(dadosMovimentacao.getTipoMovimentacaoEnum().equals(TipoMovimentacaoEnum.SAIDA)){
+							movimentacaoService.alterarSaida1(mov);
+							movimentacaoService.alterarSaida2(mov);
+						} else{
+							movimentacaoService.alterarEntrada1(mov);
+							movimentacaoService.alterarEntrada2(mov);
+						}
+						
+						
+					}
+					else {
+						if(dadosMovimentacao.getTipoMovimentacaoEnum().equals(TipoMovimentacaoEnum.SAIDA)){
+							movimentacaoService.incluirSaida(mov);
+						}
+						else {
+							movimentacaoService.incluirEntrada(mov);
+						}
+					}
+					
+				}
+				
+			} else {
+				
+				//Caso a movimentacao não tiver ID quer dizer que é uma nova
+				for (Movimentacao mov : movimentacoes) {
+					
+					//Caso a movimentacao não tiver ID quer dizer que é uma nova
+					if (mov.getId() == null){
+						mov.setData(dadosMovimentacao .getLoteMovimentacao().getData());
+						mov.setLoteMovimentacao(dadosMovimentacao.getLoteMovimentacao());
+						
+						if(dadosMovimentacao.getTipoMovimentacaoEnum().equals(TipoMovimentacaoEnum.SAIDA)){
+							movimentacaoService.incluirSaida(mov);
+						}
+						else {
+							movimentacaoService.incluirEntrada(mov);
+						}
+					}
+					
+				}
+				
+			}
+			
+			
+			
+			
+			// Para não dar saldos negativos gerando error
+			if(dadosMovimentacao.getTipoMovimentacaoEnum().equals(TipoMovimentacaoEnum.ENTRADA)){
+				//Exclui as mov a serem excluidas
+				if (movimentacoesExcluir != null){
+					for (Movimentacao movimentacao : movimentacoesExcluir) {
+						if(movimentacao.getId() != null ){
+							movimentacaoService.excluirMovimentacao(movimentacao);
+						}
+					}
+				}
+			}
+			
+			
+		}  catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new ApplicationException(e);
+		}
+		
+		
+	}
+	
+	
+	
+	
+	
 	
 	public Movimentacao obterMobiMovimentacaoById(Integer codigo){
 		

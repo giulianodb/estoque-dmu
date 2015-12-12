@@ -1,6 +1,9 @@
 package org.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -9,6 +12,8 @@ import org.apache.myfaces.extensions.cdi.core.api.scope.conversation.ViewAccessS
 import org.controller.model.LoteDataModel;
 import org.controller.model.MovimentacaoDataModel;
 import org.entity.Movimentacao;
+import org.entity.TipoMovimentacaoEnum;
+import org.entity.TipoParceiroEnum;
 import org.exception.ControllerExceptionHandler;
 
 @Named
@@ -24,8 +29,14 @@ public class LoteController implements Serializable  {
 	@Inject
 	private LoteDataModel loteDataModel;
 	
+	private List<TipoMovimentacaoEnum> tipoMovimentacaoCombo;
+	
 	
 	public String iniciarPesquisaReceibo(){
+		
+		if (tipoMovimentacaoCombo == null){
+			tipoMovimentacaoCombo = new ArrayList<TipoMovimentacaoEnum>(Arrays.asList(TipoMovimentacaoEnum.values()));
+		}
 		
 		return "/pages/movimentacao/listar_recibo";
 	}
@@ -37,9 +48,6 @@ public class LoteController implements Serializable  {
 		
 		return null;
 	}
-
-
-
 
 
 	public Movimentacao getMovimentacao() {
@@ -65,6 +73,21 @@ public class LoteController implements Serializable  {
 
 	public void setLoteDataModel(LoteDataModel loteDataModel) {
 		this.loteDataModel = loteDataModel;
+	}
+
+
+
+
+	public List<TipoMovimentacaoEnum> getTipoMovimentacaoCombo() {
+		return tipoMovimentacaoCombo;
+	}
+
+
+
+
+	public void setTipoMovimentacaoCombo(
+			List<TipoMovimentacaoEnum> tipoMovimentacaoCombo) {
+		this.tipoMovimentacaoCombo = tipoMovimentacaoCombo;
 	}
 	
 }

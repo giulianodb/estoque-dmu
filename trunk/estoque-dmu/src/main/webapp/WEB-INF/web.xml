@@ -46,27 +46,27 @@
     <servlet-class>org.quartz.ee.servlet.QuartzInitializerServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  <security-constraint>
-    <display-name>Sistema</display-name>
-    <web-resource-collection>
-      <web-resource-name>Sistema</web-resource-name>
-      <url-pattern>/pages/*</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>Administrador</role-name>
-    </auth-constraint>
-  </security-constraint>
-  <login-config>
-    <auth-method>FORM</auth-method>
-    <form-login-config>
-      <form-login-page>/login.jsf</form-login-page>
-      <form-error-page>/login_error.jsf</form-error-page>
-    </form-login-config>
-  </login-config>
-  <security-role>
-    <description>Quando usuario estiver logado</description>
-    <role-name>Administrador</role-name>
-  </security-role>
+<!--   <security-constraint> -->
+<!--     <display-name>Sistema</display-name> -->
+<!--     <web-resource-collection> -->
+<!--       <web-resource-name>Sistema</web-resource-name> -->
+<!--       <url-pattern>/pages/*</url-pattern> -->
+<!--     </web-resource-collection> -->
+<!--     <auth-constraint> -->
+<!--       <role-name>Administrador</role-name> -->
+<!--     </auth-constraint> -->
+<!--   </security-constraint> -->
+<!--   <login-config> -->
+<!--     <auth-method>FORM</auth-method> -->
+<!--     <form-login-config> -->
+<!--       <form-login-page>/login.jsf</form-login-page> -->
+<!--       <form-error-page>/login_error.jsf</form-error-page> -->
+<!--     </form-login-config> -->
+<!--   </login-config> -->
+<!--   <security-role> -->
+<!--     <description>Quando usuario estiver logado</description> -->
+<!--     <role-name>Administrador</role-name> -->
+<!--   </security-role> -->
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>

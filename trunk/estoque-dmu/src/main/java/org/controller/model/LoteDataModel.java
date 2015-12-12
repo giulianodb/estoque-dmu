@@ -1,5 +1,6 @@
 package org.controller.model;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import javax.faces.application.FacesMessage;
 import javax.inject.Inject;
 
 import org.entity.LoteMovimentacao;
+import org.entity.TipoMovimentacaoEnum;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 import org.service.LoteService;
@@ -25,6 +27,13 @@ public class LoteDataModel extends LazyDataModel<LoteMovimentacao> {
     
     @Inject
     private LoteMovimentacao lotePesquisa;
+    
+    
+   private Date dataInicioPesquisa;
+   
+   private Date dataFimPesquisa;
+   
+   private TipoMovimentacaoEnum tipoMovimentacaoPesquisa;
  
     public LoteDataModel() {  
 
@@ -50,10 +59,10 @@ public class LoteDataModel extends LazyDataModel<LoteMovimentacao> {
     public List<LoteMovimentacao> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String,Object> filters) {
     	try {
     		//Realiza a contagem do total de dados a serem paginados
-    		this.setRowCount(loteService.obterQtdeLote(lotePesquisa));
+    		this.setRowCount(loteService.obterQtdeLote(lotePesquisa, dataInicioPesquisa, dataFimPesquisa, tipoMovimentacaoPesquisa));
     		
     		//Seta os dados na lista de forma paginada
-    		this.setDatasource(loteService.pesquisarLote(lotePesquisa, first,pageSize));
+    		this.setDatasource(loteService.pesquisarLote(lotePesquisa,dataInicioPesquisa, dataFimPesquisa, tipoMovimentacaoPesquisa, first,pageSize));
     		
     	}catch (Exception e) {
     		Message.setMessage("br.gov.pr.celepar.exemplo.controller.model.DataModel.load.ERRO", new String[]{"alunos"}, FacesMessage.SEVERITY_ERROR);
@@ -83,6 +92,31 @@ public class LoteDataModel extends LazyDataModel<LoteMovimentacao> {
 
 	public void setLotePesquisa(LoteMovimentacao lotePesquisa) {
 		this.lotePesquisa = lotePesquisa;
+	}
+
+	public Date getDataInicioPesquisa() {
+		return dataInicioPesquisa;
+	}
+
+	public void setDataInicioPesquisa(Date dataInicioPesquisa) {
+		this.dataInicioPesquisa = dataInicioPesquisa;
+	}
+
+	public Date getDataFimPesquisa() {
+		return dataFimPesquisa;
+	}
+
+	public void setDataFimPesquisa(Date dataFimPesquisa) {
+		this.dataFimPesquisa = dataFimPesquisa;
+	}
+
+	public TipoMovimentacaoEnum getTipoMovimentacaoPesquisa() {
+		return tipoMovimentacaoPesquisa;
+	}
+
+	public void setTipoMovimentacaoPesquisa(
+			TipoMovimentacaoEnum tipoMovimentacaoPesquisa) {
+		this.tipoMovimentacaoPesquisa = tipoMovimentacaoPesquisa;
 	}
 
 }

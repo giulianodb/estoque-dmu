@@ -106,6 +106,42 @@ public class LoteMovimentacao implements Serializable{
 	}
 	
 	
+	/**
+	 * Retorna o nome do recebedor, verifica se é campanha  etc..
+	 * @return
+	 */
+	public String obterNomeReceptor(Boolean mostrarCampanha){
+		if(campanha != null && campanha.getId()!=null){
+			if (familiaCampanha != null){
+				if (mostrarCampanha){
+					return campanha.getNome() + " - " + familiaCampanha.getNomeResponsavel();
+				} else{
+					return familiaCampanha.getNomeResponsavel();
+				}
+			}
+			else {
+				return instituicaoCampanha.getNome();
+			}
+		}	
+		
+		else if(instituicao!=null && instituicao.getId() != null) {
+			return instituicao.getNome();
+		}
+		
+		
+		else if(familia!= null && familia.getId() != null) {
+			return familia.getNomeResponsavel();
+		}
+		else {
+			return "Anônimo";
+		}
+	}
+	
+	
+	
+	public String obterNomeReceptor(){
+		return obterNomeReceptor(false);
+	}
 	
 	
 	public String obterTipoMovimentacao(){

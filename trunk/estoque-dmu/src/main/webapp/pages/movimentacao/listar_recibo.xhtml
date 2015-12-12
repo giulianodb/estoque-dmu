@@ -25,15 +25,32 @@
 				<p:panel toggleable="true" id="pgCampos" header="Informações da Entrada">
 					<p:focus context="pgCampos" />
 					<h:panelGrid columns="2" >		
+						<p:outputLabel for="dataInicialPesquisa" value="Data inicial:" />
+							<p:calendar
+								value="#{loteController.loteDataModel.dataInicioPesquisa}"
+								id="dataInicialPesquisa" 
+								locale="pt" pattern="dd/MM/yyyy" maxlength="10" size="20">
+							</p:calendar> 						
+						<p:outputLabel for="dataFinalPesquisa" value="Data final:" />
+							<p:calendar
+								value="#{loteController.loteDataModel.dataFimPesquisa}"
+								id="dataFinalPesquisa" 
+								locale="pt" pattern="dd/MM/yyyy" maxlength="10" size="20">
+							</p:calendar>
+							<p:outputLabel for="tipoMovimentacao" value="Tipo movimentação:" />
+								<p:selectOneMenu value="#{loteController.loteDataModel.tipoMovimentacaoPesquisa}" id="tipoMovimentacao"  >
+										<f:selectItem itemLabel="Selecione" itemValue="" />
+										<f:selectItems value="#{loteController.tipoMovimentacaoCombo}" var="s" itemLabel="#{s.descricao}" itemValue="#{s}" />
+									</p:selectOneMenu >
+
 
 					</h:panelGrid>
 					<h:panelGrid columns="3" cellpadding="3" >													 
 						<p:commandButton icon="ui-icon-disk" 
-							update=":gridForm entradaForm"
-							value="Pesquisa"
-						 	title="Pesquisar Entrada"
-							action="#{movimentacaoController.iniciarPesquisaMovimentacao()}"						 		
-							ajax="false"></p:commandButton>
+							update=":gridForm pgCampos"
+							value="Pesquisar"
+						 	title="Pesquisar"
+							ajax="true"></p:commandButton>
 							
 					</h:panelGrid>
 				</p:panel>
@@ -60,13 +77,15 @@
 		    	        <p:outputLabel value="#{lote.codigo}" />
 		        	</p:column> 
 					<p:column headerText="Data">
-		    	        <p:outputLabel value="#{lote.data}" />
+		    	        <p:outputLabel value="#{lote.data}" >
+		    	        	<f:convertDateTime pattern="dd/MM/yyyy" />
+		    	        </p:outputLabel>
 		        	</p:column> 
 		        	<p:column headerText="Tipo movimentação">
 		    	        <p:outputLabel value="#{lote.obterTipoMovimentacao()}" >
 		    	        </p:outputLabel>
 		        	</p:column>
-		        	<p:column headerText="Doador/Receptor">
+		        	<p:column headerText="Doador/Recebedor">
 		    	        <p:outputLabel value="#{lote.obterNomeDoador()}" >
 		    	        </p:outputLabel>
 		        	</p:column>
@@ -78,13 +97,38 @@
 		        	
 			        <p:column headerText="Selecionar" style="text-align: center;" >				                
 						
-						      <p:commandButton id="cmdReciboEntrada" icon="ui-icon-direction"									 	 
+						      <p:commandButton id="cmdReciboEntrada" icon="ui-icon-document"									 	 
 					 		update=":gridForm :entradaForm"
 					 		title="Recibo Entrada"	
 					 		ajax="false"
 							action="#{relatorioController.reciboEntrada(lote)}"
 							rendered="#{lote.obterTipoMovimentacao() == 'Entrada'}" > 
 						</p:commandButton>	
+						
+						      <p:commandButton id="cmdReciboSaida" icon="ui-icon-document"									 	 
+					 		update=":gridForm :entradaForm"
+					 		title="Recibo Saída"	
+					 		ajax="false"
+							action="#{relatorioController.reciboSaida(lote)}"
+							rendered="#{lote.obterTipoMovimentacao() == 'Saída'}" > 
+						</p:commandButton>
+						
+						
+						<p:commandButton id="cmdAlterarReciboSaida" icon="ui-icon-pencil"									 	 
+					 		update=":gridForm :entradaForm"
+					 		title="Alterar Recibo Saída"	
+					 		ajax="false"
+							action="#{saidaController.iniciarAlterarMovimentacaoSaida(lote)}"
+							rendered="#{lote.obterTipoMovimentacao() == 'Saída'}" > 
+						</p:commandButton>
+						
+						<p:commandButton id="cmdAlterarReciboEntrada" icon="ui-icon-pencil"									 	 
+					 		update=":gridForm :entradaForm"
+					 		title="Alterar Recibo Entrada"	
+					 		ajax="false"
+							action="#{entradaController.iniciarAlterarEntrada(lote)}"
+							rendered="#{lote.obterTipoMovimentacao() == 'Entrada'}" > 
+						</p:commandButton>
 						            
 				    </p:column>
 			        <f:facet name="footer">  

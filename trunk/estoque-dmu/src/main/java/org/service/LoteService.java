@@ -1,5 +1,6 @@
 package org.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.entity.Campanha;
 import org.entity.LoteMovimentacao;
 import org.entity.Movimentacao;
 import org.entity.Produto;
+import org.entity.TipoMovimentacaoEnum;
 import org.exception.ApplicationException;
 import org.util.DateUtil;
 
@@ -31,14 +33,38 @@ public class LoteService {
 	@EJB
 	private LoteService loteService;
 	
-	public List<LoteMovimentacao> pesquisarLote(LoteMovimentacao lote, Integer primeiroRegistro, Integer tamanhoPagina) throws ApplicationException{
+	public List<LoteMovimentacao> pesquisarLote(LoteMovimentacao lote, Date dataInicioPesquisa, Date dataFimPesquisa, TipoMovimentacaoEnum tipoMovimentacaoPesquisa, Integer primeiroRegistro, Integer tamanhoPagina) throws ApplicationException{
 		try {
-			StringBuilder sb = new StringBuilder("SELECT lote FROM LoteMovimentacao lote ");	
-			sb.append(" LEFT JOIN FETCH lote.instituicao instituicao  ");
+			StringBuilder sb = new StringBuilder("SELECT distinct lote FROM LoteMovimentacao lote ");	
+//			if (dataFimPesquisa != null || dataInicioPesquisa != null){
+//				sb.append(" LEFT JOIN FETCH lote.instituicao instituicao  ");
+//			}
+			if (tipoMovimentacaoPesquisa != null){
+				sb.append(" JOIN lote.listMovimentacao l  ");
+			}
+			sb.append(" WHERE ");
+			if (dataInicioPesquisa != null){
+				sb.append(" lote.data >= :dataInicio AND ");
+			}
+			if (dataFimPesquisa != null){
+				sb.append(" lote.data <= :dataFim AND");
+			}
+			if (tipoMovimentacaoPesquisa != null){
+				sb.append(" l.tipoMovimentacaoEnum = :tipoMovimentacao AND ");
+			}
+			
+			sb.append(" 1 = 1 ");
+			
+			sb.append("ORDER BY lote.data DESC");
 			
 			TypedQuery<LoteMovimentacao> query = em.createQuery(sb.toString(),LoteMovimentacao.class);
-		
-			sb.append("ORDER BY lote.data ");
+			
+			if (dataInicioPesquisa != null){
+				query.setParameter("dataInicio", dataInicioPesquisa);
+			}
+			if (dataFimPesquisa != null){
+				query.setParameter("dataFim", dataFimPesquisa);
+			}
 			
 			//Delimita o num de registro para a pagina a ser recuperada
 	        if (primeiroRegistro != null){
@@ -47,7 +73,25 @@ public class LoteService {
 	        if (tamanhoPagina != null){
 	        	query.setMaxResults(tamanhoPagina);				
 	        }
-			return query.getResultList();
+	        
+	    	if (tipoMovimentacaoPesquisa != null){
+	    		query.setParameter("tipoMovimentacao", tipoMovimentacaoPesquisa); 
+			}
+	        
+	        List<LoteMovimentacao> listaMovimentacao = query.getResultList();
+//	        List<LoteMovimentacao> listaRemover = new ArrayList<LoteMovimentacao>();
+//	        
+//	        if (tipoMovimentacaoPesquisa != null){
+//	        	for (LoteMovimentacao loteMovimentacao : listaMovimentacao) {
+//	        		if (!loteMovimentacao.obterTipoMovimentacao().equals(tipoMovimentacaoPesquisa.getDescricao())) {
+//	        			listaRemover.add(loteMovimentacao);
+//	        		}
+//	        	}
+//	        	listaMovimentacao.removeAll(listaRemover);
+//	        	
+//	        }
+	        
+			return listaMovimentacao;
 		} catch(Exception e) {
 			throw new ApplicationException("br.gov.pr.celepar.exemplo.dao.MatriculaDAO.listarPorAlunoComRelacionamentos.ERRO", e);
 		}
@@ -61,6 +105,8 @@ public class LoteService {
 			dataInicial = DateUtil.adicionarHoraInicio(dataInicial);
 			dataFinal = DateUtil.adicionarHoraFim(dataFinal);
 			StringBuilder sb = new StringBuilder("SELECT lote FROM LoteMovimentacao lote ");	
+			
+			
 			
 			TypedQuery<LoteMovimentacao> query = em.createQuery(sb.toString(),LoteMovimentacao.class);
 			
@@ -79,11 +125,45 @@ public class LoteService {
 	
 	
 	
-	public Integer obterQtdeLote(LoteMovimentacao loteMovimentacao) throws ApplicationException{
+	public Integer obterQtdeLote(LoteMovimentacao loteMovimentacao, Date dataInicioPesquisa, Date dataFimPesquisa, TipoMovimentacaoEnum tipoMovimentacaoPesquisa) throws ApplicationException{
 			
 			try {
-				StringBuilder sb = new StringBuilder("SELECT COUNT(lote) FROM LoteMovimentacao lote ");
+				StringBuilder sb = new StringBuilder("SELECT COUNT(DISTINCT lote) FROM LoteMovimentacao lote ");
+				
+//				if (dataFimPesquisa != null || dataInicioPesquisa != null){
+//					sb.append(" LEFT JOIN FETCH lote.instituicao instituicao  ");
+//				}
+				if (tipoMovimentacaoPesquisa != null){
+					sb.append(" JOIN lote.listMovimentacao l  ");
+				}
+				
+				sb.append(" WHERE ");
+				if (dataInicioPesquisa != null){
+					sb.append(" lote.data >= :dataInicio AND ");
+				}
+				if (dataFimPesquisa != null){
+					sb.append(" lote.data <= :dataFim AND");
+				}
+				if (tipoMovimentacaoPesquisa != null){
+					sb.append(" l.tipoMovimentacaoEnum = :tipoMovimentacao AND ");
+				}
+				
+				sb.append(" 1 = 1 ");
+				
+				
 				Query query = em.createQuery(sb.toString());
+				
+				if (dataInicioPesquisa != null){
+					query.setParameter("dataInicio", dataInicioPesquisa);
+				}
+				if (dataFimPesquisa != null){
+					query.setParameter("dataFim", dataFimPesquisa);
+				}
+				
+		        
+		    	if (tipoMovimentacaoPesquisa != null){
+		    		query.setParameter("tipoMovimentacao", tipoMovimentacaoPesquisa); 
+				}
 				
 				Long x = (Long) query.getSingleResult();		
 				return Integer.valueOf(x.intValue());

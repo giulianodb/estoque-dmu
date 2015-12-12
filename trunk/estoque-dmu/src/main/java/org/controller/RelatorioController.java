@@ -281,7 +281,36 @@ public class RelatorioController implements Serializable {
 					.getExternalContext().getResponse();
 			response.setContentType("application/pdf");
 			response.addHeader("Content-disposition",
-					"attachment; filename=\" relatorio.pdf\"");
+					"attachment; filename=\" Recibo_entrada.pdf\"");
+
+			OutputStream os = null;
+			os = response.getOutputStream();
+
+			byteArrayOutputStream.writeTo(os);
+			os.flush();
+			os.close();
+			byteArrayOutputStream.close();
+
+			FacesContext.getCurrentInstance().responseComplete();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	public void reciboSaida(LoteMovimentacao lote) {
+		try {
+
+			ByteArrayOutputStream byteArrayOutputStream = relatorioService
+					.reciboSaida(lote);
+
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+
+			HttpServletResponse response = (HttpServletResponse) facesContext
+					.getExternalContext().getResponse();
+			response.setContentType("application/pdf");
+			response.addHeader("Content-disposition",
+					"attachment; filename=\" Receibo_saída.pdf\"");
 
 			OutputStream os = null;
 			os = response.getOutputStream();

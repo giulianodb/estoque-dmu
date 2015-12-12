@@ -8,21 +8,21 @@ public class ReciboEntradaDTO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Float quantidade;
+	private String quantidade;
 	
 	private String tipoUnidade;
 	
 	private String nomeProduto;
 	
-	private Float valorUnitario;
+	private String valorUnitario;
 	
-	private Float valorTotal;
+	private String valorTotal;
 
-	public Float getQuantidade() {
+	public String getQuantidade() {
 		return quantidade;
 	}
 
-	public void setQuantidade(Float quantidade) {
+	public void setQuantidade(String quantidade) {
 		this.quantidade = quantidade;
 	}
 
@@ -42,19 +42,20 @@ public class ReciboEntradaDTO implements Serializable {
 		this.nomeProduto = nomeProduto;
 	}
 
-	public Float getValorUnitario() {
+	public String getValorUnitario() {
 		return valorUnitario;
 	}
 
-	public void setValorUnitario(Float valorUnitario) {
+	public void setValorUnitario(String valorUnitario) {
 		this.valorUnitario = valorUnitario;
 	}
 
-	public Float getValorTotal() {
+	public String getValorTotal() {
 		return valorTotal;
 	}
 
-	public void setValorTotal(Float valorTotal) {
+	public void setValorTotal(String valorTotal) {
 		this.valorTotal = valorTotal;
 	}
+
 }

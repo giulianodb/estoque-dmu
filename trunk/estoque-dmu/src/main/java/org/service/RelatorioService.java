@@ -471,10 +471,12 @@ public class RelatorioService {
 				dto.setNomeProduto(movimentacao.getProduto().getNome());
 			}
 			
-			dto.setQuantidade(movimentacao.getQuantidade());
+			MoedaConverter mc = new MoedaConverter();
+			
+			dto.setQuantidade(mc.getAsString(null, null, movimentacao.getQuantidade()) );
 			dto.setTipoUnidade(movimentacao.getProduto().getTipoMedida().getDescricao());
-			dto.setValorTotal(movimentacao.getValor());
-			dto.setValorUnitario(NumeroUtil.DividirDinheiro(movimentacao.getValor(), movimentacao.getQuantidade(), 3));
+			dto.setValorTotal(mc.getAsString(null, null, movimentacao.getValor())  );
+			dto.setValorUnitario(mc.getAsString(null, null,NumeroUtil.DividirDinheiro(movimentacao.getValor(), movimentacao.getQuantidade(), 3))  );
 			
 			listaReciboEntradaDTO.add(dto);
 			
@@ -484,12 +486,33 @@ public class RelatorioService {
 		
 		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(listaReciboEntradaDTO);
 		
+		String endereco = "";
+		String documento = "";
+		String campanha = "";
+		
+		if (lote.getDoador() != null){
+			endereco = lote.getDoador().getRua() + " - " + lote.getDoador().getBairro() + " - " + lote.getDoador().getCidade();
+			documento = lote.getDoador().getCpf();
+		} else if (lote.getFamilia()!= null) {
+			endereco = lote.getFamilia().getRua() + " - " + lote.getFamilia().getBairro() + " - " + lote.getFamilia().getCidade();
+			documento = lote.getFamilia().getCpfResponsavel();
+		} else if (lote.getInstituicao()!=null) {
+			endereco = lote.getInstituicao().getEmail();
+			documento = lote.getInstituicao().getCnpj();
+		}
+		
+		
+		if (lote.getCampanha() != null){
+			campanha = lote.getCampanha().getNome();
+		}
+		
 		Map<String, Object> mapa = new HashMap<String, Object>();
 		mapa.put("doador", lote.obterNomeDoador());
-		mapa.put("endereco", "INSERIR A RUA COMPLETA...");
-		mapa.put("documento", "INSERIR DOCUMENTO...");
-		mapa.put("data", DateUtil.dataToString(lote.getData()));
-		mapa.put("numeroRecibo", lote.getNumeroEntrada());
+		mapa.put("endereco", endereco);
+		mapa.put("campanha", campanha);
+		mapa.put("documento", documento);
+		mapa.put("data", DateUtil.dataExtenso(DateUtil.dataToString(lote.getData())));
+		mapa.put("numeroRecibo", lote.getCodigo());
 		
 		mapa.put("valorTotal", mc.getAsString(null,null,lote.valorTotalMovimentacao()));
 		
@@ -529,6 +552,106 @@ public class RelatorioService {
 		}
 	}
 	
+	
+	public ByteArrayOutputStream reciboSaida (LoteMovimentacao lote) throws ApplicationException{
+		
+		List<ReciboEntradaDTO> listaReciboEntradaDTO = new ArrayList<ReciboEntradaDTO>();
+		
+		for (Movimentacao movimentacao : lote.getListMovimentacao()) {
+			ReciboEntradaDTO dto = new ReciboEntradaDTO();
+			
+			if (movimentacao.getDescricaoNota() != null && !"".equals(movimentacao.getDescricaoNota())){
+				dto.setNomeProduto(movimentacao.getDescricaoNota());
+			}
+			else {
+				dto.setNomeProduto(movimentacao.getProduto().getNome());
+			}
+			
+			MoedaConverter mc = new MoedaConverter();
+			
+			dto.setQuantidade(mc.getAsString(null, null, movimentacao.getQuantidade()) );
+			dto.setTipoUnidade(movimentacao.getProduto().getTipoMedida().getDescricao());
+			dto.setValorTotal(mc.getAsString(null, null, movimentacao.getValor())  );
+			dto.setValorUnitario(mc.getAsString(null, null,NumeroUtil.DividirDinheiro(movimentacao.getValor(), movimentacao.getQuantidade(), 3))  );
+			
+			listaReciboEntradaDTO.add(dto);
+			
+		}
+		
+		MoedaConverter mc = new MoedaConverter();
+		
+		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(listaReciboEntradaDTO);
+		
+		String endereco = "Não informado.";
+		String documento = " Não informado.";
+		String campanha = "";
+		
+		if (lote.getDoador() != null){
+			endereco = lote.getDoador().getRua() + " - " + lote.getDoador().getBairro() + " - " + lote.getDoador().getCidade();
+			documento = lote.getDoador().getCpf();
+		} else if (lote.getFamilia()!= null) {
+			endereco = lote.getFamilia().getRua() + " - " + lote.getFamilia().getBairro() + " - " + lote.getFamilia().getCidade();
+			documento = lote.getFamilia().getCpfResponsavel();
+		} else if (lote.getInstituicao()!=null) {
+			endereco = lote.getInstituicao().getEmail();
+			documento = lote.getInstituicao().getCnpj();
+		} else if (lote.getFamiliaCampanha()!=null) {
+			endereco = lote.getFamiliaCampanha().getRua() + " - " + lote.getFamiliaCampanha().getBairro();
+			documento = lote.getFamiliaCampanha().getCpfResponsavel();
+		} else if (lote.getInstituicaoCampanha()!=null) {
+			endereco = lote.getInstituicaoCampanha().getEmail();
+			documento = lote.getInstituicaoCampanha().getCnpj();
+		}
+		
+		
+		if (lote.getCampanha() != null){
+			campanha = lote.getCampanha().getNome();
+		}
+		
+		Map<String, Object> mapa = new HashMap<String, Object>();
+		mapa.put("recebedor", lote.obterNomeReceptor());
+		mapa.put("endereco", endereco);
+		mapa.put("documento", documento);
+		mapa.put("data", DateUtil.dataExtenso(DateUtil.dataToString(lote.getData())));
+		mapa.put("numeroRecibo", lote.getCodigo());
+		mapa.put("campanha", campanha);
+		mapa.put("valorTotal", mc.getAsString(null,null,lote.valorTotalMovimentacao()));
+		
+		
+		//ESSE Atributo está indo para a tabela...
+		mapa.put("zabumba", beanColDataSource);
+		
+		JasperReport report;
+		try {
+			report = JasperCompileManager
+					.compileReport(PropertiesLoaderImpl.getValor("recibo_saida"));
+			// // preenchimento do relatorio, note que o metodo
+			// recebe 3 parametros: // 1 - o relatorio // // 2 - um
+			// Map, com parametros que sao passados ao relatorio //
+			// no momento do preenchimento. No nosso caso eh null,
+			// pois nao // estamos usando nenhum parametro // // 3 -
+			// o data source. Note que nao devemos passar a lista
+			// diretamente, // e sim "transformar" em um data source
+			// utilizando a classe //
+			// JRBeanCollectionDataSource
+			JasperPrint print = JasperFillManager.fillReport(report, mapa,
+					new JRBeanCollectionDataSource(listaReciboEntradaDTO)); // exportacao do
+			// relatorio para outro formato, no caso PDF]]
+
+			// JasperExportManager.exportReportToPdfFile(print,
+			// "/home/giuliano/RelatorioClientes.pdf");
+			System.out.println("Relatório gerado.");
+
+			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			byteArrayOutputStream.write(JasperExportManager
+					.exportReportToPdf(print));
+
+			return byteArrayOutputStream;
+		}catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	
 	

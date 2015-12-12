@@ -6,9 +6,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.application.FacesMessage.Severity;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
@@ -18,8 +15,10 @@ import org.controller.model.MovimentacaoDataModel;
 import org.entity.Campanha;
 import org.entity.Familia;
 import org.entity.Instituicao;
+import org.entity.LoteMovimentacao;
 import org.entity.Movimentacao;
 import org.entity.Produto;
+import org.entity.TipoMovimentacaoEnum;
 import org.entity.TipoParceiroEnum;
 import org.exception.ApplicationException;
 import org.exception.ControllerExceptionHandler;
@@ -90,6 +89,17 @@ public class SaidaController implements Serializable  {
 	private ProdutoService produtoService;
 	
 	
+	private List<Movimentacao> listaMovimentacao;
+	
+	//Lista de movimentacoes para serem excluidas na alteracao
+	private List<Movimentacao> listaMovimentacaoParaExcluir;
+	
+	@Inject
+	private Movimentacao saidaDadosReceptor;
+	
+	@Inject
+	private LoteController loteController;
+	
 	public String iniciarPesquisaSaida(){
 		
 		return "/pages/movimentacao/listar_movimentacao";
@@ -102,6 +112,7 @@ public class SaidaController implements Serializable  {
 		//carregando combos iniciais
 		listProdutoCombo = produtoService.pesquisarProduto(new Produto(), 0, 0);
 		listaTipoParceiroCombo = new ArrayList<TipoParceiroEnum>(Arrays.asList(TipoParceiroEnum.values()));
+		listaTipoParceiroCombo.remove(TipoParceiroEnum.PESSOA);
 		listaTipoParceiroCampanhaCombo = new ArrayList<TipoParceiroEnum>();
 		
 		listaTipoParceiroCampanhaCombo.add(TipoParceiroEnum.FAMILIA);
@@ -121,13 +132,20 @@ public class SaidaController implements Serializable  {
 	}
 	
 	
-	public String iniciarAlterarMovimentacaoSaida() throws ApplicationException{
+	public String iniciarAlterarMovimentacaoSaida(LoteMovimentacao lote) throws ApplicationException{
+		 
 		
 //		valorMedioProduto = 0f;
+		
+		saidaDadosReceptor = movimentacaoProvider.get();
+		saidaDadosReceptor.setLoteMovimentacao(lote);
+		listaMovimentacao = lote.getListMovimentacao();
 		
 		//carregando combos iniciais
 		listProdutoCombo = produtoService.pesquisarProduto(new Produto(), 0, 0);
 		listaTipoParceiroCombo = new ArrayList<TipoParceiroEnum>(Arrays.asList(TipoParceiroEnum.values()));
+		listaTipoParceiroCombo.remove(TipoParceiroEnum.PESSOA);
+		
 		listaTipoParceiroCampanhaCombo = new ArrayList<TipoParceiroEnum>();
 		
 		listaTipoParceiroCampanhaCombo.add(TipoParceiroEnum.FAMILIA);
@@ -136,7 +154,7 @@ public class SaidaController implements Serializable  {
 //		saida.getLoteMovimentacao().setFamiliaCampanha(new Familia());
 //		saida.getLoteMovimentacao().setInstituicaoCampanha(new Instituicao());
 		
-		if (saida.getLoteMovimentacao().getCampanha() != null){
+		if (saidaDadosReceptor.getLoteMovimentacao().getCampanha() != null){
 			tipoParceiroSelecionado = TipoParceiroEnum.CAMPANHA;
 			mostrarComboCampanha = true;
 			mostrarComboInstituicao = false;
@@ -148,7 +166,7 @@ public class SaidaController implements Serializable  {
 			}
 			
 			
-		} else if(saida.getLoteMovimentacao().getFamilia() != null){
+		} else if(saidaDadosReceptor.getLoteMovimentacao().getFamilia() != null){
 			tipoParceiroSelecionado = TipoParceiroEnum.FAMILIA;
 			mostrarComboCampanha = false;
 			mostrarComboInstituicao = false;
@@ -157,7 +175,7 @@ public class SaidaController implements Serializable  {
 			if(listaFamiliaCombo == null || listaFamiliaCombo.size() == 0){
 				listaFamiliaCombo = familiaService.pesquisarFamilia(new Familia());
 			}
-		} else if(saida.getLoteMovimentacao().getInstituicao() != null){
+		} else if(saidaDadosReceptor.getLoteMovimentacao().getInstituicao() != null){
 			tipoParceiroSelecionado = TipoParceiroEnum.INSTITUICAO;
 			mostrarComboCampanha = false;
 			mostrarComboInstituicao = true;
@@ -177,14 +195,14 @@ public class SaidaController implements Serializable  {
 		
 		
 		
-		if (saida.getLoteMovimentacao().getFamiliaCampanha() != null){
+		if (saidaDadosReceptor.getLoteMovimentacao().getFamiliaCampanha() != null){
 			tipoParceiroCampanhaSelecionado = TipoParceiroEnum.FAMILIA;
 			if(listaFamiliaCombo == null || listaFamiliaCombo.size() == 0){
 				listaFamiliaCombo = familiaService.pesquisarFamilia(new Familia());
 			}
 			mostrarComboInstituicaoCampanha = false;
 			mostrarComboFamiliaCampanha = true;
-		} else if(saida.getLoteMovimentacao().getInstituicaoCampanha() != null){
+		} else if(saidaDadosReceptor.getLoteMovimentacao().getInstituicaoCampanha() != null){
 			tipoParceiroCampanhaSelecionado = TipoParceiroEnum.INSTITUICAO;
 			if(listaInstituicaoCombo == null || listaInstituicaoCombo.size() == 0){
 				listaInstituicaoCombo = instituicaoService.pesquisarInstituicao(new Instituicao());
@@ -201,78 +219,100 @@ public class SaidaController implements Serializable  {
 		return "/pages/movimentacao/saida/editar_saida";
 	}
 	
-	public String excluirSaida(){
-		
-		return null;
+	
+	
+	public void excluirSaida(){
+		listaMovimentacao.remove(saida);
+		if (saida.getId() != null){
+			if (listaMovimentacaoParaExcluir == null){
+				listaMovimentacaoParaExcluir = new ArrayList<Movimentacao>();
+			}
+			listaMovimentacaoParaExcluir.add(saida);
+		}
+		saida = movimentacaoProvider.get();
 	}
 	
 	public String incluirSaida() throws ApplicationException{
 			
-			if (saida.getLoteMovimentacao().getFamiliaCampanha() != null && saida.getLoteMovimentacao().getFamiliaCampanha().getId() != null){
-				saida.getLoteMovimentacao().setFamiliaCampanha(familiaService.obterFamilia(saida.getLoteMovimentacao().getFamiliaCampanha().getId()));
-				
-			}else {
-				saida.getLoteMovimentacao().setFamiliaCampanha(null);
-			}
+			resolverReceptor();
 			
-			
-			if (saida.getLoteMovimentacao().getFamilia() != null && saida.getLoteMovimentacao().getFamilia().getId() != null){
-				saida.getLoteMovimentacao().setFamilia(familiaService.obterFamilia(saida.getLoteMovimentacao().getFamilia().getId()));
-				
-			}else {
-				saida.getLoteMovimentacao().setFamilia(null);
-			}
-			
-			
-			
-			if (saida.getLoteMovimentacao().getInstituicao() != null && saida.getLoteMovimentacao().getInstituicao().getId() != null){
-				saida.getLoteMovimentacao().setInstituicao(instituicaoService.obterInstituicao(saida.getLoteMovimentacao().getInstituicao().getId()));
-				
-			}else {
-				saida.getLoteMovimentacao().setInstituicao(null);
-			}
-			
-			
-			
-			if (saida.getLoteMovimentacao().getInstituicaoCampanha() != null && saida.getLoteMovimentacao().getInstituicaoCampanha().getId() != null){
-				saida.getLoteMovimentacao().setInstituicaoCampanha(instituicaoService.obterInstituicao(saida.getLoteMovimentacao().getInstituicaoCampanha().getId()));
-				
-			}else {
-				saida.getLoteMovimentacao().setInstituicaoCampanha(null);
-			}
-			
-			
-			if (saida.getLoteMovimentacao().getCampanha() != null && saida.getLoteMovimentacao().getCampanha().getId() != null){
-				saida.getLoteMovimentacao().setCampanha(campanhaService.obterCampanha(saida.getLoteMovimentacao().getCampanha().getId()));
-				
-			}else {
-				saida.getLoteMovimentacao().setCampanha(null);
-			}
-			
-			
-			
-//			
-			saidaService.incluirSaida(saida);
+			saidaService.incluirSaidaLote(listaMovimentacao, saidaDadosReceptor);
 			Message.setMessage("controller.incluirSaida.SUCESSO");
 			
 		
 		
 		return iniciarPesquisaSaida();
+	}
+
+	private void resolverReceptor() throws ApplicationException {
+		if (saidaDadosReceptor.getLoteMovimentacao().getFamiliaCampanha() != null && saidaDadosReceptor.getLoteMovimentacao().getFamiliaCampanha().getId() != null){
+			saidaDadosReceptor.getLoteMovimentacao().setFamiliaCampanha(familiaService.obterFamilia(saidaDadosReceptor.getLoteMovimentacao().getFamiliaCampanha().getId()));
+			
+		}else {
+			saidaDadosReceptor.getLoteMovimentacao().setFamiliaCampanha(null);
+		}
+		
+		
+		if (saidaDadosReceptor.getLoteMovimentacao().getFamilia() != null && saidaDadosReceptor.getLoteMovimentacao().getFamilia().getId() != null){
+			saidaDadosReceptor.getLoteMovimentacao().setFamilia(familiaService.obterFamilia(saidaDadosReceptor.getLoteMovimentacao().getFamilia().getId()));
+			
+		}else {
+			saidaDadosReceptor.getLoteMovimentacao().setFamilia(null);
+		}
+		
+		
+		
+		if (saidaDadosReceptor.getLoteMovimentacao().getInstituicao() != null && saidaDadosReceptor.getLoteMovimentacao().getInstituicao().getId() != null){
+			saidaDadosReceptor.getLoteMovimentacao().setInstituicao(instituicaoService.obterInstituicao(saidaDadosReceptor.getLoteMovimentacao().getInstituicao().getId()));
+			
+		}else {
+			saidaDadosReceptor.getLoteMovimentacao().setInstituicao(null);
+		}
+		
+		
+		
+		if (saidaDadosReceptor.getLoteMovimentacao().getInstituicaoCampanha() != null && saidaDadosReceptor.getLoteMovimentacao().getInstituicaoCampanha().getId() != null){
+			saidaDadosReceptor.getLoteMovimentacao().setInstituicaoCampanha(instituicaoService.obterInstituicao(saidaDadosReceptor.getLoteMovimentacao().getInstituicaoCampanha().getId()));
+			
+		}else {
+			saidaDadosReceptor.getLoteMovimentacao().setInstituicaoCampanha(null);
+		}
+		
+		
+		if (saidaDadosReceptor.getLoteMovimentacao().getCampanha() != null && saidaDadosReceptor.getLoteMovimentacao().getCampanha().getId() != null){
+			saidaDadosReceptor.getLoteMovimentacao().setCampanha(campanhaService.obterCampanha(saidaDadosReceptor.getLoteMovimentacao().getCampanha().getId()));
+			
+		}else {
+			saidaDadosReceptor.getLoteMovimentacao().setCampanha(null);
+		}
 	}
 	
 	public String alterarSaida(){
 		
 		try {
-			saidaService.alterarSaida1(saida);
 			
-			saidaService.alterarSaida2(saida);
+			//Alterar para o utro método de alteraçcao.
+			// primeiro verifica se a data está alterada ou se o recebedor esta alterado se estiver deve fazer o forwach em cada e execetar os deois meotodos noemalmente
+			
+			//caso data não foi alterada excluir as movimentacoes excluidas que estao na lsita de movEscluidas e inserir as movimentacoes cujo codigo estão nullas pois são novas.
+			
+			resolverReceptor();
+			
+			saidaDadosReceptor.setTipoMovimentacaoEnum(TipoMovimentacaoEnum.SAIDA);
+			
+			saidaService.alterarMovimentacaoLote(listaMovimentacao, listaMovimentacaoParaExcluir , saidaDadosReceptor);
+			
 			Message.setMessage("controller.incluirSaida.SUCESSO");
 			
-		} catch (Exception e) {
+			return loteController.iniciarPesquisaReceibo();
+		} catch (ApplicationException e) {
 			e.printStackTrace();
-			Message.setMessage("ERRO", FacesMessage.SEVERITY_ERROR);
+			Message.setMessage(e);
+			return null;
 		}
-		return iniciarPesquisaSaida();
+		
+		
+		
 	}
 	
 	public void listenerAlterarTipoReceptor() throws ApplicationException{
@@ -281,13 +321,14 @@ public class SaidaController implements Serializable  {
 			if(listaCampanhaCombo == null || listaCampanhaCombo.size() == 0){
 				listaCampanhaCombo = campanhaService.pesquisarCampanha(new Campanha());
 			}
-			saida.getLoteMovimentacao().setCampanha(new Campanha());
+			saidaDadosReceptor.getLoteMovimentacao().setCampanha(new Campanha());
 			mostrarComboCampanha = true;
 			mostrarComboFamilia = false;
 			mostrarComboInstituicao = false;
 			mostrarComboFamiliaCampanha = false;
-			saida.getLoteMovimentacao().setFamiliaCampanha(new Familia());
-			saida.getLoteMovimentacao().setInstituicaoCampanha(new Instituicao());
+			mostrarComboInstituicaoCampanha = false;
+			saidaDadosReceptor.getLoteMovimentacao().setFamiliaCampanha(new Familia());
+			saidaDadosReceptor.getLoteMovimentacao().setInstituicaoCampanha(new Instituicao());
 			
 			if(listaFamiliaCombo == null || listaFamiliaCombo.size() == 0){
 				listaFamiliaCombo = familiaService.pesquisarFamilia(new Familia());
@@ -304,11 +345,12 @@ public class SaidaController implements Serializable  {
 				listaFamiliaCombo = familiaService.pesquisarFamilia(new Familia());
 			}
 			
-			saida.getLoteMovimentacao().setFamilia(new Familia());
+			saidaDadosReceptor.getLoteMovimentacao().setFamilia(new Familia());
 			mostrarComboCampanha = false;
 			mostrarComboInstituicao = false;
 			mostrarComboFamilia = true;
 			mostrarComboFamiliaCampanha = false;
+			mostrarComboInstituicaoCampanha = false;
 			break;
 		}
 		
@@ -317,18 +359,20 @@ public class SaidaController implements Serializable  {
 			mostrarComboFamilia = false;
 			mostrarComboInstituicao = false;
 			mostrarComboFamiliaCampanha = false;
+			mostrarComboInstituicaoCampanha = false;
 			break;
 		}
 		case 3: {
 			if(listaInstituicaoCombo == null || listaInstituicaoCombo.size() == 0){
 				listaInstituicaoCombo = instituicaoService.pesquisarInstituicao(new Instituicao());
 			}
-			saida.getLoteMovimentacao().setInstituicao(new Instituicao());
+			saidaDadosReceptor.getLoteMovimentacao().setInstituicao(new Instituicao());
 			
 			mostrarComboCampanha = false;
 			mostrarComboFamilia = false;
 			mostrarComboInstituicao = true;
 			mostrarComboFamiliaCampanha = false;
+			mostrarComboInstituicaoCampanha = false;
 			break;
 		}
 		
@@ -343,7 +387,7 @@ public class SaidaController implements Serializable  {
 				listaFamiliaCombo = familiaService.pesquisarFamilia(new Familia());
 			}
 			
-			saida.getLoteMovimentacao().setFamiliaCampanha(new Familia());
+			saidaDadosReceptor.getLoteMovimentacao().setFamiliaCampanha(new Familia());
 			mostrarComboInstituicaoCampanha = false;
 			mostrarComboFamiliaCampanha = true;
 			break;
@@ -354,7 +398,7 @@ public class SaidaController implements Serializable  {
 			if(listaInstituicaoCombo == null || listaInstituicaoCombo.size() == 0){
 				listaInstituicaoCombo = instituicaoService.pesquisarInstituicao(new Instituicao());
 			}
-			saida.getLoteMovimentacao().setInstituicaoCampanha(new Instituicao());
+			saidaDadosReceptor.getLoteMovimentacao().setInstituicaoCampanha(new Instituicao());
 			
 			mostrarComboInstituicaoCampanha = true;
 			mostrarComboFamiliaCampanha = false;
@@ -363,6 +407,35 @@ public class SaidaController implements Serializable  {
 		
 		}
 	}
+	
+	
+	public void adicionarSaidaLote() throws ApplicationException{
+		if (listaMovimentacao == null){
+			listaMovimentacao = new ArrayList<Movimentacao>();
+		}
+		
+		
+//		saida.setValor(NumeroUtil.multiplicarDinheiro(valorUnitarioController, entrada.getQuantidade(), 3));
+		
+		saida.setProduto(produtoService.obterProduto(saida.getProduto().getId()));
+		
+		listaMovimentacao.add(this.saida);
+		
+		saida = movimentacaoProvider.get();
+		
+//		prepararIncluirSaida();
+		
+	}
+	
+	public void prepararIncluirSaida() throws ApplicationException {
+		saida = movimentacaoProvider.get();
+		valorMedioProduto = 0f;
+		//carregando combos iniciais
+		listProdutoCombo = produtoService.pesquisarProduto(new Produto(), 0, 0);
+		
+		saida.getLoteMovimentacao().setData(new Date());
+	}
+	
 	
 	
 //	public void listenerObterPrecoMedio(){
@@ -492,6 +565,31 @@ public class SaidaController implements Serializable  {
 	public void setListaTipoParceiroCampanhaCombo(
 			List<TipoParceiroEnum> listaTipoParceiroCampanhaCombo) {
 		this.listaTipoParceiroCampanhaCombo = listaTipoParceiroCampanhaCombo;
+	}
+
+	public List<Movimentacao> getListaMovimentacao() {
+		return listaMovimentacao;
+	}
+
+	public void setListaMovimentacao(List<Movimentacao> listaMovimentacao) {
+		this.listaMovimentacao = listaMovimentacao;
+	}
+
+	public Movimentacao getSaidaDadosReceptor() {
+		return saidaDadosReceptor;
+	}
+
+	public void setSaidaDadosReceptor(Movimentacao saidaDadosReceptor) {
+		this.saidaDadosReceptor = saidaDadosReceptor;
+	}
+
+	public List<Movimentacao> getListaMovimentacaoParaExcluir() {
+		return listaMovimentacaoParaExcluir;
+	}
+
+	public void setListaMovimentacaoParaExcluir(
+			List<Movimentacao> listaMovimentacaoParaExcluir) {
+		this.listaMovimentacaoParaExcluir = listaMovimentacaoParaExcluir;
 	}
 
 }
