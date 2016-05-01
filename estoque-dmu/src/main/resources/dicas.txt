@@ -1,1 +1,0 @@
-UPDATE estoque.movimentacao m SET data= data - time '03:00' WHERE quantidadeultimo = 0
