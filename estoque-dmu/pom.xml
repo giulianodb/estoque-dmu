@@ -6,7 +6,7 @@
 	<packaging>war</packaging>
 	<version>1.0.0</version>
 	<name>Estoque</name>
-
+ 
 	<build>
 		<plugins>
 			<plugin>
