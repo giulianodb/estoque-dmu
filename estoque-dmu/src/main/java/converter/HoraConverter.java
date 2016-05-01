@@ -26,7 +26,7 @@ public class HoraConverter implements Converter{
 	@Override
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object arg2) {
 		String horaRetorno = "";
-		if (arg2 != null){
+		if (arg2 != null){ 
 			String tempoString = arg2.toString().replace(".", ",");;
 			String[] tempoSplit = tempoString.split(",");
 			
