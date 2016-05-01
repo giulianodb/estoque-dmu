@@ -5,7 +5,7 @@
 	<artifactId>estoque</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.0</version>
-	<name>Projeto exemplo </name>
+	<name>Estoque</name>
 
 	<build>
 		<plugins>
