@@ -1,0 +1,2 @@
+<!-- Página necessária para que o welcome-file definido no web.xml entenda o inicial.xhtml 
+como um endereço acessível pelo container -->

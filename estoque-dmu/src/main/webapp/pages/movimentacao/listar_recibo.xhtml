@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+	<ui:composition template="/pages/templates/layout.xhtml"	 >				
+	<ui:define name="breadcrumb">
+      <ul class="page-breadcrumb breadcrumb">
+        <li id="inicial"> <i class="fa fa-home"></i> <p:commandLink id="breadHome" action="/pages/templates/initial.jsf" ajax="false"> Início </p:commandLink> <i class="fa fa-angle-right"></i> </li>
+		<li><i class="fa fa-building"></i> <span>Recibo de movimentação</span><i class="fa fa-angle-right"></i></li>
+        <li> <span>Pesquisar Movimentação</span> </li>
+      </ul>
+      <div class="col-md-12 well"> 
+        <h1 class="pagedesc">
+        	<i class="fa fa-table x-big"></i> Pesquisar Movimentação<br/>
+        </h1>        
+      </div>
+    </ui:define>		
+		<ui:define name="body">	
+			<h:form id="entradaForm">
+				<p:panel toggleable="true" id="pgCampos" header="Informações da Entrada">
+					<p:focus context="pgCampos" />
+					<h:panelGrid columns="2" >		
+						<p:outputLabel for="dataInicialPesquisa" value="Data inicial:" />
+							<p:calendar
+								value="#{loteController.loteDataModel.dataInicioPesquisa}"
+								id="dataInicialPesquisa" 
+								locale="pt" pattern="dd/MM/yyyy" maxlength="10" size="20">
+							</p:calendar> 						
+						<p:outputLabel for="dataFinalPesquisa" value="Data final:" />
+							<p:calendar
+								value="#{loteController.loteDataModel.dataFimPesquisa}"
+								id="dataFinalPesquisa" 
+								locale="pt" pattern="dd/MM/yyyy" maxlength="10" size="20">
+							</p:calendar>
+							<p:outputLabel for="tipoMovimentacao" value="Tipo movimentação:" />
+								<p:selectOneMenu value="#{loteController.loteDataModel.tipoMovimentacaoPesquisa}" id="tipoMovimentacao"  >
+										<f:selectItem itemLabel="Selecione" itemValue="" />
+										<f:selectItems value="#{loteController.tipoMovimentacaoCombo}" var="s" itemLabel="#{s.descricao}" itemValue="#{s}" />
+									</p:selectOneMenu >
+
+
+					</h:panelGrid>
+					<h:panelGrid columns="3" cellpadding="3" >													 
+						<p:commandButton icon="ui-icon-disk" 
+							update=":gridForm pgCampos"
+							value="Pesquisar"
+						 	title="Pesquisar"
+							ajax="true"></p:commandButton>
+							
+					</h:panelGrid>
+				</p:panel>
+				<br/>
+				<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+				<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+					<p:graphicImage name="/images/ajax_loader.gif" />
+				</p:dialog>			
+			</h:form>	
+					
+		<!-- Grade -->
+			<h:form id="gridForm">
+		    	<p:dataTable var="lote" 
+				    value="#{loteController.loteDataModel}" 
+				    paginator="true" 
+				    rows="10"  
+	                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+	                rowsPerPageTemplate="10,20,40" 
+	                id="gdLote" 
+	                lazy="true" 
+	                paginatorPosition="bottom"
+	                emptyMessage="#{appMessages['message.datatable.noRecords']}">  				
+					<p:column headerText="Número">
+		    	        <p:outputLabel value="#{lote.codigo}" />
+		        	</p:column> 
+					<p:column headerText="Data">
+		    	        <p:outputLabel value="#{lote.data}" >
+		    	        	<f:convertDateTime pattern="dd/MM/yyyy" />
+		    	        </p:outputLabel>
+		        	</p:column> 
+		        	<p:column headerText="Tipo movimentação">
+		    	        <p:outputLabel value="#{lote.obterTipoMovimentacao()}" >
+		    	        </p:outputLabel>
+		        	</p:column>
+		        	<p:column headerText="Doador/Recebedor">
+		    	        <p:outputLabel value="#{lote.obterNomeDoador()}" >
+		    	        </p:outputLabel>
+		        	</p:column>
+		        	<p:column headerText="Valor total">
+		    	        <p:outputLabel value="#{lote.valorTotalMovimentacao()}" >
+		    	        	<f:converter converterId="converter.MoedaConverter"/>
+		    	        </p:outputLabel>
+		        	</p:column>
+		        	
+			        <p:column headerText="Selecionar" style="text-align: center;" >				                
+						
+						      <p:commandButton id="cmdReciboEntrada" icon="ui-icon-document"									 	 
+					 		update=":gridForm :entradaForm"
+					 		title="Recibo Entrada"	
+					 		ajax="false"
+							action="#{relatorioController.reciboEntrada(lote)}"
+							rendered="#{lote.obterTipoMovimentacao() == 'Entrada'}" > 
+						</p:commandButton>	
+						
+						      <p:commandButton id="cmdReciboSaida" icon="ui-icon-document"									 	 
+					 		update=":gridForm :entradaForm"
+					 		title="Recibo Saída"	
+					 		ajax="false"
+							action="#{relatorioController.reciboSaida(lote)}"
+							rendered="#{lote.obterTipoMovimentacao() == 'Saída'}" > 
+						</p:commandButton>
+						
+						
+						<p:commandButton id="cmdAlterarReciboSaida" icon="ui-icon-pencil"									 	 
+					 		update=":gridForm :entradaForm"
+					 		title="Alterar Recibo Saída"	
+					 		ajax="false"
+							action="#{saidaController.iniciarAlterarMovimentacaoSaida(lote)}"
+							rendered="#{lote.obterTipoMovimentacao() == 'Saída'}" > 
+						</p:commandButton>
+						
+						<p:commandButton id="cmdAlterarReciboEntrada" icon="ui-icon-pencil"									 	 
+					 		update=":gridForm :entradaForm"
+					 		title="Alterar Recibo Entrada"	
+					 		ajax="false"
+							action="#{entradaController.iniciarAlterarEntrada(lote)}"
+							rendered="#{lote.obterTipoMovimentacao() == 'Entrada'}" > 
+						</p:commandButton>
+						            
+				    </p:column>
+			        <f:facet name="footer">  
+						#{loteController.loteDataModel.getRowCount()} #{appMessages['message.datatable.records']}
+					</f:facet>	
+				</p:dataTable>
+			</h:form>		
+		</ui:define>
+	</ui:composition>
+</ui:component>

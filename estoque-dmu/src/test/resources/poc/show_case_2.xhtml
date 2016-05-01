@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+	<ui:composition template="/pages/templates/layout.xhtml">
+		<ui:define name="breadcrumb">
+			<ul class="page-breadcrumb breadcrumb">
+				<li><i class="fa fa-home"></i> <a href="index.html">Início</a>
+					<i class="fa fa-angle-right"></i></li>
+				<li><a href="#">Caminho</a> <i class="fa fa-angle-right"></i></li>
+				<li><a href="#">Página</a></li>
+			</ul>
+			<div class="col-md-12 well">
+				<!-- INÍCIO PAGE TITLE & BREADCRUMB-->
+				<h1 class="pagedesc">
+					<i class="fa fa-table x-big"></i> Título<br /> <small>Descrição
+						opcional da função da tela</small>
+				</h1>
+
+				<!-- FIM PAGE TITLE & BREADCRUMB-->
+			</div>
+		</ui:define>
+		<ui:define name="body">
+			<h:form id="form3">
+
+				<p:growl id="growl" showDetail="true" />
+
+				<p:dashboard id="board" model="#{dashboardBean.model}">
+					<p:ajax event="reorder" listener="#{dashboardBean.handleReorder}"
+						update="growl" />
+
+					<p:panel id="sports" header="Sports">
+						<h:outputText value="Sports Content" />
+					</p:panel>
+
+					<p:panel id="finance" header="Finance">
+						<h:outputText value="Finance Content" />
+					</p:panel>
+
+					<p:panel id="lifestyle" header="Lifestyle">
+						<h:outputText value="Lifestyle Content" />
+					</p:panel>
+
+					<p:panel id="weather" header="Weather">
+						<h:outputText value="Weather Content" />
+					</p:panel>
+
+					<p:panel id="politics" header="Politics">
+						<h:outputText value="Politics Content" />
+					</p:panel>
+				</p:dashboard>
+
+			</h:form>
+			<h:form>
+				<p:panel header="Masks">
+					<h:panelGrid columns="2" cellpadding="5">
+						<h:outputText value="Data: " />
+						<p:inputMask value="#{maskController.date}" mask="99/99/9999" />
+
+						<h:outputText value="Telefone: " />
+						<p:inputMask value="#{maskController.phone}" mask="(999) 999-9999" />
+
+						<h:outputText value="Fone com Ramal: " />
+						<p:inputMask value="#{maskController.phoneExt}"
+							mask="(999) 999-9999? R99999" />
+
+						<p:commandButton value="Reset" type="reset"
+							styleClass="btn orange" />
+					</h:panelGrid>
+				</p:panel>
+			</h:form>
+
+			<h:form id="form2">
+				<p:panel header="Editor">
+					<p:editor id="editor" value="#{editorBean.value}" width="600" />
+
+					<p:dialog header="Content" widgetVar="dlg" showEffect="fade"
+						hideEffect="fade" modal="true">
+						<h:outputText id="display" value="#{editorBean.value}"
+							escape="false" />
+					</p:dialog>
+				</p:panel>
+			</h:form>
+			<h:form>
+				<p:panel header="Mensagem">
+					<p:notificationBar position="top" effect="slide" widgetVar="bar"
+						styleClass="top">
+						<h:outputText value="Mensagem mensagem mensagem"
+							style="color:#FFCC00;font-size:16px;" />
+					</p:notificationBar>
+
+					<p:commandButton value="Mostrar" onclick="PF('bar').show()"
+						type="button" />
+					<p:commandButton value="Ocultar" onclick="PF('bar').hide()"
+						type="button" />
+				</p:panel>
+			</h:form>
+			<h:form prependId="false">
+
+				<p:growl id="msgs" />
+
+				<p:panel header="Inplace Editor">
+					<h:panelGrid columns="2" columnClasses="column" cellpadding="5">
+						<h:outputText value="Basic Input: " />
+						<p:inplace id="basic">
+							<p:inputText value="Edit Me" />
+						</p:inplace>
+
+						<h:outputText value="Ajax Inplace Editor: " />
+						<p:inplace id="ajaxInplace" editor="true">
+							<p:inputText value="#{inplaceBean.text}" required="true"
+								label="text" />
+						</p:inplace>
+
+						<h:outputText value="Select One (Dlbclick): " />
+						<p:inplace id="selectableInplace" label="Cities"
+							effectSpeed="fast" event="dblclick">
+							<h:selectOneMenu>
+								<f:selectItem itemLabel="Istanbul" itemValue="Istanbul" />
+								<f:selectItem itemLabel="Ankara" itemValue="Ankara" />
+								<f:selectItem itemLabel="Istanbul" itemValue="Istanbul" />
+							</h:selectOneMenu>
+						</p:inplace>
+
+						<h:outputText value="Checkbox: " />
+						<p:inplace id="checkboxInplace" effect="none">
+							<f:facet name="output">
+                    Yes or No
+                </f:facet>
+							<f:facet name="input">
+								<h:selectBooleanCheckbox />
+							</f:facet>
+						</p:inplace>
+
+						<h:outputText value="Sliding Image: " />
+						<p:inplace id="slidingInplace" label="Show" effect="slide">
+							<p:graphicImage value="/resources/images/nature1.jpg" />
+						</p:inplace>
+					</h:panelGrid>
+					<h:form id="form">
+
+						<h:panelGrid columns="2" cellpadding="10">
+							<h:outputText value="Default Switcher:" />
+							<p:themeSwitcher style="width:165px" id="defaultSwitcher">
+								<f:selectItem itemLabel="Choose Theme" itemValue="" />
+								<f:selectItems value="#{themeSwitcherBean.themes}" />
+							</p:themeSwitcher>
+
+							<h:outputText value="Stateful Switcher:" />
+							<p:themeSwitcher value="#{guestPreferences.theme}"
+								style="width:165px" effect="fade" id="statefulSwitcher">
+								<f:selectItem itemLabel="Choose Theme" itemValue="" />
+								<f:selectItems value="#{themeSwitcherBean.themes}" />
+								<p:ajax listener="#{themeSwitcherBean.saveTheme}" />
+							</p:themeSwitcher>
+
+							<h:outputText value="Theme Preview:" />
+							<p:themeSwitcher style="width:165px" effect="fade" var="t"
+								id="themePreview">
+								<f:selectItem itemLabel="Choose Theme" itemValue="" />
+								<f:selectItems value="#{themeSwitcherBean.advancedThemes}"
+									var="theme" itemLabel="#{theme.name}" itemValue="#{theme}" />
+
+								<p:column>
+									<p:graphicImage value="/resources/images/themes/#{t.image}" />
+								</p:column>
+
+								<p:column>
+                #{t.name}
+            </p:column>
+							</p:themeSwitcher>
+						</h:panelGrid>
+
+						<p:separator />
+
+						<p:dialog header="Dialog" widgetVar="dlg" minHeight="40"
+							modal="true">
+							<h:outputText value="Resistance to PrimeFaces is futile!" />
+						</p:dialog>
+
+						<br />
+
+						<p:commandButton value="Dialog" onclick="PF('dlg').show()"
+							type="button" />
+
+						<br />
+						<br />
+
+						<p:panel header="Panel">
+        Panel Content
+    </p:panel>
+
+						<br />
+
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<p:commandButton type="button" value="New"
+									icon="ui-icon-document" />
+
+								<p:commandButton type="button" value="Open"
+									icon="ui-icon-folder-open" />
+
+								<p:separator />
+
+								<p:commandButton type="button" title="Save" icon="ui-icon-disk" />
+								<p:commandButton type="button" title="Delete"
+									icon="ui-icon-trash" />
+								<p:commandButton type="button" title="Print"
+									icon="ui-icon-print" />
+							</p:toolbarGroup>
+
+							<p:toolbarGroup align="right">
+								<p:menuButton value="Navigate">
+									<p:menuitem value="Home" url="http://www.primefaces.org" />
+									<p:menuitem value="ShowCase"
+										url="http://www.primefaces.org/showcase" />
+									<p:menuitem value="TouchFaces"
+										url="http://www.primefaces.org/showcase/touch" />
+								</p:menuButton>
+							</p:toolbarGroup>
+
+						</p:toolbar>
+
+						<br />
+
+						<p:tabView>
+							<p:tab title="Tab1">
+								<p:button value="Bookmark" icon="ui-icon-star">
+
+								</p:button>
+
+								<p:button value="With Icon" icon="ui-icon-star">
+
+								</p:button>
+
+								<p:button icon="ui-icon-star" title="Icon Only">
+
+								</p:button>
+
+								<p:button value="Bookmark" icon="ui-icon-star" disabled="true">
+
+								</p:button>
+
+
+
+							</p:tab>
+							<p:tab title="Tab2" disabled="true">Tab2 Content</p:tab>
+							<p:tab title="Tab3">Tab3 Content</p:tab>
+						</p:tabView>
+
+					</h:form>
+				</p:panel>
+
+			</h:form>
+
+			<h:panelGrid columns="3" cellpadding="5">
+
+				<h:outputText value="Focus/Blur: " />
+				<p:inputText id="focus"
+					title="This tooltip is displayed when input gets the focus" />
+				<p:tooltip for="focus" showEvent="focus" hideEvent="blur" />
+
+				<h:outputText value="Fade: " />
+				<h:outputLink id="fade" value="#">
+					<h:outputText value="Fade Effect" />
+				</h:outputLink>
+				<p:tooltip for="fade" value="Fade effect is used by default"
+					showEffect="fade" hideEffect="fade" />
+
+				<h:outputText value="Slide: " />
+				<h:outputLink id="slide" value="#">
+					<h:outputText value="Slide Effect" />
+				</h:outputLink>
+				<p:tooltip for="slide"
+					value="This tooltip uses slide effect for the animation"
+					showEffect="slide" hideEffect="slide" />
+
+				<h:outputText value="Clip/Explode: " />
+				<h:outputLink id="grow" value="#">
+					<h:outputText value="Clip/Explode Effects" />
+				</h:outputLink>
+				<p:tooltip for="grow"
+					value="This tooltip uses clip/explode effects for the animation"
+					showEffect="clip" hideEffect="explode" />
+
+				<h:outputText value="Content:  " />
+				<h:outputLink id="lnk" value="#">
+					<h:outputText value="PrimeFaces" />
+				</h:outputLink>
+				<p:tooltip for="lnk">
+					<p:graphicImage value="/resources/images/avatar1.jpg" />
+				</p:tooltip>
+
+			</h:panelGrid>
+			<h:form>
+
+				<p:growl id="growl" sticky="true" showDetail="true" />
+
+				<p:wizard flowListener="#{userWizard.onFlowProcess}">
+
+					<p:tab id="personal" title="Personal">
+
+						<p:panel header="Personal Details">
+
+							<h:messages errorClass="error" />
+
+							<h:panelGrid columns="2">
+								<p:outputLabel value="Firstname: *" />
+								<p:inputText required="true" label="Firstname"
+									value="#{userWizard.user.firstname}" />
+
+								<p:outputLabel value="Lastname: *" />
+								<p:inputText required="true" label="Lastname"
+									value="#{userWizard.user.lastname}" />
+
+								<p:outputLabel value="Age: " />
+								<p:inputText value="#{userWizard.user.age}" />
+
+								<p:outputLabel value="Skip to last: " />
+								<h:selectBooleanCheckbox value="#{userWizard.skip}" />
+							</h:panelGrid>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="address" title="Address">
+						<p:panel header="Adress Details">
+
+							<h:messages errorClass="error" />
+
+							<h:panelGrid columns="2">
+								<p:outputLabel value="Street: " />
+								<p:inputText value="#{userWizard.user.street}" />
+
+								<p:outputLabel value="Postal Code: " />
+								<p:inputText value="#{userWizard.user.postalCode}" />
+
+								<p:outputLabel value="City: " />
+								<p:inputText value="#{userWizard.user.city}" />
+
+								<p:outputLabel value="Skip to last: " />
+								<h:selectBooleanCheckbox value="#{userWizard.skip}" />
+							</h:panelGrid>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="contact" title="Contact">
+						<p:panel header="Contact Information">
+
+							<h:messages errorClass="error" />
+
+							<h:panelGrid columns="2">
+								<p:outputLabel value="Email: *" />
+								<p:inputText required="true" label="Email"
+									value="#{userWizard.user.email}" />
+
+								<p:outputLabel value="Phone: " />
+								<p:inputText value="#{userWizard.user.phone}" />
+
+								<p:outputLabel value="Additional Info: " />
+								<p:inputText value="#{userWizard.user.info}" />
+							</h:panelGrid>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="confirm" title="Confirmation">
+						<p:panel header="Confirmation">
+
+							<h:panelGrid id="confirmation" columns="2">
+								<p:outputLabel value="Firstname: " />
+								<p:inputText styleClass="outputLabel"
+									value="#{userWizard.user.firstname}" />
+
+								<p:outputLabel value="Lastname: " />
+								<p:inputText styleClass="outputLabel"
+									value="#{userWizard.user.lastname}" />
+
+								<p:outputLabel value="Age: " />
+								<p:inputText styleClass="outputLabel"
+									value="#{userWizard.user.age}" />>  
+                      
+                    			<p:outputLabel value="Street: " />
+								<p:inputText styleClass="outputLabel"
+									value="#{userWizard.user.street}" />
+
+								<p:outputLabel value="Postal Code: " />
+								<p:inputText styleClass="outputLabel"
+									value="#{userWizard.user.postalCode}" />
+
+								<p:outputLabel value="City: " />
+								<p:inputText styleClass="outputLabel"
+									value="#{userWizard.user.city}" />
+
+								<p:outputLabel value="Email: " />
+								<p:inputText styleClass="outputLabel"
+									value="#{userWizard.user.email}" />
+
+								<p:outputLabel value="Phone " />
+								<p:inputText styleClass="outputLabel"
+									value="#{userWizard.user.phone}" />
+
+								<p:outputLabel value="Info: " />
+								<p:inputText styleClass="outputLabel"
+									value="#{userWizard.user.info}" />
+
+								<p:outputLabel />
+								<p:inputText />
+							</h:panelGrid>
+
+							<p:commandButton value="Submit" update="growl"
+								actionListener="#{userWizard.save}" />
+
+						</p:panel>
+					</p:tab>
+
+				</p:wizard>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</ui:component>

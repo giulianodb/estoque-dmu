@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:component
+ 	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
+	<ui:composition template="/pages/templates/layout.xhtml">
+		<ui:define name="breadcrumb">
+			<ul class="page-breadcrumb breadcrumb">
+		    	<li id="inicial"> <i class="fa fa-home"></i> <p:commandLink id="breadHome" action="/pages/templates/initial.jsf" ajax="false"> Início </p:commandLink> <i class="fa fa-angle-right"></i> </li>
+        		<li><i class="fa fa-hdd-o"></i><span>Família</span> <i class="fa fa-angle-right"></i> </li>
+		        <li> <span> Cadastrar Família </span> </li>
+		    </ul>
+		    <div class="col-md-12 well"> 
+		        <h1 class="pagedesc">
+		        	<i class="fa fa-table x-big"></i> Cadastrar Família <br/>
+		        	<span class="observacao">(*) campo obrigatório</span>           
+		        </h1>        
+		    </div>
+	    </ui:define>
+		<ui:define name="body">		
+				<h:form>
+					<p:panel toggleable="true" id="pgCampos" header="Família">
+						<p:focus context="pgCampos" />
+				 		<h:panelGrid columns="2">
+				 			<p:outputLabel for="nome" value="Nome:" />
+				 			<p:inputText value="#{doadorController.doador.nome}" id="nome" label="Nome Responsável Família" maxlength="60" size="50" required="true">
+							</p:inputText>
+							
+							<p:outputLabel for="cpf" value="CPF:" />
+				 			<p:inputText value="#{doadorController.doador.cpf}" id="cpf" label="CPF" maxlength="15" size="15">
+							</p:inputText> 
+							
+							<p:outputLabel for="estado" value="Estado:" />
+				 			<p:inputText value="#{doadorController.doador.estado}" id="estado" label="Estado" maxlength="3" size="3">
+							</p:inputText> 
+							
+							<p:outputLabel for="cidade" value="Cidade:" />
+				 			<p:inputText value="#{doadorController.doador.cidade}" id="cidade" label="Cidade" maxlength="60" size="50">
+							</p:inputText> 
+							
+							<p:outputLabel for="bairro" value="Bairro:" />
+				 			<p:inputText value="#{doadorController.doador.bairro}" id="bairro" label="Bairro" maxlength="60" size="50">
+							</p:inputText> 
+							
+							<p:outputLabel for="rua" value="Rua:" />
+				 			<p:inputText value="#{doadorController.doador.rua}" id="rua" label="Rua" maxlength="60" size="50">
+							</p:inputText> 
+							
+							<p:outputLabel for="telefone" value="Telefone:" />
+				 			<p:inputText value="#{doadorController.doador.telefone}" id="telefone" label="Telefone" maxlength="14" size="14">
+							</p:inputText> 
+							
+							<p:outputLabel for="celular" value="Celular:" />
+				 			<p:inputText value="#{doadorController.doador.celular}" id="celular" label="Celular" maxlength="14" size="14">
+							</p:inputText> 
+							
+							<p:outputLabel for="email" value="Email:" />
+				 			<p:inputText value="#{doadorController.doador.email}" id="email" label="Email" maxlength="60" size="50">
+							</p:inputText> 
+							
+							
+																			
+						</h:panelGrid>
+						
+						<br></br>
+						
+						<p:separator id="separator"/>
+						<h:panelGrid columns="3" cellpadding="3">
+							<p:commandButton action="#{doadorController.alterarDoador}" value="Alterar" rendered="#{!empty doadorController.doador.id}" ajax="false" icon="ui-icon-disk"/>
+							<p:commandButton action="#{doadorController.incluirDoador}" value="Incluir" rendered="#{empty doadorController.doador.id}" ajax="false" icon="ui-icon-disk" />
+							<p:commandButton action="#{doadorController.iniciarPesquisaDoador()}" value="Voltar" immediate="true" ajax="false" icon="ui-icon-arrowreturnthick-1-w" />
+						</h:panelGrid>
+					</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</ui:component>
