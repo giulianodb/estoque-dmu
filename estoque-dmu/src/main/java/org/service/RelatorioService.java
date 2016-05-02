@@ -112,7 +112,7 @@ public class RelatorioService {
 			// relatorio para outro formato, no caso PDF]]
 
 			// JasperExportManager.exportReportToPdfFile(print,
-			// "/home/giuliano/RelatorioClientes.pdf");
+			// "~/RelatorioClientes.pdf");
 			System.out.println("Relatório gerado.");
 
 			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -312,7 +312,7 @@ public class RelatorioService {
 			// relatorio para outro formato, no caso PDF]]
 
 			// JasperExportManager.exportReportToPdfFile(print,
-			// "/home/giuliano/RelatorioClientes.pdf");
+			// "~/RelatorioClientes.pdf");
 			System.out.println("Relatório gerado.");
 
 			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -440,7 +440,7 @@ public class RelatorioService {
 			// relatorio para outro formato, no caso PDF]]
 
 			// JasperExportManager.exportReportToPdfFile(print,
-			// "/home/giuliano/RelatorioClientes.pdf");
+			// "~/RelatorioClientes.pdf");
 			System.out.println("Relatório gerado.");
 
 			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -538,7 +538,7 @@ public class RelatorioService {
 			// relatorio para outro formato, no caso PDF]]
 
 			// JasperExportManager.exportReportToPdfFile(print,
-			// "/home/giuliano/RelatorioClientes.pdf");
+			// "~/RelatorioClientes.pdf");
 			System.out.println("Relatório gerado.");
 
 			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -639,7 +639,7 @@ public class RelatorioService {
 			// relatorio para outro formato, no caso PDF]]
 
 			// JasperExportManager.exportReportToPdfFile(print,
-			// "/home/giuliano/RelatorioClientes.pdf");
+			// "~/RelatorioClientes.pdf");
 			System.out.println("Relatório gerado.");
 
 			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -755,7 +755,7 @@ public class RelatorioService {
 			// relatorio para outro formato, no caso PDF]]
 	
 			// JasperExportManager.exportReportToPdfFile(print,
-			// "/home/giuliano/RelatorioClientes.pdf");
+			// "~/RelatorioClientes.pdf");
 			System.out.println("Relatório gerado.");
 	
 			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -943,7 +943,7 @@ public ByteArrayOutputStream relatorioEstoqueAnalitico(Produto produto, Date dat
 			// relatorio para outro formato, no caso PDF]]
 
 			// JasperExportManager.exportReportToPdfFile(print,
-			// "/home/giuliano/RelatorioClientes.pdf");
+			// "~/RelatorioClientes.pdf");
 			System.out.println("Relatório gerado.");
 
 			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -1046,7 +1046,7 @@ public ByteArrayOutputStream relatorioEstoqueAnalitico(Produto produto, Date dat
 			// relatorio para outro formato, no caso PDF]]
 
 			// JasperExportManager.exportReportToPdfFile(print,
-			// "/home/giuliano/RelatorioClientes.pdf");
+			// "~/RelatorioClientes.pdf");
 			System.out.println("Relatório gerado.");
 
 			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -1132,7 +1132,7 @@ public ByteArrayOutputStream relatorioEstoqueAnalitico(Produto produto, Date dat
 			// relatorio para outro formato, no caso PDF]]
 
 			// JasperExportManager.exportReportToPdfFile(print,
-			// "/home/giuliano/RelatorioClientes.pdf");
+			// "~/RelatorioClientes.pdf");
 			System.out.println("Relatório gerado.");
 
 			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

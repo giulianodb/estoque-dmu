@@ -207,7 +207,7 @@
 		<band height="81" splitType="Stretch">
 			<image>
 				<reportElement uuid="afa20d0d-0bf9-4d1a-87c4-73ccb8bec540" x="22" y="14" width="98" height="65"/>
-				<imageExpression><![CDATA["/home/giuliano/workspace/estoque-dmu/src/main/webapp/resources/images/logot.png"]]></imageExpression>
+				<imageExpression><![CDATA["~/workspace/estoque-dmu/src/main/webapp/resources/images/logot.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement uuid="be755fbb-3704-4da5-8634-504389e04a7c" x="120" y="28" width="512" height="20"/>
