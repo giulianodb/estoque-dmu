@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:composition template="/pages/templates/layout.xhtml">
+		<ui:define name="body">
+		
+			<h:form>
+			 <h:panelGrid columns="1" >
+			 		<h:outputLabel value="O resultado do teste desta página poderá ser observado no log de execução do servidor de aplicação" 
+			 		styleClass="fonteAlerta"/>
+			 		<br/>
+			   		<h:outputLabel value="#{applicationController.mensagem}" styleClass="fonteAlerta" style="color:red;margin:8px;"/>
+					<br/>
+					<h:commandButton id="botao1" action="#{applicationController.chamadaTeste()}" value="Imprimir" styleClass="btn_secundario"/>
+			 </h:panelGrid> 
+			</h:form>
+			
+		</ui:define>		
+	
+	</ui:composition>
+</html>

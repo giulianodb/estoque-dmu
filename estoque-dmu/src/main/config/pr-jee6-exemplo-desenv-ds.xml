@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!-- Os arquivos de DataSource servem para configurar, no servidor de      -->
+<!-- aplicações, um serviço de poll de conexões com uma fonte de dados.    -->
+<!-- O nome do arquivo deve seguir o seguinte padrão para que possa ser    -->
+<!-- publicado corretamente no servidor de aplicações correspondente:      -->
+<!--    <nome_aplicação>-desenv-ds.xml                                     -->
+<!--    <nome_aplicação>-homolog-ds.xml                                    -->
+<!--    <nome_aplicação>-prod-ds.xml                                       -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+
+<!-- para jboss as7 -->
+<datasources>
+
+	<datasource jndi-name="java:jboss/datasources/pr-jee6-exemploDS" pool-name="pr-jee6-exemploDS" enabled="true" use-java-context="true" use-ccm="false">
+		<connection-url>jdbc:postgresql://10.15.62.90/pr_jee6</connection-url>
+	    <driver>postgresql</driver> <!-- Driver do banco de dados deve ser intalado/configurado no servidor -->
+
+		<pool>
+			<min-pool-size>1</min-pool-size> <!-- Quantidade mínima de conexões que serão abertas para sua fonte de dados -->
+			<max-pool-size>2</max-pool-size> <!-- Quantidade máxima de conexões que serão abertas para sua fonte de dados -->
+			<prefill>true</prefill>
+		</pool>
+	             
+	    <security>
+		    <user-name>sa_pr_jee6</user-name>
+	    	<password>stranger</password>
+	    </security>
+	             
+	</datasource>
+	
+</datasources>
+
+
+
+<!-- ======================================================================== -->
+<!-- Os tags <min-pool-size> e <max-pool-size> no ambiente de desenvolvimento -->
+<!-- e homologação devem conter valores baixos para não sobrecarregar o banco -->
+<!-- de dados sem necessidade. No ambiente de produção é necessário entrar em --> 
+<!-- contato com o DBA para definir o valores mais adequados.                 -->                               
+<!-- ======================================================================== -->

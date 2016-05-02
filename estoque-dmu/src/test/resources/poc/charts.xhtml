@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+	<ui:composition template="/pages/templates/layout.xhtml">
+		<ui:define name="breadcrumb">
+			<ul class="page-breadcrumb breadcrumb">
+				<li><i class="fa fa-home"></i> <a href="index.html">Início</a>
+					<i class="fa fa-angle-right"></i></li>
+				<li><a href="#">Manter Tabelas</a> <i class="fa fa-angle-right"></i>
+				</li>
+				<li><a href="#">Editar Tabela</a></li>
+			</ul>
+			<div class="col-md-12 well">
+				<!-- INÍCIO PAGE TITLE & BREADCRUMB-->
+				<h1 class="pagedesc">
+					<i class="fa fa-table x-big"></i> Editar Tabela<br /> <small>Para
+						tabelas mais simples (com poucos campos), podemos utilizar uma
+						tabela com edição diretamente, como demonstrado no eemplo abaixo</small>
+				</h1>
+
+				<!-- FIM PAGE TITLE & BREADCRUMB-->
+			</div>
+		</ui:define>
+		<ui:define name="body">
+			<h:form id="form">
+				<h:panelGrid columns="2">
+					<p:lineChart value="#{chartBean.linearModel}" legendPosition="e"
+						zoom="true" animate="true" title="Linear Chart" minY="0" maxY="10"
+						style="width:400px;" />
+
+					<p:barChart id="basic" value="#{chartBean.categoryModel}"
+						legendPosition="ne" title="Basic Bar Chart" min="0" max="200"
+						style="width:400px" animate="true" />
+				</h:panelGrid>
+
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</ui:component>

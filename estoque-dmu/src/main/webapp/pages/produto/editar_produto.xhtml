@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:component
+ 	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
+	<ui:composition template="/pages/templates/layout.xhtml">
+		<ui:define name="breadcrumb">
+			<ul class="page-breadcrumb breadcrumb">
+		    	<li id="inicial"> <i class="fa fa-home"></i> <p:commandLink id="breadHome" action="/pages/templates/initial.jsf" ajax="false"> Início </p:commandLink> <i class="fa fa-angle-right"></i> </li>
+        		<li><i class="fa fa-hdd-o"></i><span>Produto</span> <i class="fa fa-angle-right"></i> </li>
+		        <li> <span> Cadastrar produto </span> </li>
+		    </ul>
+		    <div class="col-md-12 well"> 
+		        <h1 class="pagedesc">
+		        	<i class="fa fa-table x-big"></i> Cadastrar produto <br/>
+		        	<span class="observacao">(*) campo obrigatório</span>           
+		        </h1>        
+		    </div>
+	    </ui:define>
+		<ui:define name="body">		
+				<h:form>
+					<p:panel toggleable="true" id="pgCampos" header="Produto">
+						<p:focus context="pgCampos" />
+				 		<h:panelGrid columns="2">
+				 			<p:outputLabel for="nomeProduto" value="Produto:" />
+				 			<p:inputText value="#{produtoController.produto.nome}" id="nomeProduto" label="Nome Produto" maxlength="60" size="50">
+							</p:inputText> 
+							
+							<p:outputLabel for="tipoProduto" value="Tipo produto:" />
+							<p:selectOneMenu value="#{produtoController.produto.tipoProduto}" id="tipoProduto" required="true">
+								<f:selectItem itemLabel="Selecione" itemValue="" />
+								<f:selectItems value="#{produtoController.listTipoProduto}" var="s" itemLabel="#{s.descricao}" itemValue="#{s}" />
+							</p:selectOneMenu>
+						
+							<p:outputLabel for="tipoMedida" value="Tipo medida:" />
+							<p:selectOneMenu value="#{produtoController.produto.tipoMedida}" id="tipoMedida" required="true">
+								<f:selectItem itemLabel="Selecione" itemValue="" />
+								<f:selectItems value="#{produtoController.listTipoMedida}" var="s" itemLabel="#{s.descricao}" itemValue="#{s}" />
+							</p:selectOneMenu>
+												
+							<p:outputLabel for="descricao" value="Descrição:" />
+							<p:inputTextarea id="descricao"  value="#{produtoController.produto.descricao}"></p:inputTextarea>	
+						</h:panelGrid>
+						
+						<br></br>
+						
+						<p:separator id="separator"/>
+						<h:panelGrid columns="3" cellpadding="3">
+							<p:commandButton action="#{produtoController.alterarProduto()}" value="Alterar" rendered="#{!empty produtoController.produto.id}" ajax="false" icon="ui-icon-disk"/>
+							<p:commandButton action="#{produtoController.incluirProduto()}" value="Incluir" rendered="#{empty produtoController.produto.id}" ajax="false" icon="ui-icon-disk" />
+							<p:commandButton action="#{produtoController.iniciarPesquisaProduto()}" value="Voltar" immediate="true" ajax="false" icon="ui-icon-arrowreturnthick-1-w" />
+						</h:panelGrid>
+					</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</ui:component>

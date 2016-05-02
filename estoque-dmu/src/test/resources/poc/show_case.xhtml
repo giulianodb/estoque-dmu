@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+  <ui:composition template="/pages/templates/layout.xhtml">
+    <ui:define name="breadcrumb">
+      <ul class="page-breadcrumb breadcrumb">
+        <li> <i class="fa fa-home"></i> <a href="index.html">Início</a> <i class="fa fa-angle-right"></i> </li>
+        <li> <a href="#">Manter Tabelas</a> <i class="fa fa-angle-right"></i> </li>
+        <li> <a href="#">Editar Tabela</a> </li>
+      </ul>
+      <div class="col-md-12 well"> 
+        <!-- INÍCIO PAGE TITLE & BREADCRUMB-->
+        <h1 class="pagedesc"><i class="fa fa-table x-big"></i> Editar Tabela<br/>
+          <small>Para tabelas mais simples (com poucos campos), podemos utilizar uma tabela com edição diretamente,
+          como demonstrado no eemplo abaixo</small> </h1>
+        
+        <!-- FIM PAGE TITLE & BREADCRUMB--> 
+      </div>
+    </ui:define>
+    <ui:define name="body">
+      <h:form id="alunoInserirForm">
+        <p:panel toggleable="true" id="painel1" closable="true" toggleSpeed="500" closeSpeed="500" widgetVar="panel">
+        	<f:facet name="options">  
+	            <p:menu>  
+	                <p:submenu label="Settings">  
+	                    <p:menuitem value="Toggle" url="#" icon="ui-icon-newwin" onclick="panel.toggle()"/>  
+	                    <p:menuitem value="Remove" url="#" icon="ui-icon-close" onclick="panel.close()"/>  
+	                </p:submenu>  
+	            </p:menu>  
+	        </f:facet>
+          <f:facet name="header"> <i class="fa fa-reorder"></i>&nbsp;
+            <h:outputText value="Informações do Aluno" />
+          </f:facet>
+          <h:panelGrid columns="3" columnClasses="form-group">
+            <p:outputLabel value="*Nome Completo:" styleClass="control-label" />
+            <p:inputText value="#{showCaseController.aluno.nome}" styleClass="form-control" pt:placeholder="Nome Completo"
+						id="nomeCompleto" required="true" label="Nome Completo"						
+						maxlength="128"/>
+            <p:message for="nomeCompleto"/>
+            <p:outputLabel value="*Email:" styleClass="control-label"/>
+			<p:inputText value="#{showCaseController.aluno.nome}" styleClass="form-control" placeholder="ex: nome@email.com"
+						id="email" required="true" label="Email"						
+						maxlength="128" disabled="true"/>
+            <p:message for="email"/>
+
+
+            <p:outputLabel value="Exemplo de TextArea:"></p:outputLabel>
+            <p:inputTextarea rows="5" cols="30" counter="counter" maxlength="10"     
+    					counterTemplate="{0} characters remaining." autoResize="false"/>
+            <h:outputText id="counter" />
+            <p:outputLabel value="*Data de Nascimento:" styleClass="form_label"/>
+            <p:calendar
+						value="#{showCaseController.aluno.dtNascimento}"
+						locale="pt" showButtonPanel="true" navigator="true"
+						id="dataNascimento" maxdate="#{showCaseController.getDataAtual()}" required="true" 
+						label="Data de Nascimento"  pattern="dd/MM/yyyy"
+						mode="popup"> </p:calendar>
+            <p:message for="dataNascimento"/>
+            <p:outputLabel value="Edite-me:" styleClass="form_label"/>
+            <p:inplace id="inplace">
+              <p:inputText value="Edite-me" />
+            </p:inplace>
+            <p:message for="inplace"/>
+            <p:outputLabel value="*Seleção múltipla:" styleClass="form_label"/>
+            <p:selectManyMenu id="basic" value="#{messagesController.listMultiSelect}">
+              <f:selectItem itemLabel="Option 1" itemValue="Option 1" />
+              <f:selectItem itemLabel="Option 2" itemValue="Option 2" />
+              <f:selectItem itemLabel="Option 3" itemValue="Option 3" />
+            </p:selectManyMenu>
+            <p:message for="basic"/>
+            <p:outputLabel value="*Checkbox:" styleClass="form_label"/>
+            <p:selectBooleanCheckbox id="check" value="#{messagesController.checkBox}" />
+            <p:message for="check"/>
+            
+            <p:outputLabel value="*Checkbox Desabilitado:" styleClass="form_label"/>
+            <p:selectBooleanCheckbox id="check2" value="#{messagesController.checkBox}" disabled="true" />
+            <p:message for="check2"/>
+            
+            <p:outputLabel value="Radio Button: " styleClass="form_label"/>
+            <p:selectOneRadio id="radiooptions" value="#{messagesController.editor}">
+              <f:selectItem itemLabel="Option 1" itemValue="1" itemDisabled="true" />
+              <f:selectItem itemLabel="Option 2" itemValue="2" />
+              <f:selectItem itemLabel="Option 3" itemValue="3" />
+            </p:selectOneRadio>
+            <p:message for="radiooptions"/>
+            <p:outputLabel value="Senha com Feedback: " styleClass="form_label"/>
+            <p:password id="feedback" value="#{messagesController.editor}" feedback="true"/>
+            <p:message for="feedback"/>
+            <h:outputLabel for="spinnerBasic" value="Spinner: " styleClass="form_label"/>
+            <p:spinner id="spinnerBasic"   
+                    value="#{messagesController.number1}"/>
+            <p:message for="spinnerBasic"/>
+            <h:outputLabel value="Combo: " styleClass="form_label" />
+            <p:selectOneMenu value="#{messagesController.number1}" id="combo">
+              <f:selectItem itemLabel="Select One" itemValue="" />
+              <f:selectItem itemLabel="Option 1" itemValue="1" />
+              <f:selectItem itemLabel="Option 2" itemValue="2" />
+              <f:selectItem itemLabel="Option 3" itemValue="3" />
+            </p:selectOneMenu>
+            <p:message for="combo"/>
+            <h:outputLabel value="Pick List: " styleClass="form_label" />
+            <p:pickList id="pickList" value="#{pickListBean.cities}" var="city"   
+                		itemLabel="#{city}" itemValue="#{city}" />
+            <p:message for="pickList"/>
+					
+					<h:outputLabel value="Select com Filtro: " styleClass="form_label" />
+					<p:selectOneMenu id="scomplete" value="#{showCaseController.selectedPlayer}" converter="playerConverter" panelStyle="width:150px"  
+                         effect="fade" var="p" style="width:160px"  filter="true" filterMatchMode="startsWith">  
+		            	<f:selectItem itemLabel="Select One" itemValue="" />  
+		            	<f:selectItems value="#{showCaseController.players}" var="player" itemLabel="#{player.name}" itemValue="#{player}"/>
+		            	<p:column>  
+			                #{p.name} - #{p.number}  
+			            </p:column>
+		        	</p:selectOneMenu>
+		        	<p:message for="scomplete"/>
+		        	
+		        	<h:outputLabel value="Tree Table: " styleClass="form_label" />
+		        	<p:treeTable id="treetable" value="#{showCaseController.root}" var="document">  
+			        <f:facet name="header">  
+			            Document Viewer  
+			        </f:facet>  
+			  
+			        <p:column style="width:32%">  
+			            <f:facet name="header">  
+			                Name  
+			            </f:facet>  
+			            <h:outputText value="#{document.name}" />  
+			        </p:column>  
+			  
+			        <p:column style="width:32%">  
+			            <f:facet name="header">  
+			                Size  
+			            </f:facet>  
+			            <h:outputText value="#{document.size}" />  
+			        </p:column>  
+			  
+			        <p:column style="width:32%">  
+			            <f:facet name="header">  
+			                Type  
+			            </f:facet>  
+			            <h:outputText value="#{document.type}" />  
+			        </p:column>  
+			  
+			        <p:column style="width:4%">  
+			            <p:commandLink oncomplete="PF('documentDialog').show()" title="View Detail" styleClass="ui-icon ui-icon-search">  
+			                <f:setPropertyActionListener value="#{document}"   
+			                    target="#{showCaseController.selectedDocument}" />  
+			            </p:commandLink>  
+			        </p:column>  
+			    </p:treeTable> 			    
+			    <p:message for="scomplete"/>
+			   			
+			   		<p:outputLabel value="Auto Complete: " styleClass="form_label" />
+            		<p:autoComplete id="acSimple" value="#{showCaseController.txt1}"   
+                    	completeMethod="#{showCaseController.complete}"/>
+                    <p:message for="scomplete"/>
+                    	
+                    <p:outputLabel value="Teclado Virtual: " styleClass="form_label" />
+                    <p:keyboard value=""/>
+                    <p:message for="scomplete"/>
+				</h:panelGrid>
+				<h:panelGrid columns="3" cellpadding="3" styleClass="botoes">
+					<p:commandButton 
+						value="Incluir"
+						title="Incluir Aluno"	
+						actionListener="#{showCaseController.incluirAluno()}" 
+						ajax="false"
+						styleClass="btn green" />  
+				</h:panelGrid>
+			</p:panel>
+			<p:dialog id="dialog" header="Document Detail" showEffect="fade" widgetVar="documentDialog" modal="true">  
+		        <p:outputPanel id="documentPanel">  
+		            <h:panelGrid  columns="2" cellpadding="5" rendered="#{not empty documentsController.selectedDocument}">  
+		                <h:outputLabel for="name" value="Name: " />  
+		                <h:outputText id="name" value="#{documentsController.selectedDocument.name}" style="font-weight:bold" />  
+		  
+		                <h:outputLabel for="size" value="Size: " />  
+		                <h:outputText id="size" value="#{documentsController.selectedDocument.size}" style="font-weight:bold" />  
+		  
+		                <h:outputLabel for="type" value="Type " />  
+		                <h:outputText id="type" value="#{documentsController.selectedDocument.type}" style="font-weight:bold" />  
+		            </h:panelGrid>  
+		        </p:outputPanel>  
+		    </p:dialog>
+			<br/>
+			
+		</h:form>					
+		
+		<!-- Grade -->
+      <h:form id="gridForm">
+			<p:dataTable 
+        			var="car" 
+        			value="#{showCaseController.mediumCarsModel}" 
+				    paginator="true" 
+				    rows="10"  
+	                paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"  
+	                rowsPerPageTemplate="10,20,40" 
+	                selectionMode="single" 
+	                selection="#{showCaseController.selectedCar}" 
+	                id="gdAluno" 
+	                lazy="true"
+	                styleClass="table table-bordered table-striped table-condensed flip-content"
+	                paginatorPosition="bottom"
+	                scrollRows="20"  
+                    scrollable="true" liveScroll="true" scrollHeight="150">
+        <p:column selectionMode="multiple" style="width:38px" />  
+  
+        <p:column headerText="Modelo" style="width:25%">  
+            #{car.model}  
+        </p:column>  
+  
+        <p:column headerText="Ano" style="width:25%">  
+            #{car.year}  
+        </p:column>  
+  
+        <p:column headerText="Fabricante" style="width:24%">  
+            #{car.manufacturer}  
+        </p:column>  
+  
+        <p:column headerText="Cor" style="width:24%">  
+            #{car.color}  
+        </p:column>  
+  
+        <f:facet name="footer">  
+            <p:commandButton id="viewButton" value="View" icon="ui-icon-search"  
+                             update=":gridForm:displayMulti" oncomplete="PF('multiCarDialog').show()"/>  
+        	 #{showCaseController.alunoDataModel.getRowCount()} #{appMessages['message.datatable.records']} 
+       	</f:facet>
+        </p:dataTable>
+        <h:panelGrid columns="2">  
+    <p:panel header="Export All Data">  
+        <h:commandLink>  
+            <p:graphicImage value="/resources/images/excel.png" />  
+            <p:dataExporter type="xls" target="gdAluno" fileName="cars" />  
+        </h:commandLink>  
+  
+        <h:commandLink>  
+            <p:graphicImage value="/resources/images/pdf.png" />  
+            <p:dataExporter type="pdf" target="gdAluno" fileName="cars"/>  
+        </h:commandLink>  
+          
+        <h:commandLink>  
+            <p:graphicImage value="/resources/images/csv.png" />  
+            <p:dataExporter type="csv" target="gdAluno" fileName="cars" />  
+        </h:commandLink>  
+          
+        <h:commandLink>  
+            <p:graphicImage value="/resources/images/xml.png" />  
+            <p:dataExporter type="xml" target="gdAluno" fileName="cars" />  
+        </h:commandLink>  
+    </p:panel>  
+      
+    <p:panel header="Export Page Data">  
+        <h:commandLink>  
+            <p:graphicImage value="/resources/images/excel.png" />  
+            <p:dataExporter type="xls" target="gdAluno" fileName="cars" pageOnly="true"/>  
+        </h:commandLink>  
+  
+        <h:commandLink>  
+            <p:graphicImage value="/resources/images/pdf.png" />  
+            <p:dataExporter type="pdf" target="gdAluno" fileName="cars" pageOnly="true"/>  
+        </h:commandLink>  
+          
+        <h:commandLink>  
+            <p:graphicImage value="/resources/images/csv.png" />  
+            <p:dataExporter type="csv" target="gdAluno" fileName="cars" pageOnly="true"/>  
+        </h:commandLink>  
+          
+        <h:commandLink>  
+            <p:graphicImage value="/resources/images/xml.png" />  
+            <p:dataExporter type="xml" target="gdAluno" fileName="cars" pageOnly="true"/>  
+        </h:commandLink>  
+    </p:panel>  
+</h:panelGrid>
+        <p:dialog id="multiDialog" header="Car Detail" widgetVar="multiCarDialog"  
+              height="300" showEffect="fade" hideEffect="explode">  
+  
+        <p:dataList id="displayMulti" value="#{showCaseController.selectedCars}" var="selectedCar">  
+            Model: #{selectedCar.model}, Year: #{selectedCar.year}  
+        </p:dataList>  
+  
+    </p:dialog>
+      </h:form>
+      <br />
+      <hi>Componente de TABS</hi>
+      <p:tabView id="tabView" effect="slide">
+        <p:tab id="tab1" title="Godfather Part I">
+          <h:panelGrid columns="2" cellpadding="10">
+            <p:graphicImage id="tab1Img" value="/resources/images/godfather1.jpg" />
+            <h:outputText id="tab1Text"  
+			                value="The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding.  
+			                His beloved son Michael has just come home from the war, but does not intend to become part of his father's business. T  
+			                hrough Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, kind and benevolent to those who give respect,  
+			                but given to ruthless violence whenever anything stands against the good of the family." />
+          </h:panelGrid>
+        </p:tab>
+        <p:tab id="tab2" title="Godfather Part II">
+          <h:panelGrid columns="2" cellpadding="10">
+            <p:graphicImage id="tab2Img" value="/resources/images/godfather2.jpg" />
+            <h:outputText id="tab2Text" value="Francis Ford Coppola's legendary continuation and sequel to his landmark 1972 film, The_Godfather, parallels the young Vito Corleone's rise with his son Michael's spiritual fall, deepening The_Godfather's depiction of the dark side of the American dream.  
+			            In the early 1900s, the child Vito flees his Sicilian village for America after the local Mafia kills his family. Vito struggles to make a living, legally or illegally, for his wife and growing brood in Little Italy,  
+			            killing the local Black Hand Fanucci after he demands his customary cut of the tyro's business. With Fanucci gone, Vito's communal stature grows."/>
+          </h:panelGrid>
+        </p:tab>
+        <p:tab id="tab3" title="Godfather Part III" disabled="true">
+          <h:panelGrid columns="2" cellpadding="10">
+            <p:graphicImage id="tab3Img" value="/resources/images/godfather3.jpg" />
+            <h:outputText id="tab3Text" value="After a break of more than 15 years, director Francis Ford Coppola and writer Mario Puzo returned to the well for this third and final story of the fictional Corleone crime family.  
+			                Two decades have passed, and crime kingpin Michael Corleone, now divorced from his wife Kay has nearly succeeded in keeping his promise that his family would one day be completely legitimate."/>
+          </h:panelGrid>
+        </p:tab>
+      </p:tabView>
+      <br />
+      <h1>Tooltip Messagens</h1>
+      <p:tooltip />
+      <h3>Messages</h3>
+      <h:form id="form1">
+        <p:messages id="mensagens" showDetail="true" autoUpdate="true" closable="true" />
+        <p:commandButton id="infoButton" value="Info" actionListener="#{messagesController.addInfo}" styleClass="btn blue"/>
+        <p:commandButton id="warnButton" value="Warn" actionListener="#{messagesController.addWarn}" styleClass="btn yellow"/>
+        <p:commandButton id="errorButton" value="Error" actionListener="#{messagesController.addError}" styleClass="btn red"/>
+        <p:commandButton id="fatalButton" value="Fatal" actionListener="#{messagesController.addFatal}" styleClass="btn red"/>
+      </h:form>
+      <h3>Message</h3>
+      <h:form id="form2">
+        <h:panelGrid id="grid" columns="3" cellpadding="4">
+          <h:outputText value="Default: *" />
+          <p:inputText id="default" required="true" />
+          <p:message for="default" />
+          <h:outputText value="Text: *" />
+          <p:inputText id="txt" required="true" />
+          <p:message for="txt" display="text" />
+          <h:outputText value="Icon: *" />
+          <p:inputText id="icon" required="true" />
+          <p:message for="icon" display="icon" />
+          <h:outputText value="Tooltip:" />
+          <p:inputText id="tt" required="true" />
+          <p:message for="tt" display="tooltip" />
+        </h:panelGrid>
+        <p:commandButton id="submitButton" value="Submit" update="grid"  styleClass="btn green"/>
+      </h:form>
+      <br />
+      <h:outputText value="Accordion" />
+      <p:accordionPanel >
+        <p:tab title="Godfather Part I">
+          <h:panelGrid columns="2" cellpadding="10">
+            <p:graphicImage value="/resources/images/godfather1.jpg" />
+            <h:outputText  
+			                value="The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding.   
+			                His beloved son Michael has just come home from the war, but does not intend to become part of his father's business. T  
+			                hrough Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, kind and benevolent to those who give respect,   
+			                but given to ruthless violence whenever anything stands against the good of the family." />
+          </h:panelGrid>
+        </p:tab>
+        <p:tab title="Godfather Part II">
+          <h:panelGrid columns="2" cellpadding="10">
+            <p:graphicImage value="/resources/images/godfather2.jpg" />
+            <h:outputText value="Francis Ford Coppola's legendary continuation and sequel to his landmark 1972 film, The_Godfather, parallels the young Vito Corleone's rise with his son Michael's spiritual fall, deepening The_Godfather's depiction of the dark side of the American dream.   
+			            In the early 1900s, the child Vito flees his Sicilian village for America after the local Mafia kills his family. Vito struggles to make a living, legally or illegally, for his wife and growing brood in Little Italy,   
+			            killing the local Black Hand Fanucci after he demands his customary cut of the tyro's business. With Fanucci gone, Vito's communal stature grows." />
+          </h:panelGrid>
+        </p:tab>
+        <p:tab title="Godfather Part III" disabled="true">
+          <h:panelGrid columns="2" cellpadding="10">
+            <p:graphicImage value="/resources/images/godfather3.jpg" />
+            <h:outputText value="After a break of more than 15 years, director Francis Ford Coppola and writer Mario Puzo returned to the well for this third and final story of the fictional Corleone crime family.   
+			                Two decades have passed, and crime kingpin Michael Corleone, now divorced from his wife Kay has nearly succeeded in keeping his promise that his family would one day be completely legitimate." />
+          </h:panelGrid>
+        </p:tab>
+      </p:accordionPanel>
+      <br />
+      <h:outputText value="Fieldset" />
+      <p:fieldset legend="Simple FieldSet">
+        <h:panelGrid columns="2" cellpadding="10">
+          <p:graphicImage value="/resources/images/godfather1.jpg" />
+          <h:outputText  
+			            value="The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding.  
+			            His beloved son Michael has just come home from the war, but does not intend to become part of his father's business. T  
+			            hrough Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, kind and benevolent to those who give respect,  
+			            but given to ruthless violence whenever anything stands against the good of the family." />
+        </h:panelGrid>
+      </p:fieldset>
+      <br />
+      <h:outputText value="Splitbutton" />
+      <h:form> 
+      	<p:splitButton value="Salvar 2" styleClass="btn green ui-state-highlight" >  
+			        <p:menuitem value="Update" icon="ui-icon-arrowrefresh-1-w"/>  
+			        <p:menuitem value="Delete" icon="ui-icon-close"/>  
+			        <p:separator />  
+			        <p:menuitem value="Homepage" url="http://www.primefaces.org" icon="ui-icon-extlink"/>  
+			    </p:splitButton>
+		
+ 
+    <p:growl id="messages"/>
+ 
+		    
+        <p:commandButton value="With Icon" id="withIcon"   
+            		icon="ui-icon-disk" disabled="true" styleClass="btn green ui-state-highlight"/>
+        &nbsp;
+        <p:commandButton id="iconOnly"  
+            		icon="ui-icon-disk" title="Icon Only"   styleClass="btn green ui-state-highlight"/>
+      </h:form>
+
+      <br />
+      <h:outputText value="Upload" />
+      <h:form>
+        <p:fileUpload mode="advanced"  
+			            update="messagesss" auto="false" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+		 
+        <p:growl id="messagesss" showDetail="true"/>
+        <p:fileUpload mode="simple" styleClass="form-control"/>
+      </h:form>
+      <br />
+      <h:form>
+      	<p:commandButton id="basic" value="Show Dialog" onclick="dlg.show()" type="button" />  
+                              
+		<p:dialog widgetVar="dlg" maximizable="false" minimizable="false" modal="true">  
+			<f:facet name="header"> 
+				<i class="fa fa-reorder"></i>&nbsp;
+				<h:outputText value="Informações do Aluno" />
+			</f:facet>
+		    <h:outputText value="This Dialog can be Maximized and Minimized!" />  
+		</p:dialog>
+      </h:form>
+      
+      <h:form id="formDash">  
+  
+    <p:growl id="growl" showDetail="true" />  
+  
+    <p:dashboard id="board" model="#{showCaseController.modelD}">  
+        <p:ajax event="reorder" listener="#{showCaseController.handleReorder}" update="growl" />  
+  
+        <p:panel id="sports" header="Sports">  
+            <h:outputText value="Sports Content" />  
+        </p:panel>  
+  
+        <p:panel id="finance" header="Finance">  
+            <h:outputText value="Finance Content" />  
+        </p:panel>  
+  
+        <p:panel id="lifestyle" header="Lifestyle">  
+            <h:outputText value="Lifestyle Content"  />  
+        </p:panel>  
+  
+        <p:panel id="weather" header="Weather">  
+            <h:outputText value="Weather Content" />  
+        </p:panel>  
+  
+        <p:panel id="politics" header="Politics">  
+            <h:outputText value="Politics Content" />  
+        </p:panel>  
+    </p:dashboard>  
+  
+</h:form>
+    </ui:define>
+  </ui:composition>
+</ui:component>

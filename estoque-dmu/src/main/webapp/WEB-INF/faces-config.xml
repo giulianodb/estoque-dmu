@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+
+	<application>
+		<!-- Define arquivo que contem as mensagens da aplicacao  -->
+		<resource-bundle>
+			<base-name>ApplicationMessages</base-name>
+			<var>appMessages</var>
+		</resource-bundle>
+		
+		<!-- Define arquivo customizado para as mensagens das validacoes JSF e BeanValidation. -->
+		<message-bundle>ValidationMessages</message-bundle>
+				
+	</application>	
+
+	<!-- Define uma fabrica customizada para tratar excecoes do JSF -->
+	<factory>
+		<exception-handler-factory>org.exception.ExceptionHandlerFacesFactory</exception-handler-factory>
+	</factory>
+	
+	<!-- Realiza o log das fases do JSF, facilitando a compreencao do fluxo da requisicao 
+		 NAO UTILIZAR EM AMBIENTE DE PRODUCAO -->
+	<!--<lifecycle>-->
+	<!--<phase-listener>br.gov.pr.celepar.utils.listener.FacesLifeCycleListener</phase-listener>-->
+	<!--</lifecycle>-->
+
+</faces-config>

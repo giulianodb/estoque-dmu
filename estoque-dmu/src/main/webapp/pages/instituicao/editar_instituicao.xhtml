@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:component
+ 	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
+	<ui:composition template="/pages/templates/layout.xhtml">
+		<ui:define name="breadcrumb">
+			<ul class="page-breadcrumb breadcrumb">
+		    	<li id="inicial"> <i class="fa fa-home"></i> <p:commandLink id="breadHome" action="/pages/templates/initial.jsf" ajax="false"> Início </p:commandLink> <i class="fa fa-angle-right"></i> </li>
+        		<li><i class="fa fa-hdd-o"></i><span>Instituição</span> <i class="fa fa-angle-right"></i> </li>
+		        <li> <span> Cadastrar Instituição </span> </li>
+		    </ul>
+		    <div class="col-md-12 well"> 
+		        <h1 class="pagedesc">
+		        	<i class="fa fa-table x-big"></i> Cadastrar Instituição <br/>
+		        	<span class="observacao">(*) campo obrigatório</span>           
+		        </h1>        
+		    </div>
+	    </ui:define>
+		<ui:define name="body">		
+				<h:form>
+					<p:panel toggleable="true" id="pgCampos" header="Instituição">
+						<p:focus context="pgCampos" />
+				 		<h:panelGrid columns="2">
+				 			<p:outputLabel for="nomeInstituicao" value="Instituição:" />
+				 			<p:inputText value="#{instituicaoController.instituicao.nome}" id="nomeInstituicao" label="Nome Instituicao" maxlength="60" size="50">
+							</p:inputText>
+							
+							<p:outputLabel for="cnpj" value="CNPJ:" />
+				 			<p:inputText value="#{instituicaoController.instituicao.cnpj}" id="cnpj" label="CNPJ" maxlength="16" size="16" required="true" >
+							</p:inputText> 
+							
+							<p:outputLabel for="nomeContato" value="Nome contato:" />
+				 			<p:inputText value="#{instituicaoController.instituicao.nomeContato}" id="nomeContato" label="Nome contato" maxlength="60" size="50">
+							</p:inputText> 
+							
+							<p:outputLabel for="telefone" value="Telefone:" />
+				 			<p:inputText value="#{instituicaoController.instituicao.telefone}" id="telefone" label="Telefone" maxlength="14" size="14">
+							</p:inputText> 
+							
+							<p:outputLabel for="email" value="Email:" />
+				 			<p:inputText value="#{instituicaoController.instituicao.email}" id="email" label="Email" maxlength="60" size="50">
+							</p:inputText> 
+							
+							
+																			
+						</h:panelGrid>
+						
+						<br></br>
+						
+						<p:separator id="separator"/>
+						<h:panelGrid columns="3" cellpadding="3">
+							<p:commandButton action="#{instituicaoController.alterarInstituicao}" value="Alterar" rendered="#{!empty instituicaoController.instituicao.id}" ajax="false" icon="ui-icon-disk"/>
+							<p:commandButton action="#{instituicaoController.incluirInstituicao}" value="Incluir" rendered="#{empty instituicaoController.instituicao.id}" ajax="false" icon="ui-icon-disk" />
+							<p:commandButton action="#{instituicaoController.iniciarPesquisaInstituicao()}" value="Voltar" immediate="true" ajax="false" icon="ui-icon-arrowreturnthick-1-w" />
+						</h:panelGrid>
+					</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</ui:component>

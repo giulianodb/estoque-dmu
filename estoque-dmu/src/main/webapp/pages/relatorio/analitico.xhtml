@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+	<ui:composition template="/pages/templates/layout.xhtml"	 >				
+	<ui:define name="breadcrumb">
+      <ul class="page-breadcrumb breadcrumb">
+        <li id="inicial"> <i class="fa fa-home"></i> <p:commandLink id="breadHome" action="/pages/templates/initial.jsf" ajax="false"> Início </p:commandLink> <i class="fa fa-angle-right"></i> </li>
+		<li><i class="fa fa-building"></i> <span>Relatório analítico</span><i class="fa fa-angle-right"></i></li>
+        <li> <span>Emitir relatório analítico</span> </li>
+      </ul>
+      <div class="col-md-12 well"> 
+        <h1 class="pagedesc">
+        	<i class="fa fa-table x-big"></i> Relatório Analítico<br/>
+        </h1>        
+      </div>
+    </ui:define>		
+		<ui:define name="body">	
+			<h:form id="sinteticoForm">
+				<p:panel toggleable="true" id="pgCampos" header="Informações da Família">
+					<p:focus context="pgCampos" />
+					<h:panelGrid columns="2" >		
+						<p:outputLabel for="dataInicialPesquisa" value="Data inicial:" />
+							<p:calendar
+								value="#{relatorioController.dataInicialPesquisa}"
+								id="dataInicialPesquisa" required="true" 
+								locale="pt" pattern="dd/MM/yyyy" maxlength="10" size="20">
+							</p:calendar> 						
+						<p:outputLabel for="dataFinalPesquisa" value="Data final:" />
+							<p:calendar
+								value="#{relatorioController.dataFinalPesquisa}"
+								id="dataFinalPesquisa" required="true" 
+								locale="pt" pattern="dd/MM/yyyy" maxlength="10" size="20">
+							</p:calendar> 
+							
+							<p:outputLabel for="produto" value="Produto:" />
+							<p:selectOneMenu value="#{relatorioController.produto.id}" id="produto" required="true" filter="true">
+								<f:selectItem itemLabel="Selecione" itemValue="" />
+								<f:selectItems value="#{relatorioController.listProdutoCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
+							</p:selectOneMenu>
+					</h:panelGrid>
+					<h:panelGrid columns="3" cellpadding="3" >													 
+						<p:commandButton icon="ui-icon-disk" 
+							value="Emitir relatório"
+						 	title="Relatório"
+							action="#{relatorioController.relatorioEstoqueAnalitico()}" ajax="false"/>						 		
+					</h:panelGrid>
+				</p:panel>
+				<br/>
+				<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+				<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+					<p:graphicImage name="/images/ajax_loader.gif" />
+				</p:dialog>			
+			</h:form>	
+					
+		<!-- Grade -->
+		</ui:define>
+	</ui:composition>
+</ui:component>
