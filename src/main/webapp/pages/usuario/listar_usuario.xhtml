@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">	
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" >
+
+	<ui:composition template="/pages/templates/layout.xhtml">			
+		
+    	<ui:param name="activeMenu" value="usuario"/>
+	    <ui:param name="activeSubmenu" value="listarUsuario"/>
+	   	<f:metadata>
+        	 <f:viewAction action="#{usuarioControl.iniciarListarUsuario()}" />
+    	</f:metadata>
+		<ui:define name="breadcrumb">		
+		   <li><i class="fa fa-hdd-o"></i> Usuário </li>          
+           <li>
+        	 <span>
+        		<h:outputText value="Listar usuários" />
+        	 </span>
+           </li>		
+		</ui:define>
+		<ui:define name="body">			
+			<div class="box">
+								
+				<h:form id="usuarioForm">
+							
+					<div class="box-body row">
+						<div class="form-group col-md-6">
+							<p:outputLabel for="nomeUsuario" value="Nome Usuário:" />
+							<p:inputText value="#{usuarioControl.usuarioPesquisa.nome}" 
+								id="nomeUsuario" label="Nome Usuario"
+								maxlength="60" size="50" styleClass="form-control">
+							</p:inputText> 
+						</div>
+					</div>
+					
+					<div class="box-footer align-left">
+							<p:commandButton  
+								update=":gridForm usuarioForm"
+								value="Pesquisa"
+							 	title="Pesquisar Campanha"
+								action="#{usuarioControl.pesquisarUsuario()}"						 		
+								ajax="false" styleClass="btn btn-flat btn-primary "></p:commandButton>
+								
+								<p:spacer width="10"/>					
+											
+								<p:commandButton
+								value="Novo usuario"
+							 	title="Novo usuario"
+								action="#{campanhaController.iniciarIncluirCampanha()}"						 		
+								ajax="false" styleClass="btn btn-flat btn-primary "></p:commandButton>
+								
+						</div>		
+								
+								
+					<br/>
+					<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+					<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+						<p:graphicImage name="/images/ajax_loader.gif" />
+					</p:dialog>			
+				</h:form>	
+			</div>		
+		<!-- Grade -->
+		
+			<div class="box box-default">
+				<div class="box-header with-border">
+					<span class="box-title">Lista de usuários</span>
+					<div class="box-tools pull-right">
+						<button class="btn btn-box-tool" data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+				<div class="box-body">
+					<h:form id="gridForm">
+				    	<p:dataTable var="usuario" 
+						    value="#{usuarioControl.listUsuario}" 
+						    paginator="true" 
+						    rows="10"  
+			                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+			                rowsPerPageTemplate="10,20,40" 
+			                id="gdUsuarios" 
+			                paginatorPosition="bottom"
+			                emptyMessage="#{appMessages['message.datatable.noRecords']}">  				
+							<p:column headerText="Usuário">
+				    	        <p:outputLabel value="#{usuario.nome}" />
+				        	</p:column>
+				        	<p:column headerText="E-mail">
+				    	        <p:outputLabel value="#{usuario.email}" />
+				        	</p:column>
+				        	
+				        	<p:column headerText="Login">
+				    	        <p:outputLabel value="#{usuario.loginUsuario}" />
+				        	</p:column>
+				        	
+				        	<p:column headerText="Papel">
+				    	        <p:outputLabel value="#{usuario.papel.descricaoPapel}" />
+				        	</p:column>
+				        	
+					        <p:column headerText="Selecionar" style="text-align: center;" >				                
+						    
+						    	<p:commandButton id="cmdAlterarUsuario" icon="ui-icon-pencil"									 	 
+							 		update=":gridForm :usuarioForm"
+							 		title="Alterar Usuário"	
+							 		ajax="true"
+									action="#{usuarioControl.iniciarAltarerarUsuario()}">
+									<f:setPropertyActionListener target="#{usuarioControl.usuario}" value="#{usuario}"/> 		 	 
+								</p:commandButton>	
+						    
+						    
+						        <p:commandButton id="cmdExcluirUsuario" icon="ui-icon-trash"									 	 
+							 		update=":gridForm :usuarioForm"
+							 		title="Excluir Campanha"	
+							 		ajax="true"
+									action="#{usuarioControl.excluirUsuario()}">
+									<f:setPropertyActionListener target="#{usuarioControl.usuario}" value="#{usuario}"/> 		 	 
+								</p:commandButton>			            
+						    </p:column>
+					        <f:facet name="footer">  
+								#{usuarioControl.listUsuario.size()} #{appMessages['message.datatable.records']}
+							</f:facet>	
+						</p:dataTable>
+					</h:form> 
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</ui:component>

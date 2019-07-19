@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">	
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" >
+
+	<ui:composition template="/pages/templates/layout.xhtml"	 >			
+	
+		
+    	<ui:param name="activeMenu" value="Doador"/>
+		<ui:param name="activeSubmenu" value="listarDoador"/>
+	   	<f:metadata>
+        	<f:viewAction action="#{doadorController.iniciarPesquisaDoador()}" />        	
+    	</f:metadata>
+		<ui:define name="breadcrumb">		
+		   <li><i class="fa fa-hdd-o"></i> Doador </li>          
+           <li>
+        	 <span>
+        		<h:outputText value="Listar doadores" />
+        	 </span>
+           </li>		
+		</ui:define>
+		<ui:define name="body">			
+			<div class="box">
+			
+				<h:form id="doadorForm">
+				
+					<div class="box-body row">
+						<div class="form-group col-md-6">
+							<p:outputLabel for="nomeDoador" value="Nome Doador:" />
+							<p:inputText value="#{doadorController.doadorDataModel.doadorPesquisa.nome}" 
+								id="nomeDoador" label="Nome "
+								maxlength="60" size="50" styleClass="form-control">
+							</p:inputText> 
+						</div>
+					</div>	
+						
+					<div class="box-footer align-left">						
+	
+							<p:commandButton  
+								update=":gridForm doadorForm"
+								value="Pesquisa"
+							 	title="Pesquisar Doador"
+								action="#{doadorController.iniciarPesquisaDoador()}"						 		
+								ajax="false" styleClass="btn btn-flat btn-primary "></p:commandButton>
+								
+								<p:spacer width="10"/>	
+								<p:commandButton  
+								
+								value="Novo doador"
+							 	title="Novo Doador"
+								action="#{doadorController.iniciarIncluirDoador()}"						 		
+								ajax="false" styleClass="btn btn-flat btn-primary "></p:commandButton>
+								
+						</div>		
+					<br/>
+					<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+					<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+						<p:graphicImage name="/images/ajax_loader.gif" />
+					</p:dialog>			
+				</h:form>	
+						
+			</div>		
+						
+			<!-- Grade -->
+			
+			<div class="box box-default">
+				<div class="box-header with-border">
+					<span class="box-title">Lista de doadores</span>
+					<div class="box-tools pull-right">
+						<button class="btn btn-box-tool" data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+				<div class="box-body">
+					<h:form id="gridForm">
+				    	<p:dataTable var="doador" 
+						    value="#{doadorController.doadorDataModel}" 
+						    paginator="true" 
+						    rows="10"  
+			                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+			                rowsPerPageTemplate="10,20,40" 
+			                selectionMode="single" 
+			                id="gdDoadors" 
+			                lazy="true" 
+			                paginatorPosition="bottom"
+			                emptyMessage="#{appMessages['message.datatable.noRecords']}">  				
+							<p:column headerText="Nome responável">
+				    	        <p:outputLabel value="#{doador.nome}" />
+				        	</p:column>
+				        	<p:column headerText="Telefone">
+				    	        <p:outputLabel value="#{doador.telefone}" />
+				        	</p:column>
+				        	<p:column headerText="Celular">
+				    	        <p:outputLabel value="#{doador.celular}" />
+				        	</p:column>
+				        	<p:column headerText="Email">
+				    	        <p:outputLabel value="#{doador.email}" />
+				        	</p:column>
+				        	
+				        	<p:column headerText="Bairro">
+				    	        <p:outputLabel value="#{doador.bairro}" />
+				        	</p:column>
+				        	
+				        	
+					        <p:column headerText="Selecionar" style="text-align: center;" >	
+					        	 <p:commandButton id="cmdAlterarDoador" icon="ui-icon-pencil"									 	 
+							 		update=":gridForm :doadorForm"
+							 		title="Alterar Doador"	
+							 		ajax="true"
+									action="#{doadorController.iniciarAlterarDoador()}">
+									<f:setPropertyActionListener target="#{doadorController.doador}" value="#{doador}"/> 		 	 
+								</p:commandButton>				                
+						        <p:commandButton id="cmdExcluirDoador" icon="ui-icon-trash"									 	 
+							 		update=":gridForm :doadorForm"
+							 		title="Excluir Doador"	
+							 		ajax="true"
+									action="#{doadorController.excluirDoador()}">
+									<p:confirm header="Confirmação" message="Você tem certeza que deseja excluir a movimentação?"  icon="ui-icon-alert" />
+									<f:setPropertyActionListener target="#{doadorController.doador}" value="#{doador}"/> 		 	 
+								</p:commandButton>			            
+						    </p:column>
+					        <f:facet name="footer">  
+								#{doadorController.doadorDataModel.getRowCount()} #{appMessages['message.datatable.records']}
+							</f:facet>	
+						</p:dataTable>
+						
+						  <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+		       				 <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		        			<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		    			</p:confirmDialog>
+					</h:form>		
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</ui:component>

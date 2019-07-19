@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">	
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" >
+	
+	<ui:composition template="/pages/templates/layout.xhtml">
+		<ui:param name="activeSubmenu" value="editarUsuario"/>
+    	<ui:param name="activeMenu" value="usuario"/>
+	   	<f:metadata>
+        	<f:viewAction action="#{usuarioControl.iniciarEditarUsuario(param.idUsuario)}" />
+    	</f:metadata>
+		<ui:define name="breadcrumb">		
+		   <li><i class="fa fa-hdd-o"></i> Usuario </li>          
+           <li >
+        	 <span>
+        		<h:outputText value="Alterar usuário" />
+        		<h:outputText value="Incluir usuário" />
+        	 </span>
+           </li>		
+		</ui:define>
+		<ui:define name="body">			
+			<div class="box">
+				<h:form id="usuario" >			
+					<div class="box-header with-border">
+             			<h3 class="box-title">Editar usuário</h3>
+         			</div>
+					
+					<div class="box-body row">
+						<div class="form-group col-md-6">
+							<p:outputLabel for="nomeUsuario" value="Nome:" indicateRequired="true" />
+							<p:inputText value="#{usuarioControl.usuario.nome}" id="nomeUsuario" label="Nome" maxlength="60" size="50" required="true" styleClass="form-control"/>
+						</div>
+						
+						<div class="form-group col-md-6">
+							<p:outputLabel for="emailUsuario" value="E-mail:" indicateRequired="true" />
+							<p:inputText value="#{usuarioControl.usuario.email}" id="emailUsuario" label="Email" maxlength="60" size="50" required="true" styleClass="form-control"/>
+						</div>
+						
+						<div class="form-group col-md-6">
+							<p:outputLabel for="loginUsuario" value="Login:" indicateRequired="true" />
+							<p:inputText value="#{usuarioControl.usuario.loginUsuario}" id="loginUsuario" label="Login" maxlength="60" size="50" required="true" styleClass="form-control"/>
+						</div>
+						
+						<div class="form-group col-md-6">
+							<p:outputLabel for="senhaUsuario" value="Senha:" indicateRequired="true" />
+							<p:inputText value="#{usuarioControl.usuario.senha}" id="senhaUsuario" label="Senha" maxlength="60" size="50" required="true" styleClass="form-control"/>
+						</div>
+						
+						<div class="form-group col-md-6">
+							<p:outputLabel for="papelUsuario" value="Papel:" indicateRequired="true" />
+							<p:selectOneMenu value="#{usuarioControl.usuario.papel.idPapel}" id="papelUsuario" required="true" styleClass="form-control" >
+								<f:selectItem itemLabel="Selecione" itemValue="" />
+								<f:selectItems value="#{usuarioControl.listPapel}" var="s" itemLabel="#{s.nomePapel}" itemValue="#{s.idPapel}" />
+							</p:selectOneMenu >
+						</div>
+						
+					</div>	
+				
+				<div class="box-footer align-left">
+					<p:commandButton action="#{usuarioControl.alterarUsuario()}" value="Alterar" rendered="#{!empty usuarioControl.usuario.idUsuario}" ajax="false" styleClass="btn btn-flat btn-primary "/>
+					<p:spacer width="10"/>
+					<p:commandButton action="#{usuarioControl.incluirUsuario()}" value="Incluir" rendered="#{empty usuarioControl.usuario.idUsuario}" ajax="false" styleClass="btn btn-flat btn-primary "/>
+					<p:spacer width="10"/>
+					<p:commandButton action="#{campanhaController.iniciarPesquisaCampanha()}" value="Voltar" immediate="true" ajax="false" icon="ui-icon-arrowreturnthick-1-w" styleClass="btn btn-flat btn-primary "/>
+				</div>				
+					
+				</h:form> 
+			</div>
+		</ui:define>
+	</ui:composition>
+</ui:component>

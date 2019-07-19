@@ -1,0 +1,6 @@
+set datetimef=%date:~-4%_%date:~3,2%_%date:~0,2%
+set BACKUP_FILE=D:\estoque\estoque_%datetimef%.backup
+echo backup file name is %BACKUP_FILE%
+SET PGPASSWORD=qwerty
+echo on
+C:\"Program Files"\psql\9.2\bin\pg_dump -i -h localhost -p 5432 -U postgres -F c -b -v -f %BACKUP_FILE% estoque-dmu

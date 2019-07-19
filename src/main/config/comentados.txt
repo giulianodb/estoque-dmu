@@ -1,0 +1,21 @@
+listar_recibo.xhtml
+
+		
+								<p:commandButton id="cmdAlterarReciboSaida" icon="ui-icon-pencil"									 	 
+							 		update=":gridForm :entradaForm"
+							 		title="Alterar Recibo Saída"	
+							 		ajax="false"
+									action="#{saidaController.redirecionarPaginaEditarSaida(lote.codigo)}"
+									rendered="#{lote.obterTipoMovimentacao() == 'Saída'}" > 
+								</p:commandButton>
+								
+								<p:commandButton id="cmdAlterarReciboEntrada" icon="ui-icon-pencil"									 	 
+							 		update=":gridForm :entradaForm"
+							 		title="Alterar Recibo Entrada"	
+							 		ajax="false"
+									action="#{entradaController.redirecionarPaginaEditarEntrada(lote.codigo)}"
+									rendered="#{lote.obterTipoMovimentacao() == 'Entrada'}" > 
+								</p:commandButton>
+								
+								
+								

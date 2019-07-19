@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">	
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" >
+
+	<ui:composition template="/pages/templates/layout.xhtml">
+		
+    	<ui:param name="activeMenu" value="Produto"/>
+		<ui:param name="activeSubmenu" value="editarSaida"/>
+	   	<f:metadata>
+        	<f:viewAction action="#{saidaController.iniciarEdicaoMovimentacaoSaida(param.codLote)}" />
+    	</f:metadata>
+		<ui:define name="breadcrumb">		
+		   <li><i class="fa fa-hdd-o"></i> Realizar Saída </li>          
+           <li>
+        	 <span>
+        		<h:outputText value="Editar saída" />
+        	 </span>
+           </li>		
+		</ui:define>
+		<ui:define name="body">			
+			<div class="box">	
+				<h:form>
+					<div class="box-body row" jsf:id="pgCampos">
+						
+						<div class="box-header with-border" jsf:id="pgCamposDoador">
+             				<h3 class="box-title">Informações saída</h3>
+         				</div>
+						 	
+						<div class="form-group col-md-3">	
+				 			<p:outputLabel for="data" value="Data saida:" />
+				 				<br />
+								<p:calendar
+									value="#{saidaController.saidaDadosReceptor.loteMovimentacao.data}"
+									id="data" required="true" 
+									locale="pt" pattern="dd/MM/yyyy" maxlength="10" size="8" >
+								</p:calendar> 
+						</div>
+								
+						<div class="form-group col-md-12">		
+								<p:outputLabel for="tipoReceptor" value="Tipo recebedor:" />
+								<p:selectOneMenu value="#{saidaController.tipoParceiroSelecionado}" id="tipoReceptor" required="true" styleClass="form-control">
+									<f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{saidaController.listaTipoParceiroCombo}" var="s" itemLabel="#{s.descricao}" itemValue="#{s}" />
+									<p:ajax partialSubmit="true" listener="#{saidaController.listenerAlterarTipoReceptor()}" update="lblReceptorInstituicao,cbReceptorInstituicao,lblReceptorFamilia,cbReceptorFamilia,lblReceptorCampanha,cbReceptorCampanha,lblDestinoCampanha,cbDestinoCampanha,lblPara,cbPara" ></p:ajax>
+								</p:selectOneMenu >
+						</div>		
+								
+						<div class="form-group col-md-6">		
+								<h:panelGroup layout="block" id="lblReceptorInstituicao">
+									<p:outputLabel id="labelInsti" value="Recebedor" rendered="#{saidaController.mostrarComboInstituicao}"/>
+								</h:panelGroup>
+								
+								<h:panelGroup layout="block" id="cbReceptorInstituicao" > 
+									<p:selectOneMenu value="#{saidaController.saidaDadosReceptor.loteMovimentacao.instituicao.id}" filter="true" id="comboInstituicao" styleClass="form-control" required="true" rendered="#{saidaController.mostrarComboInstituicao}">
+										<f:selectItem itemLabel="Selecione" itemValue="" />
+										<f:selectItems value="#{saidaController.listaInstituicaoCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
+									</p:selectOneMenu >
+								</h:panelGroup>
+						</div>		
+								
+						<div class="form-group col-md-12">								
+								<h:panelGroup layout="block" id="lblReceptorFamilia">
+									<p:outputLabel id="labelFam" value="Recebedor:" rendered="#{saidaController.mostrarComboFamilia}"/>
+								</h:panelGroup>
+								
+								<h:panelGroup layout="block" id="cbReceptorFamilia" > 
+									<p:selectOneMenu value="#{saidaController.saidaDadosReceptor.loteMovimentacao.familia.id}" styleClass="form-control" filter="true" id="comboFamilia" required="true" rendered="#{saidaController.mostrarComboFamilia}">
+										<f:selectItem itemLabel="Selecione" itemValue="" />
+										<f:selectItems value="#{saidaController.listaFamiliaCombo}" var="s" itemLabel="#{s.nomeResponsavel}" itemValue="#{s.id}" />
+									</p:selectOneMenu >
+								</h:panelGroup>
+						</div>		
+								
+						<div class="form-group col-md-6">		
+								<h:panelGroup layout="block" id="lblReceptorCampanha">
+										<p:outputLabel id="labelCam" value="Campanha:" rendered="#{saidaController.mostrarComboCampanha}"/>
+								</h:panelGroup>
+								
+								<h:panelGroup layout="block" id="cbReceptorCampanha">
+									<p:selectOneMenu value="#{saidaController.saidaDadosReceptor.loteMovimentacao.campanha.id}" styleClass="form-control" filter="true" id="comboCampanha" required="true" rendered="#{saidaController.mostrarComboCampanha}">
+										<f:selectItem itemLabel="Selecione" itemValue="" />
+										<f:selectItems value="#{saidaController.listaCampanhaCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
+									</p:selectOneMenu >
+								</h:panelGroup>
+						</div>
+						
+						<div class="form-group col-md-6">		
+								
+									<h:panelGroup layout="block" id="lblDestinoCampanha">
+										<p:outputLabel value="Para:" rendered="#{saidaController.mostrarComboCampanha}" />
+									</h:panelGroup>
+									
+									<h:panelGroup layout="block" id="cbDestinoCampanha">
+										<p:selectOneMenu value="#{saidaController.tipoParceiroCampanhaSelecionado}" styleClass="form-control" id="tipoReceptorCampanha" required="true" rendered="#{saidaController.mostrarComboCampanha}"  >
+											<f:selectItem itemLabel="Selecione" itemValue="" />
+											<f:selectItems value="#{saidaController.listaTipoParceiroCampanhaCombo}" var="s" itemLabel="#{s.descricao}" itemValue="#{s}" />
+											<p:ajax partialSubmit="true" listener="#{saidaController.listenerAlterarTipoReceptorCampanha()}" update="lblReceptorInstituicao,cbReceptorInstituicao,lblReceptorFamilia,cbReceptorFamilia,lblReceptorCampanha,lblDestinoCampanha,cbDestinoCampanha,lblPara,cbPara" ></p:ajax>
+										</p:selectOneMenu >
+								
+									</h:panelGroup>
+							</div>	
+								
+							<div class="form-group col-md-6">	
+								<h:panelGroup layout="block" id="lblPara">
+									<p:outputLabel id="labelPara" value="Família:" rendered="#{saidaController.mostrarComboFamiliaCampanha}" />
+									<p:outputLabel id="labelPara2" value="Instituição:" rendered="#{saidaController.mostrarComboInstituicaoCampanha}" />
+								</h:panelGroup>
+								
+								
+								
+								<h:panelGroup layout="block" id="cbPara">
+									<p:selectOneMenu value="#{saidaController.saidaDadosReceptor.loteMovimentacao.familiaCampanha.id}" styleClass="form-control" filter="true" id="comboFamiliaCampanha" required="true" rendered="#{saidaController.mostrarComboFamiliaCampanha}">
+										<f:selectItem itemLabel="Selecione" itemValue="" />
+										<f:selectItems value="#{saidaController.listaFamiliaCombo}" var="s" itemLabel="#{s.nomeResponsavel}" itemValue="#{s.id}" />
+									</p:selectOneMenu >
+									
+									<p:selectOneMenu value="#{saidaController.saidaDadosReceptor.loteMovimentacao.instituicaoCampanha.id}" styleClass="form-control" filter="true" id="comboInstituicaoCampanha"  required="true" rendered="#{saidaController.mostrarComboInstituicaoCampanha}">
+										<f:selectItem itemLabel="Selecione" itemValue="" />
+										<f:selectItems value="#{saidaController.listaInstituicaoCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
+									</p:selectOneMenu >
+					 			</h:panelGroup>
+					 		</div>	
+						
+						</div>					 				
+				 		
+						
+					<div jsf:id="pgLista"> 
+						<div class="box-body row">	
+							<div class="box-header with-border" >
+             					<h3 class="box-title">Produtos</h3>
+         					</div>
+							
+							
+					 			<div class="form-group col-md-6">			
+					 				<p:outputLabel for="produto" value="Produto:" />
+									<p:selectOneMenu value="#{saidaController.saida.produto.id}" styleClass="form-control" id="produto" filter="true">
+										<f:selectItem itemLabel="Selecione" itemValue="" />
+										<f:selectItems value="#{saidaController.listProdutoCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
+									</p:selectOneMenu>
+								</div>	
+									
+						 		<div class="form-group col-md-3">		
+						 			<p:outputLabel for="quantidade" value="Quantidade:" />
+						 			<p:inputText value="#{saidaController.saida.quantidade}" id="quantidade" styleClass="form-control" label="Quantidade" maxlength="8" size="8">
+										<f:converter converterId="converter.MoedaConverter"></f:converter>
+									</p:inputText>
+								</div>	
+							</div>		
+							
+								<div class="box-footer align-center">		
+									<p:commandButton actionListener="#{saidaController.adicionarSaidaLote()}" value="Adicionar"  ajax="true"  update="gdSaidas pgLista"/>
+					 			</div>
+					 				
+				 					
+				 				
+					 			<p:dataTable var="saida" 
+								    value="#{saidaController.listaMovimentacao}" 
+								    paginator="true" 
+								    rows="10"  
+					                id="gdSaidas" 
+					                lazy="false" 
+					                paginatorPosition="bottom"
+					                emptyMessage="#{appMessages['message.datatable.noRecords']}">  				
+									<p:column headerText="Produto">
+						    	        <p:outputLabel value="#{saida.produto.nome}" />
+						        	</p:column>
+						        	
+						        	<p:column headerText="Quantidade">
+						    	        <p:outputLabel value="#{saida.quantidade}" >
+						    	        	<f:converter converterId="converter.MoedaConverter"/>
+						    	        </p:outputLabel>
+						        	</p:column>
+						        	
+							        <p:column headerText="Selecionar" style="text-align: center;" >				                
+								        <p:commandButton id="cmdExcluirEntrada" icon="ui-icon-trash"									 	 
+									 		update="gdSaidas"
+									 		title="Excluir Entrada"	
+									 		ajax="true"
+											action="#{saidaController.excluirSaida()}">
+											<f:setPropertyActionListener target="#{saidaController.saida}" value="#{saida}"/> 		 	 
+										</p:commandButton>			            
+								    </p:column>
+								</p:dataTable>
+						
+				 	</div>
+				 	
+				 	
+						<br></br>
+						
+						<p:separator id="separator"/>
+						<div class="box-footer align-left">
+							<p:commandButton action="#{saidaController.alterarSaida}" value="Alterar" rendered="#{!empty saidaController.saidaDadosReceptor.loteMovimentacao.codigo}" ajax="false" icon="ui-icon-disk"/>
+							<p:spacer width="10"/>
+							<p:commandButton action="#{saidaController.incluirSaida}" value="Incluir" rendered="#{empty saidaController.saidaDadosReceptor.loteMovimentacao.codigo}" ajax="false" icon="ui-icon-disk" />
+							<p:spacer width="10"/>
+							<p:commandButton action="#{saidaController.iniciarPesquisaSaida()}" value="Voltar" immediate="true" ajax="false" icon="ui-icon-arrowreturnthick-1-w" />
+						</div>
+					
+						<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+						<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+							<p:graphicImage name="/images/ajax_loader.gif" />
+						</p:dialog>	
+				</h:form>
+			</div>
+		</ui:define>
+	</ui:composition>
+</ui:component>

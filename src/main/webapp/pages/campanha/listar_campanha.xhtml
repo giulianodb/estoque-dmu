@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">	
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" >
+
+	<ui:composition template="/pages/templates/layout.xhtml"	 >			
+	
+		
+    	<ui:param name="activeMenu" value="Campanha"/>
+	    <ui:param name="activeSubmenu" value="listarCampanha"/>
+	   	<f:metadata>
+        	 <f:viewAction action="#{campanhaController.iniciarPesquisaCampanha()}" />
+    	</f:metadata>
+		<ui:define name="breadcrumb">		
+		   <li><i class="fa fa-hdd-o"></i> Campanha </li>          
+           <li>
+        	 <span>
+        		<h:outputText value="Listar campanha" />
+        	 </span>
+           </li>		
+		</ui:define>
+		<ui:define name="body">			
+			<div class="box">
+								
+				<h:form id="campanhaForm">
+							
+					<div class="box-body row">
+						<div class="form-group col-md-6">
+							<p:outputLabel for="nomeCampanha" value="Nome Campanha:" />
+							<p:inputText value="#{campanhaController.campanhaPesquisa.nome}" 
+								id="nomeCampanha" label="Nome Campanha"
+								maxlength="60" size="50" styleClass="form-control">
+							</p:inputText> 
+						</div>
+					</div>
+					
+					<div class="box-footer align-left">
+	
+	
+							<p:commandButton  
+								update=":gridForm campanhaForm"
+								value="Pesquisa"
+							 	title="Pesquisar Campanha"
+								action="#{campanhaController.pesquisarCampanha()}"						 		
+								ajax="false" styleClass="btn btn-flat btn-primary "></p:commandButton>
+								
+								<p:spacer width="10"/>					
+											
+								<p:commandButton
+								value="Novo campanha"
+							 	title="Novo Campanha"
+								action="#{campanhaController.iniciarIncluirCampanha()}"						 		
+								ajax="false" styleClass="btn btn-flat btn-primary "></p:commandButton>
+								
+						</div>		
+								
+								
+								
+								
+					<br/>
+					<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+					<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+						<p:graphicImage name="/images/ajax_loader.gif" />
+					</p:dialog>			
+				</h:form>	
+			</div>		
+		<!-- Grade -->
+		
+			<div class="box box-default">
+				<div class="box-header with-border">
+					<span class="box-title">Lista de campanhas</span>
+					<div class="box-tools pull-right">
+						<button class="btn btn-box-tool" data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+				<div class="box-body">
+					<h:form id="gridForm">
+				    	<p:dataTable var="campanha" 
+						    value="#{campanhaController.campanhaDataModel}" 
+						    paginator="true" 
+						    rows="10"  
+						    selectionMode="single" 
+			                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+			                rowsPerPageTemplate="10,20,40" 
+			                id="gdCampanhas"
+			                lazy="true" 
+			                paginatorPosition="bottom"
+			                emptyMessage="#{appMessages['message.datatable.noRecords']}">  				
+							<p:column headerText="Campanha">
+				    	        <p:outputLabel value="#{campanha.nome}" />
+				        	</p:column>
+				        	<p:column headerText="Mês início campanha">
+				    	        <p:outputLabel value="#{campanha.mesInicio.descricao}" />
+				        	</p:column>
+				        	
+				        	<p:column headerText="Mês fim campanha">
+				    	        <p:outputLabel value="#{campanha.mesFim.descricao}" />
+				        	</p:column>
+				        	
+				        	<p:column headerText="Descrição campanha">
+				    	        <p:outputLabel value="#{campanha.descricao}" />
+				        	</p:column>
+				        	
+					        <p:column headerText="Selecionar" style="text-align: center;" >				                
+						    
+						    	<p:commandButton id="cmdAlterarCampanha" icon="ui-icon-pencil"									 	 
+							 		update=":gridForm :campanhaForm"
+							 		title="Alterar Campanha"	
+							 		ajax="true"
+									action="#{campanhaController.iniciarAlterarCampanha()}">
+									<f:setPropertyActionListener target="#{campanhaController.campanha}" value="#{campanha}"/> 		 	 
+								</p:commandButton>	
+						    
+						    
+						        <p:commandButton id="cmdExcluirCampanha" icon="ui-icon-trash"									 	 
+							 		update=":gridForm :campanhaForm"
+							 		title="Excluir Campanha"	
+							 		ajax="true"
+									action="#{campanhaController.excluirCampanha()}">
+									<p:confirm header="Confirmação" message="Você tem certeza que deseja excluir a campanha?"  icon="ui-icon-alert" />
+									<f:setPropertyActionListener target="#{campanhaController.campanha}" value="#{campanha}"/> 		 	 
+								</p:commandButton>			            
+						    </p:column>
+					        <f:facet name="footer">  
+								#{campanhaController.listaCampanha.size()} #{appMessages['message.datatable.records']}
+							</f:facet>	
+						</p:dataTable>
+						
+						  <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+		       				 <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		        			<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		    			</p:confirmDialog>
+					</h:form> 
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</ui:component>

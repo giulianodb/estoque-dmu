@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">	
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" >
+
+	<ui:composition template="/pages/templates/layout.xhtml"	 >			
+	
+		
+    	<ui:param name="activeMenu" value="Produto"/>
+		<ui:param name="activeSubmenu" value="listarMovimentacao"/>
+	   	<f:metadata>
+        	
+    	</f:metadata>
+		<ui:define name="breadcrumb">		
+		   <li><i class="fa fa-hdd-o"></i> Movimentações </li>          
+           <li>
+        	 <span>
+        		<h:outputText value="Listar movimentações" />
+        	 </span>
+           </li>		
+		</ui:define>
+		<ui:define name="body">			
+			<div class="box">
+				<h:form id="entradaForm">
+        	<p:remoteCommand async="false" delay="2" name="nomeRemoteCommand" id="idRemoteCommand" action="#{movimentacaoController.iniciarPesquisaMovimentacao(param.codLote)}" autoRun="true" immediate="true"/>
+							
+					<div class="box-body row">
+						<div class="form-group col-md-6">
+							<p:outputLabel for="nomeProduto" value="Nome produto:" />
+							<p:inputText value="#{movimentacaoController.movimentacaoDataModel.movimentacaoPesquisa.produto.nomeSemAcento}" 
+								id="nomeProduto" label="Nome Produto" styleClass="form-control"
+								maxlength="60" size="50">
+							</p:inputText> 
+						</div>			
+					</div>
+					
+					<div class="box-footer align-left">	
+		
+							<p:commandButton icon="ui-icon-disk" 
+								update=":gridForm entradaForm"
+								value="Pesquisa"
+							 	title="Pesquisar Entrada"
+								action="#{movimentacaoController.iniciarPesquisaMovimentacao()}"						 		
+								ajax="true" styleClass="btn btn-flat btn-primary "></p:commandButton>
+								
+					</div>			
+								
+					<br/>
+					<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+					<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+						<p:graphicImage name="/images/ajax_loader.gif" />
+					</p:dialog>			
+				</h:form>	
+			</div>		
+		<!-- Grade -->
+		<div class="box box-default">
+				<div class="box-header with-border">
+					<span class="box-title">Lista de campanhas</span>
+					<div class="box-tools pull-right">
+						<button class="btn btn-box-tool" data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+				<div class="box-body">
+					<h:form id="gridForm">
+				    	<p:dataTable var="movimentacao" 
+						    value="#{movimentacaoController.movimentacaoDataModel}" 
+						    paginator="true" 
+						    rows="10"  
+			                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+			                rowsPerPageTemplate="10,20,40" 
+			                id="gdMovimentacao" 
+			                lazy="true" 
+			                paginatorPosition="bottom"
+			                emptyMessage="#{appMessages['message.datatable.noRecords']}">  				
+							<p:column headerText="Produto">
+				    	        <p:outputLabel value="#{movimentacao.produto.nome}" />
+				        	</p:column> 
+				        	<p:column headerText="Tipo movimentação">
+				    	        <p:outputLabel value="#{movimentacao.tipoMovimentacaoEnum.descricao}" >
+				    	        </p:outputLabel>
+				        	</p:column>
+				        	<p:column headerText="Quantidade">
+				    	        <p:outputLabel value="#{movimentacao.quantidade}" >
+				    	        	<f:converter converterId="converter.MoedaConverter"/>
+				    	        </p:outputLabel>
+				        	</p:column>
+				        	<p:column headerText="Valor">
+				    	        <p:outputLabel value="#{movimentacao.valor}" >
+				    	        	<f:converter converterId="converter.MoedaConverter"/>
+				    	        </p:outputLabel>
+				        	</p:column>
+				        	
+				        	<p:column headerText="Data">
+				    	        <p:outputLabel value="#{movimentacao.loteMovimentacao.data}" >
+				    	        	<f:convertDateTime pattern="dd/MM/yyyy" />
+				    	        </p:outputLabel>
+				        	</p:column>
+				        	
+				        	<p:column headerText="Doador" >
+				    	        <p:outputLabel value="#{movimentacao.loteMovimentacao.campanha.nome}" rendered="#{!empty movimentacao.loteMovimentacao.campanha}"/>
+				        	
+				    	        <p:outputLabel value="#{movimentacao.loteMovimentacao.instituicao.nome}" rendered="#{!empty movimentacao.loteMovimentacao.instituicao}"/>
+				    	        
+				    	         <p:outputLabel value="#{movimentacao.loteMovimentacao.familia.nomeResponsavel}" rendered="#{!empty movimentacao.loteMovimentacao.familia.nomeResponsavel}"/>
+				        	
+				    	        <p:outputLabel value="Anônimo" rendered="#{empty movimentacao.loteMovimentacao.instituicao and empty movimentacao.loteMovimentacao.campanha and empty movimentacao.loteMovimentacao.instituicao and empty movimentacao.loteMovimentacao.familia.nomeResponsavel}"/>
+				        	</p:column>
+				        	
+				        	<p:column headerText="Recibo">
+				    	        <p:outputLabel value="#{movimentacao.loteMovimentacao.codigo}" >
+				    	        </p:outputLabel>
+				        	</p:column>
+				        	
+				        	
+				        	
+					        <p:column headerText="Selecionar" style="text-align: center;" >				                
+						        <p:commandButton id="cmdExcluirEntrada" icon="ui-icon-trash"									 	 
+							 		update=":gridForm :entradaForm"
+							 		title="Excluir Entrada"	
+							 		ajax="true"
+									action="#{movimentacaoController.excluirEntrada()}">
+									<p:confirm header="Confirmação" message="Você tem certeza que deseja excluir a movimentação?"  icon="ui-icon-alert" />
+									<f:setPropertyActionListener target="#{movimentacaoController.movimentacao}" value="#{movimentacao}"/> 		 	 
+								</p:commandButton>
+								
+									            
+						    </p:column>
+					        <f:facet name="footer">  
+								#{movimentacaoController.movimentacaoDataModel.getRowCount()} #{appMessages['message.datatable.records']}
+							</f:facet>	
+						</p:dataTable>
+						
+						  <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+		       				 <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		        			<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		    			</p:confirmDialog>
+		    		</h:form>	
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</ui:component>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">	
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" >
+
+	<ui:composition template="/pages/templates/layout.xhtml"	 >			
+		
+    	<ui:param name="activeMenu" value="configuracao"/>
+		<ui:param name="activeSubmenu" value="limiteMov"/>
+	   	<f:metadata>
+         	<f:viewAction action="#{utilitarioController.paginaLimiteMovimentacao()}" />       	
+    	</f:metadata>
+		<ui:define name="breadcrumb">		
+		   <li><i class="fa fa-hdd-o"></i> Configurar data Limite movimentações </li>          
+           <li>
+        	 <span>
+        		<h:outputText value="Configurar data limiete" />
+        	 </span>
+           </li>		
+		</ui:define>
+		<ui:define name="body">			
+			<div class="box">
+				<h:form id="sinteticoForm">
+					<div class="box-header with-border">
+             				<h3 class="box-title">Configurar data Limite movimentações</h3>
+         				</div>
+					<div class="box-body row">
+						<div class="form-group col-md-3">	
+							<p:outputLabel for="ano" value="Ano:" /> <br />
+								<p:inputText value="#{utilitarioController.ano}" id="ano"></p:inputText>						
+							</div>	
+								
+							<div class="form-group col-md-3">	
+							<p:outputLabel for="mes" value="Mês:" /> <br />
+								<p:inputText value="#{utilitarioController.mes}" id="mes"></p:inputText>
+							</div>
+						</div>
+						
+						<div class="box-footer align-left">		
+												
+								<p:commandButton  
+								value="Atualizar"
+							 	title="Atualizar"
+								action="#{utilitarioController.atualizarLimiteMovimentacao()}" ajax="false"/>		
+						</div>		
+													 		
+					<br/>
+					<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+					<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+						<p:graphicImage name="/images/ajax_loader.gif" />
+					</p:dialog>			
+				</h:form>	
+			</div>		
+		<!-- Grade -->
+		</ui:define>
+	</ui:composition>
+</ui:component>

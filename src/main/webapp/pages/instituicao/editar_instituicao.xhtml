@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">	
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" >
+
+	<ui:composition template="/pages/templates/layout.xhtml">
+		
+    	<ui:param name="activeMenu" value="Instituicao"/>
+		<ui:param name="activeSubmenu" value="editarInstituicao"/>
+	   	<f:metadata>
+        	<f:viewAction action="#{instituicaoController.iniciarEditarInstituicao(param.codInstituicao)}" />
+    	</f:metadata>
+		<ui:define name="breadcrumb">		
+		   <li><i class="fa fa-hdd-o"></i> Campanha </li>          
+           <li>
+        	 <span>
+        		<h:outputText value="Editar campanha" />
+        	 </span>
+           </li>		
+		</ui:define>
+		<ui:define name="body">			
+			<div class="box">
+				<div class="box-header with-border">
+						<div class="col-xs-6 col-sm-3">
+							<h3 class="box-title">
+								<i class="fa fa-table x-big" /> Editar instituição
+							</h3>
+						</div>	
+					</div>	
+				<h:form>
+					<div class="box-body row">
+						<div class="form-group col-md-6">	
+				 			<p:outputLabel for="nomeInstituicao" value="Instituição:" />
+				 			<p:inputText value="#{instituicaoController.instituicao.nome}" id="nomeInstituicao" label="Nome Instituicao" maxlength="60" size="50" styleClass="form-control">
+							</p:inputText>
+						</div>	
+						
+						<div class="form-group col-md-6">	
+							<p:outputLabel for="cnpj" value="CNPJ:" />
+				 			<p:inputText value="#{instituicaoController.instituicao.cnpj}" id="cnpj" label="CNPJ" maxlength="16" size="16" required="true" styleClass="form-control">
+							</p:inputText>
+						</div>	 
+							
+						<div class="form-group col-md-6">	
+							<p:outputLabel for="nomeContato" value="Nome contato:" />
+				 			<p:inputText value="#{instituicaoController.instituicao.nomeContato}" id="nomeContato" label="Nome contato" maxlength="60" size="50" styleClass="form-control">
+							</p:inputText>
+						</div>	 
+							
+						<div class="form-group col-md-6">	
+							<p:outputLabel for="telefone" value="Telefone:" />
+				 			<p:inputText value="#{instituicaoController.instituicao.telefone}" id="telefone" label="Telefone" maxlength="14" size="14" styleClass="form-control">
+							</p:inputText>
+						</div>	 
+							
+						<div class="form-group col-md-6">	
+							<p:outputLabel for="email" value="Email:" />
+				 			<p:inputText value="#{instituicaoController.instituicao.email}" id="email" label="Email" maxlength="60" size="50" styleClass="form-control">
+							</p:inputText>
+						</div>	 
+					</div>														
+						
+						<br></br>
+							<div class="box-footer align-left">
+								<p:commandButton action="#{instituicaoController.alterarInstituicao}" value="Alterar" rendered="#{!empty instituicaoController.instituicao.id}" ajax="false" icon="ui-icon-disk"  styleClass="btn btn-flat btn-primary"/>
+								<p:spacer width="10"/>
+								<p:commandButton action="#{instituicaoController.incluirInstituicao}" value="Incluir" rendered="#{empty instituicaoController.instituicao.id}" ajax="false" icon="ui-icon-disk"  styleClass="btn btn-flat btn-primary"/>
+								<p:spacer width="10"/>
+								<p:commandButton action="#{instituicaoController.iniciarPesquisaInstituicao()}" value="Voltar" immediate="true" ajax="false" icon="ui-icon-arrowreturnthick-1-w" />
+							</div>
+					
+				</h:form>
+			</div>
+		</ui:define>
+	</ui:composition>
+</ui:component>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">	
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" >
+
+	<ui:composition template="/pages/templates/layout.xhtml">
+		
+    	<ui:param name="activeMenu" value="Campanha"/>
+		<ui:param name="activeSubmenu" value="editarCampanha"/>
+	   	<f:metadata>
+        	<f:viewAction action="#{campanhaController.iniciarEditarCampanha(param.codCampanha)}" />
+    	</f:metadata>
+		<ui:define name="breadcrumb">		
+		   <li><i class="fa fa-hdd-o"></i> Campanha </li>          
+           <li>
+        	 <span>
+        		<h:outputText value="Editar campanha" />
+        	 </span>
+           </li>		
+		</ui:define>
+		<ui:define name="body">			
+			<div class="box">
+					<div class="box-header with-border">
+						<div class="col-xs-6 col-sm-3">
+							<h3 class="box-title">
+								<i class="fa fa-table x-big" /> Editar campanha
+							</h3>
+						</div>	
+					</div>	
+					<h:form>
+						<div class="box-body row">
+							<div class="form-group col-md-6">
+								<p:outputLabel for="nomeCampanha" value="Campanha:" 
+									indicateRequired="true" />
+									<p:inputText value="#{campanhaController.campanha.nome}" id="nomeCampanha" label="Nome Campanha" maxlength="60" size="50" required="true" styleClass="form-control">
+									</p:inputText>
+							</div>
+							
+							<div class="form-group col-md-3">	
+								<p:outputLabel for="mesInicioCampanha" value="Mês inicio campanha:" />
+								<p:selectOneMenu value="#{campanhaController.campanha.mesInicio}" id="mesInicioCampanha" required="true" styleClass="form-control">
+									<f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{campanhaController.listaMeses}" var="s" itemLabel="#{s.descricao}" itemValue="#{s}" />
+								</p:selectOneMenu>
+							</div>	
+								
+							<div class="form-group col-md-3">	
+								<p:outputLabel for="mesFimCampanha" value="Mês fim campanha:" />
+								<p:selectOneMenu value="#{campanhaController.campanha.mesFim}" id="mesFimCampanha" required="true" styleClass="form-control">
+									<f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{campanhaController.listaMeses}" var="s" itemLabel="#{s.descricao}" itemValue="#{s}" />
+								</p:selectOneMenu>
+							</div>
+							
+							
+							<div class="form-group col-md-12">											
+								<p:outputLabel for="descricao" value="Descrição:" />
+								<p:inputTextarea id="descricao"  value="#{campanhaController.campanha.descricao}" styleClass="form-control"></p:inputTextarea>	
+							</div>
+						</div>
+						
+						<div class="box-footer align-left">
+								<p:commandButton action="#{campanhaController.alterarCampanha}" value="Alterar" rendered="#{!empty campanhaController.campanha.id}" ajax="false" icon="ui-icon-disk" styleClass="btn btn-flat btn-primary "/>
+								<p:spacer width="10"/>
+								<p:commandButton action="#{campanhaController.incluirCampanha}" value="Incluir" rendered="#{empty campanhaController.campanha.id}" ajax="false" icon="ui-icon-disk" styleClass="btn btn-flat btn-primary "/>
+								<p:spacer width="10"/>
+								<p:commandButton action="#{campanhaController.iniciarPesquisaCampanha()}" value="Voltar" immediate="true" ajax="false" icon="ui-icon-arrowreturnthick-1-w" styleClass="btn btn-flat btn-primary "/>
+						
+						</div>	
+					
+						
+				</h:form>
+			</div>
+		</ui:define>
+	</ui:composition>
+</ui:component>

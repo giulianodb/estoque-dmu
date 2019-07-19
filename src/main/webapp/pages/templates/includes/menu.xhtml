@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+	
+		<h:form>
+		<ul class="sidebar-menu">
+			<li class="#{activeMenu eq 'inicial' ? 'active' : ''}">
+				<p:link href="/pages/templates/initial.jsf"> 
+					<i class="fa fa-home"></i>  <span>Inicial </span> 
+				</p:link>
+			</li>
+			
+			
+			<li class="treeview #{activeMenu eq 'usuario' ? 'active' : ''}" jsf:id="liUsuario" jsf:rendered="#{request.isUserInRole('Administrador')}"> 
+				<a href="#"> 
+					<i class="fa fa-user"></i> <span>Usuário</span> 
+					<i class="fa fa-angle-left pull-right"></i>
+				</a>
+				<ul class="treeview-menu">
+					<li class="#{activeSubmenu eq 'novoUsuario' ? 'active' : ''}">
+						<p:link href="/pages/usuario/editar_usuario.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Cadastrar usuário </span> 
+						</p:link>
+					</li>
+					<li class="#{activeSubmenu eq 'listarUsuario' ? 'active' : ''}">
+						<p:link href="/pages/usuario/listar_usuario.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Listar usuários </span> 
+						</p:link>
+					</li>
+				</ul>
+			</li>
+			
+			
+			<li class="treeview #{activeMenu eq 'Produto' ? 'active' : ''}" >
+				<a href="#"> 
+					<i class="fa fa-tag"></i> <span>Produto</span> 
+					<i class="fa fa-angle-left pull-right"></i>
+				</a>
+				<ul class="treeview-menu">
+					<li class="#{activeSubmenu eq 'listarProduto' ? 'active' : ''}">
+						<p:link href="/pages/produto/listar_produto.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Listar produtos </span> 
+						</p:link>
+					</li>
+					
+					
+					<li class="#{activeSubmenu eq 'editarProduto' ? 'active' : ''}">
+						<p:link href="/pages/produto/editar_produto.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Cadastrar produto </span> 
+						</p:link>
+					</li>
+					
+					
+					<li class="#{activeSubmenu eq 'editarEntrada' ? 'active' : ''}" jsf:id="liEntrada" jsf:rendered="#{request.isUserInRole('Administrador') or request.isUserInRole('Gerente')}">
+						<p:link href="/pages/movimentacao/entrada/editar_entrada.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Entrada produto </span> 
+						</p:link>
+					</li>
+					
+					<li class="#{activeSubmenu eq 'editarSaida' ? 'active' : ''}" jsf:id="liSaida" jsf:rendered="#{request.isUserInRole('Administrador') or request.isUserInRole('Gerente')}">
+						<p:link href="/pages/movimentacao/saida/editar_saida.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Saída produto </span> 
+						</p:link>
+						
+					</li>
+					<li class="#{activeSubmenu eq 'listarMovimentacao' ? 'active' : ''}" jsf:id="liMovi" jsf:rendered="#{request.isUserInRole('Administrador') or request.isUserInRole('Gerente') or request.isUserInRole('Financeiro')}">
+						<p:link href="/pages/movimentacao/listar_movimentacao.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Listar movimentações </span> 
+						</p:link>
+					</li>
+					
+					<li class="#{activeSubmenu eq 'listarRecibo' ? 'active' : ''}" jsf:id="liRecibo" jsf:rendered="#{request.isUserInRole('Administrador') or request.isUserInRole('Gerente') or request.isUserInRole('Financeiro')}">
+						<p:link href="/pages/movimentacao/listar_recibo.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Pesquisar recibo </span> 
+						</p:link>
+					</li>
+					
+				</ul>
+			</li>
+			
+						
+			<li class="treeview #{activeMenu eq 'Campanha' ? 'active' : ''}" jsf:id="liCampanha" jsf:rendered="#{request.isUserInRole('Administrador') or request.isUserInRole('Gerente') or request.isUserInRole('Cadastro')}"> 
+				<a href="#"> 
+					<i class="fa fa-flag"></i> <span>Campanha</span> 
+					<i class="fa fa-angle-left pull-right"></i>
+				</a>
+				<ul class="treeview-menu">
+					<li class="#{activeSubmenu eq 'listarCampanha' ? 'active' : ''}">
+						<p:link href="/pages/campanha/listar_campanha.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Listar campanhas </span> 
+						</p:link>
+					</li>
+					
+					<li class="#{activeSubmenu eq 'editarCampanha' ? 'active' : ''}">
+						<p:link href="/pages/campanha/editar_campanha.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Cadastrar campanha </span> 
+						</p:link>
+					</li>
+				</ul>
+			</li>
+			
+			
+			<li class="treeview #{activeMenu eq 'Instituicao' ? 'active' : ''}" jsf:id="liInst" jsf:rendered="#{request.isUserInRole('Administrador') or request.isUserInRole('Gerente') or request.isUserInRole('Cadastro')}"> 
+				<a href="#"> 
+					<i class="fa fa-building"></i> <span>Instituição</span> 
+					<i class="fa fa-angle-left pull-right"></i>
+				</a>
+				<ul class="treeview-menu">
+					<li class="#{activeSubmenu eq 'listarInstituicao' ? 'active' : ''}">
+						<p:link href="/pages/instituicao/listar_instituicao.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Listar instituições </span> 
+						</p:link>
+					</li>
+					
+					<li class="#{activeSubmenu eq 'editarInstituicao' ? 'active' : ''}">
+						<p:link href="/pages/instituicao/editar_instituicao.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Cadastrar instituição </span> 
+						</p:link>
+					</li>
+				</ul>
+			</li>
+			
+			
+				
+			<li class="treeview #{activeMenu eq 'Familia' ? 'active' : ''}" jsf:id="liFamilia" jsf:rendered="#{request.isUserInRole('Administrador') or request.isUserInRole('Gerente') or request.isUserInRole('Cadastro')}"> 
+				<a href="#"> 
+					<i class="fa fa-users"></i> <span>Família</span> 
+					<i class="fa fa-angle-left pull-right"></i>
+				</a>
+				<ul class="treeview-menu">
+					<li class="#{activeSubmenu eq 'listarFamilia' ? 'active' : ''}">
+						<p:link href="/pages/familia/listar_familia.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Listar família</span> 
+						</p:link>
+					</li>
+					
+					<li class="#{activeSubmenu eq 'editarFamilia' ? 'active' : ''}">
+						<p:link href="/pages/familia/editar_familia.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Cadastrar família</span> 
+						</p:link>
+					</li>
+				</ul>
+			</li>
+			
+			
+			<li class="treeview #{activeMenu eq 'Doador' ? 'active' : ''}" jsf:id="liDoador" jsf:rendered="#{request.isUserInRole('Administrador') or request.isUserInRole('Gerente') or request.isUserInRole('Cadastro')}" > 
+				<a href="#"> 
+					<i class="fa fa-user"></i> <span>Doador</span> 
+					<i class="fa fa-angle-left pull-right"></i>
+				</a>
+				<ul class="treeview-menu">
+					<li class="#{activeSubmenu eq 'listarDoador' ? 'active' : ''}">
+						<p:link href="/pages/doador/listar_doador.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Listar doador</span> 
+						</p:link>
+					</li>
+					
+					<li class="#{activeSubmenu eq 'editarDoador' ? 'active' : ''}">
+						<p:link href="/pages/doador/editar_doador.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Cadastrar doador</span> 
+						</p:link>
+					</li>
+				</ul>
+			</li>
+			
+			
+			
+			<li class="treeview #{activeMenu eq 'Relatorio' ? 'active' : ''}" jsf:id="liRelatorio" jsf:rendered="#{request.isUserInRole('Administrador') or request.isUserInRole('Gerente') or request.isUserInRole('Financeiro')}">
+				<a href="#"> 
+					<i class="fa fa-file"></i> <span>Relatório</span> 
+					<i class="fa fa-angle-left pull-right"></i>
+				</a>
+				<ul class="treeview-menu">
+					<li class="#{activeSubmenu eq 'sintetico' ? 'active' : ''}">
+						<p:link href="/pages/relatorio/sintetico.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Sintético</span> 
+						</p:link>
+					</li>
+					
+					<li class="#{activeSubmenu eq 'analitico' ? 'active' : ''}">
+						<p:link href="/pages/relatorio/analitico.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Analítico</span> 
+						</p:link>
+					</li>
+					
+					<li class="#{activeSubmenu eq 'campanha' ? 'active' : ''}">
+						<p:link href="/pages/relatorio/campanha.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Campanhas</span> 
+						</p:link>
+						
+					</li>
+					
+					<li class="#{activeSubmenu eq 'saidaFamilia' ? 'active' : ''}">
+						<p:link href="/pages/relatorio/familia.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Saída para famílias</span> 
+						</p:link>
+						
+					</li>
+					<li class="#{activeSubmenu eq 'saidaInstituicao' ? 'active' : ''}">
+						<p:link href="/pages/relatorio/instituicao.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Saída para instituições</span> 
+						</p:link>
+					</li>
+				</ul>
+			</li>
+			
+			
+			<li class="treeview #{activeMenu eq 'util' ? 'active' : ''}" jsf:id="liUtil" > 
+				<a href="#"> 
+					<i class="fa fa-user"></i> <span>Utilitários</span> 
+					<i class="fa fa-angle-left pull-right"></i>
+				</a>
+				<ul class="treeview-menu">
+					<li class="#{activeSubmenu eq 'conversor' ? 'active' : ''}">
+						<p:link href="/pages/util/conversor.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Conversor</span> 
+						</p:link>
+					</li>
+					
+				</ul>
+			</li>
+			
+			<li class="treeview #{activeMenu eq 'configuracao' ? 'active' : ''}" > 
+				<a href="#"> 
+					<i class="fa fa-cogs"></i> <span>Configurações</span> 
+					<i class="fa fa-angle-left pull-right"></i>
+				</a>
+				<ul class="treeview-menu">
+					<li class="#{activeSubmenu eq 'limiteMovi' ? 'active' : ''}">
+					<p:link href="/pages/movimentacao/limite_movimentacao.jsf"> 
+							<i class="fa fa-circle-o"></i>  <span>Configurar data limite</span> 
+						</p:link>
+							
+							
+							</li>
+						</ul>
+					</li>				
+				</ul>
+				
+	</h:form>
+</ui:composition>
+			

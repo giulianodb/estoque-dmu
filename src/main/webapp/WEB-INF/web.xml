@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
+	<display-name>pr-jee6-exemplo</display-name>
+	<session-config>
+		<session-timeout>50</session-timeout>
+	</session-config>
+	<context-param>
+		<param-name>com.sun.faces.writeStateAtFormEnd</param-name>
+		<param-value>false</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<param-value>Development</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+		<param-value>client</param-value>
+	</context-param>
+	<context-param>
+		<param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
+		<param-value>6LfwZwoAAAAAAEhRyntKF1PBzysAJLzqp2v-GMRR</param-value>
+	</context-param>
+	<context-param>
+		<param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
+		<param-value>6LfwZwoAAAAAAI-oUHpdvRnkMfu9fXQHxc0P7IBu</param-value>
+	</context-param>
+	<context-param>
+		<param-name>primefaces.THEME</param-name>
+		<param-value>bootstrap</param-value>
+	</context-param>
+	<context-param>
+		<param-name>primefaces.FONT_AWESOME</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>primefaces.TRANSFORM_METADATA</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>QuartzInitializer</servlet-name>
+		<servlet-class>org.quartz.ee.servlet.QuartzInitializerServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+
+	<security-constraint>
+		<display-name>Sistema</display-name>
+		<web-resource-collection>
+			<web-resource-name>Sistema</web-resource-name>
+			<url-pattern>/pages/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Administrador</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<form-login-config>
+			<form-login-page>/login.jsf</form-login-page>
+			<form-error-page>/login_error.jsf</form-error-page>
+		</form-login-config>
+	</login-config>
+	<security-role>
+		<description>Quando usuario estiver logado</description>
+		<role-name>Administrador</role-name>
+	</security-role>
+
+
+
+
+	<context-param>
+		<param-name>resteasy.scan</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<!-- this need same with resteasy servlet url-pattern -->
+	<context-param>
+		<param-name>resteasy.servlet.mapping.prefix</param-name>
+		<param-value>/rest</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>
+			org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+	</listener>
+
+	<servlet>
+		<servlet-name>resteasy-servlet</servlet-name>
+		<servlet-class>
+			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>resteasy-servlet</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
+
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/pages/templates/error_generic.jsf</location>
+	</error-page>
+
+	<error-page>
+		<error-code>403</error-code>
+		<location>/pages/templates/error_security.jsf</location>
+	</error-page>
+
+
+	<security-constraint>
+		<display-name>Cadastro</display-name>
+		<web-resource-collection>
+			<web-resource-name>Sistema</web-resource-name>
+			<url-pattern>/pages/campanha/listar_campanha.jsf</url-pattern>
+			<url-pattern>/pages/campanha/editar_campanha.jsf</url-pattern>
+			
+			<url-pattern>/pages/produto/listar_produto.jsf</url-pattern>
+			<url-pattern>/pages/produto/editar_produto.jsf</url-pattern>
+
+			<url-pattern>/pages/instituicao/listar_instituicao.jsf</url-pattern>
+			<url-pattern>/pages/instituicao/editar_instituicao.jsf</url-pattern>
+
+			<url-pattern>/pages/familia/listar_familia.jsf</url-pattern>
+			<url-pattern>/pages/familia/editar_familia.jsf</url-pattern>
+
+			<url-pattern>/pages/doador/listar_doador.jsf</url-pattern>
+			<url-pattern>/pages/doador/editar_doador.jsf</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Administrador</role-name>
+			<role-name>Cadastro</role-name>
+			<role-name>Gerente</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<display-name>Usuario</display-name>
+		<web-resource-collection>
+			<web-resource-name>Usuario</web-resource-name>
+			<url-pattern>/pages/usuario/*</url-pattern>
+
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Administrador</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+
+
+	<security-constraint>
+		<display-name>Movimentacao</display-name>
+		<web-resource-collection>
+			<web-resource-name>Movimentacao</web-resource-name>
+			<url-pattern>/pages/movimentacao/*</url-pattern>
+
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Administrador</role-name>
+			<role-name>Gerente</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<display-name>Relatorio</display-name>
+		<web-resource-collection>
+			<web-resource-name>Relatorio</web-resource-name>
+			<url-pattern>/pages/relatorio/*</url-pattern>
+
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Administrador</role-name>
+			<role-name>Financeiro</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+
+	<security-constraint>
+		<display-name>Templates</display-name>
+		<web-resource-collection>
+			<web-resource-name>Templates</web-resource-name>
+			<url-pattern>/pages/templates/*</url-pattern>
+
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Administrador</role-name>
+			<role-name>Gerente</role-name>
+			<role-name>Financeiro</role-name>
+			<role-name>Cadastro</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+
+	<security-role>
+		<description>Quando usuario estiver logado</description>
+		<role-name>Gerente</role-name>
+	</security-role>
+	
+<!-- 		<security-role> -->
+<!-- 		<description>Quando usuario estiver logado</description> -->
+<!-- 		<role-name>Administrador</role-name> -->
+<!-- 	</security-role> -->
+	
+		<security-role>
+		<description>Quando usuario estiver logado</description>
+		<role-name>Financeiro</role-name>
+	</security-role>
+	
+		<security-role>
+		<description>Quando usuario estiver logado</description>
+		<role-name>Cadastro</role-name>
+	</security-role>
+
+
+
+
+
+
+
+	<!-- Definição de mime-types -->
+	<mime-mapping>
+		<extension>woff2</extension>
+		<mime-type>application/x-font-woff2</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>xhtml</extension>
+		<mime-type>application/xml</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>jsf</extension>
+		<mime-type>application/xml</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>eot</extension>
+		<mime-type>font/eot</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>woff</extension>
+		<mime-type>font/woff</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>ttf</extension>
+		<mime-type>font/ttf</mime-type>
+	</mime-mapping>
+</web-app>

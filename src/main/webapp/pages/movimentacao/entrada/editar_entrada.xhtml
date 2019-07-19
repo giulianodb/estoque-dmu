@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">	
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" >
+
+	<ui:composition template="/pages/templates/layout.xhtml">
+		
+    	<ui:param name="activeMenu" value="Produto"/>
+		<ui:param name="activeSubmenu" value="editarEntrada"/>
+	   	<f:metadata>
+        	<f:viewAction action="#{entradaController.iniciarEdicaoMovimentacaoEntrada(param.codLote)}" />
+    	</f:metadata>
+		<ui:define name="breadcrumb">		
+		   <li><i class="fa fa-hdd-o"></i> Realizar Entrada </li>          
+           <li>
+        	 <span>
+        		<h:outputText value="Editar entrada" />
+        	 </span>
+           </li>		
+		</ui:define>
+		<ui:define name="body">			
+			<div class="box">	
+				<h:form>
+					<div class="box-body row" jsf:id="pgCampos">
+						
+						<div class="box-header with-border" jsf:id="pgCamposDoador">
+             				<h3 class="box-title">Informações sobre o doador</h3>
+         				</div>
+																 							
+						 	
+				 				<div class="form-group col-md-6">	
+					 				<p:outputLabel for="tipoDoador" value="Tipo doador:" />
+									<p:selectOneMenu value="#{entradaController.tipoParceiroSelecionado}" id="tipoDoador" required="true" styleClass="form-control">
+										<f:selectItem itemLabel="Selecione" itemValue="" />
+										<f:selectItems value="#{entradaController.listaTipoParceiroCombo}" var="s" itemLabel="#{s.descricao}" itemValue="#{s}" />
+										<p:ajax partialSubmit="true" listener="#{entradaController.listenerAlterarTipoDoador()}" update="pgPanel" ></p:ajax>
+									</p:selectOneMenu >
+								</div>
+								
+								<div class="form-group col-md-6">
+									<p:outputLabel id="labelCampanha" value="Doador:" />
+									
+									<h:panelGroup id="pgPanel" layout="block"> 
+										<h:outputLabel value="" styleClass="form-control" rendered="#{!entradaController.mostrarComboCampanha and !entradaController.mostrarComboDoador and !entradaController.mostrarComboInstituicao}"/> 
+										<p:selectOneMenu value="#{entradaController.entradaDadosDoador.loteMovimentacao.campanha.id}" filter="true" id="comboCampanha" required="true" styleClass="form-control" rendered="#{entradaController.mostrarComboCampanha}">
+											<f:selectItem itemLabel="Selecione" itemValue="" />
+											<f:selectItems value="#{entradaController.listaCampanhaCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
+										</p:selectOneMenu >
+										
+										<p:selectOneMenu value="#{entradaController.entradaDadosDoador.loteMovimentacao.doador.id}" filter="true" id="comboDoador" required="true" styleClass="form-control" rendered="#{entradaController.mostrarComboDoador}">
+											<f:selectItem itemLabel="Selecione" itemValue="" />
+											<f:selectItems value="#{entradaController.listaDoadorCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
+										</p:selectOneMenu >
+										
+										<p:selectOneMenu value="#{entradaController.entradaDadosDoador.loteMovimentacao.instituicao.id}" filter="true" id="comboInstituicao" styleClass="form-control" required="true" rendered="#{entradaController.mostrarComboInstituicao}">
+											<f:selectItem itemLabel="Selecione" itemValue="" />
+											<f:selectItems value="#{entradaController.listaInstituicaoCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
+										</p:selectOneMenu >
+									</h:panelGroup>
+				 				</div>
+				 				<div class="form-group col-md-3">
+				 				<p:outputLabel for="data" value="Data entrada:" /><br />
+									<p:calendar
+										value="#{entradaController.entradaDadosDoador.loteMovimentacao.data}"
+										id="data" required="true" 
+										locale="pt" pattern="dd/MM/yyyy" maxlength="10" size="8" mask="99/99/9999">
+									</p:calendar> 
+				 				</div>	
+				 					<br />
+						</div>
+						<div class="box-body row">
+						<div class="box-header with-border" jsf:id="pgLista">
+             				<h3 class="box-title">Produtos</h3>
+             			</div>
+							<div class="form-group col-md-12">		
+								<p:outputLabel for="produto" value="Produto:" />
+								<p:selectOneMenu value="#{entradaController.entrada.produto.id}" id="produto" filter="true" styleClass="form-control">
+									<f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{entradaController.listProdutoCombo}" var="s" itemLabel="#{s.nome}" itemValue="#{s.id}" />
+									<p:ajax partialSubmit="true" listener="#{entradaController.listenerObterPrecoMedio()}" update="valorMedio,blocoQuantidade" ></p:ajax>
+								</p:selectOneMenu>
+					 		</div>	
+					 			
+					 		<div class="form-group col-md-3">		
+					 			<p:outputLabel for="quantidade" value="Quantidade:" />
+					 			
+					 			<h:panelGroup layout="block" id="blocoQuantidade" >
+						 			<p:inputText value="#{entradaController.entrada.quantidade}" id="quantidade" label="Quantidade" maxlength="8" size="8" styleClass="form-control">
+										<f:converter converterId="converter.MoedaConverter"></f:converter>
+									</p:inputText> #{entradaController.descricaoQuantidade}
+								</h:panelGroup>
+							</div>	
+								
+							<div class="form-group col-md-3">		
+								<p:outputLabel for="valorMedio" value="Valor médio:" />
+					 			<p:outputLabel value="#{entradaController.valorMedioProduto}" id="valorMedio" label="Valor" maxlength="8" size="8" styleClass="form-control" >
+									<f:converter converterId="converter.MoedaConverter"></f:converter>
+								</p:outputLabel> 
+							</div>		
+															
+							<div class="form-group col-md-3">									
+								<p:outputLabel for="valor" value="Valor unitário:" />
+					 			<p:inputText value="#{entradaController.valorUnitarioController}" id="valor" label="Valor" maxlength="8" size="8"  styleClass="form-control">
+					 				<f:converter converterId="converter.MoedaConverter"></f:converter>
+								</p:inputText>
+							</div>
+								
+							<div class="form-group col-md-3">		
+								<p:outputLabel for="nf" value="Nota fiscal:" />
+					 			<p:inputText value="#{entradaController.entrada.numeroNF}" id="nf" label="NF" maxlength="60" size="50" styleClass="form-control">
+								</p:inputText> 
+							</div>
+								
+							<div class="form-group col-md-12">		
+								<p:outputLabel for="descricaoNf" value="Descrição Nota:" />
+					 			<p:inputText value="#{entradaController.entrada.descricaoNota}" id="descricaoNf" label="Descrição Nf" maxlength="60" size="50" styleClass="form-control">
+								</p:inputText> 
+							</div>
+							</div>	
+							<div class="box-footer align-center">	
+								<p:commandButton actionListener="#{entradaController.adicionarEntradaLote()}" value="Adicionar"  ajax="true" icon="ui-icon-disk" update="gdEntradas pgLista"/>
+							</div>
+							
+							
+					    	<p:dataTable var="entrada" 
+							    value="#{entradaController.listaMovimentacao}" 
+							    paginator="true" 
+							    rows="10"  
+				                id="gdEntradas" 
+				                lazy="false" 
+				                paginatorPosition="bottom"
+				                emptyMessage="#{appMessages['message.datatable.noRecords']}">  				
+								<p:column headerText="Produto">
+					    	        <p:outputLabel value="#{entrada.produto.nome}" />
+					        	</p:column>
+					        	
+					        	<p:column headerText="Descrição na nota">
+					    	        <p:outputLabel value="#{entrada.descricaoNota}" />
+					        	</p:column>
+					        	
+					        	<p:column headerText="Quantidade">
+					    	        <p:outputLabel value="#{entrada.quantidade}" >
+					    	        	<f:converter converterId="converter.MoedaConverter"/>
+					    	        </p:outputLabel>
+					        	</p:column>
+					        	<p:column headerText="Valor">
+					    	        <p:outputLabel value="#{entrada.valor}" >
+					    	        	<f:converter converterId="converter.MoedaConverter"/>
+					    	        </p:outputLabel>
+					        	</p:column>
+					        	
+						        <p:column headerText="Selecionar" style="text-align: center;" >				                
+							        <p:commandButton id="cmdExcluirEntrada" icon="ui-icon-trash"									 	 
+								 		update="gdEntradas"
+								 		title="Excluir Entrada"	
+								 		ajax="true"
+										action="#{entradaController.excluirEntrada()}">
+										<f:setPropertyActionListener target="#{entradaController.entrada}" value="#{entrada}"/> 		 	 
+									</p:commandButton>			            
+							    </p:column>
+							</p:dataTable>
+							
+						
+							<div class="box-footer align-left">
+								<p:commandButton action="#{entradaController.alterarEntrada}" value="Alterar" rendered="#{!empty entradaController.entradaDadosDoador.loteMovimentacao.codigo}" ajax="false" icon="ui-icon-disk" styleClass="btn btn-flat btn-primary "/>
+								<p:spacer width="10"/>
+								<p:commandButton action="#{entradaController.incluirEntrada}" value="Incluir" rendered="#{empty entradaController.entradaDadosDoador.loteMovimentacao.codigo}" ajax="false" icon="ui-icon-disk" styleClass="btn btn-flat btn-primary " />
+								<p:spacer width="10"/>
+								<p:commandButton action="#{entradaController.iniciarPesquisaEntrada()}" value="Voltar" immediate="true" ajax="false" icon="ui-icon-arrowreturnthick-1-w" />
+							</div>
+					
+							<br/>
+				<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+				<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+					<p:graphicImage name="/images/ajax_loader.gif" />
+				</p:dialog>	
+						
+				</h:form>
+			</div>
+		</ui:define>
+	</ui:composition>
+</ui:component>

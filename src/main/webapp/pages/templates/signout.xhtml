@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">	
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" >
+	
+	<ui:composition template="/pages/templates/layout.xhtml">
+    	<ui:param name="activeMenu" value="Produto"/>
+		<ui:param name="activeSubmenu" value="editarProduto"/>
+	   	<f:metadata>
+        		<f:viewAction action="#{usuarioLogadoControl.sair()}" />
+    	</f:metadata>
+		<ui:define name="breadcrumb">		
+		   <li><i class="fa fa-hdd-o"></i> Produto </li>          
+           <li >
+        	 <span>
+        		<h:outputText value="Editar produto"/>
+        	 </span>
+           </li>		
+           
+		</ui:define>
+		<ui:define name="body">			
+			<div class="box">
+				<div class="box-header with-border">
+						<div class="col-xs-6 col-sm-3">
+							<h3 class="box-title">
+								<i class="fa fa-table x-big" /> Editar produto
+							</h3>
+						</div>	
+					</div>	
+				<h:form>
+					<div class="box-body row">
+						<div class="form-group col-md-6">
+				 			<p:outputLabel for="nomeProduto" value="Produto:" />
+				 			<p:inputText value="#{produtoController.produto.nome}" styleClass="form-control" id="nomeProduto" label="Nome Produto" maxlength="60" size="50">
+							</p:inputText> 
+						</div>
+							
+						<div class="form-group col-md-6">	
+							<p:outputLabel for="tipoProduto" value="Tipo produto:" />
+							<p:selectOneMenu value="#{produtoController.produto.tipoProduto}" styleClass="form-control" id="tipoProduto" required="true">
+								<f:selectItem itemLabel="Selecione" itemValue="" />
+								<f:selectItems value="#{produtoController.listTipoProduto}" var="s" itemLabel="#{s.descricao}" itemValue="#{s}" />
+							</p:selectOneMenu>
+						</div>
+						
+						<div class="form-group col-md-6">
+							<p:outputLabel for="tipoMedida" value="Tipo medida:" />
+							<p:selectOneMenu value="#{produtoController.produto.tipoMedida}" styleClass="form-control" id="tipoMedida" required="true">
+								<f:selectItem itemLabel="Selecione" itemValue="" />
+								<f:selectItems value="#{produtoController.listTipoMedida}" var="s" itemLabel="#{s.descricao}" itemValue="#{s}" />
+							</p:selectOneMenu>
+						</div>
+						
+						<div class="form-group col-md-12">						
+							<p:outputLabel for="descricao" value="Descrição:" />
+							<p:inputTextarea id="descricao"  value="#{produtoController.produto.descricao}" styleClass="form-control"></p:inputTextarea>	
+						</div>
+					</div>	
+						<br></br>
+						<div class="box-footer align-left">
+							<p:commandButton action="#{produtoController.alterarProduto()}" value="Alterar" styleClass="btn btn-flat btn-primary" rendered="#{!empty produtoController.produto.id}" ajax="false" icon="ui-icon-disk"/>
+							<p:spacer width="10"/>
+							<p:commandButton action="#{produtoController.incluirProduto()}" value="Incluir" styleClass="btn btn-flat btn-primary"  rendered="#{empty produtoController.produto.id}" ajax="false" icon="ui-icon-disk" />
+							<p:spacer width="10"/>
+							<p:commandButton action="#{produtoController.iniciarPesquisaProduto()}" value="Voltar" immediate="true" ajax="false" icon="ui-icon-arrowreturnthick-1-w" />
+						</div>
+			</h:form>
+		</div>
+		</ui:define>
+	</ui:composition>
+</ui:component>

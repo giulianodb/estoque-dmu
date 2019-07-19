@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">	
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" >
+
+	<ui:composition template="/pages/templates/layout.xhtml">			
+		
+    	<ui:param name="activeMenu" value="util"/>
+	    <ui:param name="activeSubmenu" value="conversor"/>
+		
+		<ui:define name="breadcrumb">		
+		   <li><i class="fa fa-hdd-o"></i> Utilitários </li>          
+           <li>
+        	 <span>
+        		<h:outputText value="Conversor" />
+        	 </span>
+           </li>		
+		</ui:define>
+		<ui:define name="body">			
+			<div class="box">
+								
+				<h:form id="usuarioForm">
+							
+					<div class="box-body row">
+						<div class="form-group col-md-6">
+							<p:outputLabel for="grama" value="Valor em gramas:" />
+							<p:inputText value="#{utilitarioController.gramas}" 
+								id="grama" label="valor em gramas"
+								maxlength="60" size="50" styleClass="form-control">
+								<f:converter converterId="converter.MoedaConverter"></f:converter>
+							</p:inputText>
+							
+							
+											<p:outputLabel for="centimetro" value="Valor em cm:" />
+							<p:inputText value="#{utilitarioController.centimetros}" 
+								id="centimetro" label="valor em centímetros"
+								maxlength="60" size="50" styleClass="form-control">
+								<f:converter converterId="converter.MoedaConverter"></f:converter>
+							</p:inputText>
+							
+							
+							
+							
+							
+							
+							
+							
+					
+							
+						</div>
+						
+						
+									<div class="form-group col-md-6">
+					
+							<p:outputLabel for="quilo" value="Valor em quilo :" />
+							<p:inputText value="#{utilitarioController.quilos}" 
+								id="quilo" label="valor em quilos"
+								maxlength="60" size="50" styleClass="form-control">
+								<f:converter converterId="converter.MoedaConverter"></f:converter>
+							</p:inputText> 
+							
+							
+							<p:outputLabel for="metro" value="Valor em metro :" />
+							<p:inputText value="#{utilitarioController.metros}" 
+								id="metro" label="valor em metros"
+								maxlength="60" size="50" styleClass="form-control">
+								<f:converter converterId="converter.MoedaConverter"></f:converter>
+							</p:inputText> 
+							
+						</div>
+						
+					</div>
+					
+					<div class="box-footer align-left">
+							<p:commandButton  
+								update=":gridForm usuarioForm"
+								value="Grama -> Quilo"
+							 	title="Pesquisar Campanha"
+								action="#{utilitarioController.gramasParaQuilos()}"						 		
+								ajax="false" styleClass="btn btn-flat btn-primary "></p:commandButton>
+								
+								<p:spacer width="10"/>					
+											
+								<p:commandButton
+								value="Quilo -> Grama"
+							 	title="Novo usuario"
+								action="#{utilitarioController.quilosParaGramas()}"						 		
+								ajax="false" styleClass="btn btn-flat btn-primary "></p:commandButton>
+								
+						</div>		
+								
+					<br/>
+					<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+					<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+						<p:graphicImage name="/images/ajax_loader.gif" />
+					</p:dialog>			
+				</h:form>	
+			</div>		
+		</ui:define>
+	</ui:composition>
+</ui:component>
