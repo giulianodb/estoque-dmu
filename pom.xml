@@ -129,12 +129,22 @@
 					<type>pom</type>
 					<scope>provided</scope>
 				</dependency>
-				<dependency>
-					<groupId>org.jboss.as</groupId>
-					<artifactId>jboss-as-ejb3</artifactId>
-					<version>7.2.0.Final</version>
-					<scope>provided</scope>
-				</dependency>
+				<!-- <dependency> -->
+				<!-- <groupId>org.jboss.as</groupId> -->
+				<!-- <artifactId>jboss-as-ejb3</artifactId> -->
+				<!-- <version>7.2.0.Final</version> -->
+				<!-- <scope>provided</scope> -->
+				<!-- <exclusions> -->
+				<!-- <exclusion> -->
+				<!-- <groupId>org.jboss.as</groupId> -->
+				<!-- <artifactId>jboss-as-clustering</artifactId> -->
+				<!-- </exclusion> -->
+				<!-- <exclusion> -->
+				<!-- <groupId>org.jboss.as</groupId> -->
+				<!-- <artifactId>jboss-as-clustering</artifactId> -->
+				<!-- </exclusion> -->
+				<!-- </exclusions> -->
+				<!-- </dependency> -->
 
 				<!-- Postgres -->
 				<dependency>
@@ -231,11 +241,11 @@
 
 
 				<!-- Dependências do CODI -->
-<!-- 				<dependency> -->
-<!-- 					<groupId>org.apache.myfaces.extensions.cdi.bundles</groupId> -->
-<!-- 					<artifactId>myfaces-extcdi-bundle-jsf20</artifactId> -->
-<!-- 					<version>1.0.6</version> -->
-<!-- 				</dependency> -->
+				<!-- <dependency> -->
+				<!-- <groupId>org.apache.myfaces.extensions.cdi.bundles</groupId> -->
+				<!-- <artifactId>myfaces-extcdi-bundle-jsf20</artifactId> -->
+				<!-- <version>1.0.6</version> -->
+				<!-- </dependency> -->
 
 				<!-- Parser JSon -->
 				<dependency>
@@ -251,19 +261,19 @@
 					<version>1.4</version>
 				</dependency>
 
-<!-- 				<dependency> -->
-<!-- 					<groupId>org.hibernate</groupId> -->
-<!-- 					<artifactId>hibernate-core</artifactId> -->
-<!-- 					<scope>provided</scope> -->
-<!-- 					<exclusions> -->
-<!-- 						<exclusion> -->
-<!-- 							<artifactId>xml-apis</artifactId> -->
-<!-- 							<groupId>xml-apis</groupId> -->
-<!-- 						</exclusion> -->
-<!-- 					</exclusions> -->
-<!-- 				</dependency> -->
-				
-				
+				<!-- <dependency> -->
+				<!-- <groupId>org.hibernate</groupId> -->
+				<!-- <artifactId>hibernate-core</artifactId> -->
+				<!-- <scope>provided</scope> -->
+				<!-- <exclusions> -->
+				<!-- <exclusion> -->
+				<!-- <artifactId>xml-apis</artifactId> -->
+				<!-- <groupId>xml-apis</groupId> -->
+				<!-- </exclusion> -->
+				<!-- </exclusions> -->
+				<!-- </dependency> -->
+
+
 			</dependencies>
 
 

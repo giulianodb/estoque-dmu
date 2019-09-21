@@ -1,15 +1,19 @@
 package org.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
+import javax.servlet.http.HttpServletResponse;
 
 import org.controller.model.ProdutoDataModel;
 import org.entity.Produto;
@@ -61,6 +65,34 @@ public class ProdutoController implements Serializable  {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void produtosTXT() {
+		try {
+
+			ByteArrayOutputStream byteArrayOutputStream = produtoService.produtosTXT();
+
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+
+			HttpServletResponse response = (HttpServletResponse) facesContext
+					.getExternalContext().getResponse();
+			response.setContentType("application/text");
+			response.addHeader("Content-disposition",
+					"attachment; filename=\" produtos.txt\"");
+
+			OutputStream os = null;
+			os = response.getOutputStream();
+
+			byteArrayOutputStream.writeTo(os);
+			os.flush();
+			os.close();
+			byteArrayOutputStream.close();
+
+			FacesContext.getCurrentInstance().responseComplete();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 	
 	public void iniciarEditarProduto(String codProduto){

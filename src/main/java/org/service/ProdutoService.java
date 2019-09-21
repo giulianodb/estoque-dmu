@@ -1,5 +1,8 @@
 package org.service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -150,5 +153,176 @@ public class ProdutoService {
 		
 		return em.find(Produto.class, id);
 	}
+	
+	/**
+	 * Obtem a lista de produtos em formato especifico para importar no sistema de contabilidade
+	 * @return
+	 */
+	public ByteArrayOutputStream produtosTXT() {
+		List<Produto> produtos = new ArrayList<Produto>();
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+			produtos = this.pesquisarProduto(null, null, null);
+			
+			for (Produto produto : produtos) {
+				sb.append("\"");
+				sb.append(produto.getId());
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append("\"");
+				sb.append(produto.getNome().trim());
+				sb.append("\"");
+				sb.append(",");
+				
+				
+				String descricao = "";
+				if (produto.getDescricao() == null || produto.getDescricao().trim().equals("")) {
+					descricao = produto.getNome().trim();
+				}
+				else {
+					descricao = produto.getDescricao().trim();
+				}
+				
+				sb.append("\"");
+				sb.append(descricao);
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append("\"");
+				sb.append(produto.getTipoMedida().getAbreviatura());
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append("\"");
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append("\"");
+				sb.append("N");
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append("\"");
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append("\"");
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append("99");
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append("\"");
+				sb.append("N");
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append("\"");
+				sb.append("N");
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append("\"");
+				sb.append("N");
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append("\"");
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append("\"");
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append("\"");
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append("\"");
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append("\"");
+				sb.append("N");
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append("\"");
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append("\"");
+				sb.append("\"");
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append(",");
+				
+				sb.append("\n");
+				
+			}
+			
+			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			try {
+				byteArrayOutputStream.write(sb.toString().getBytes());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+						
+			return byteArrayOutputStream;
+			
+			
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 
 }
