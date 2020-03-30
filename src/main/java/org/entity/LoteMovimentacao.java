@@ -72,7 +72,7 @@ public class LoteMovimentacao implements Serializable{
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Instituicao instituicaoCampanha;
 	
-	@OneToMany(mappedBy = "loteMovimentacao",fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "loteMovimentacao",fetch = FetchType.LAZY)
 	private List<Movimentacao> listMovimentacao;
 	
 	@Enumerated

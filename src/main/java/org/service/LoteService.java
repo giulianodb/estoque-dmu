@@ -46,7 +46,12 @@ public class LoteService {
 //			}
 			if (tipoMovimentacaoPesquisa != null){
 				sb.append(" JOIN lote.listMovimentacao l  ");
+			} else {
+				sb.append(" LEFT JOIN FETCH  lote.listMovimentacao l  ");
 			}
+			
+			
+			
 			sb.append(" WHERE ");
 			if (dataInicioPesquisa != null){
 				sb.append(" lote.data >= :dataInicio AND ");

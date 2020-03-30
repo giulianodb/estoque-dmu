@@ -201,7 +201,7 @@
 	<parameter name="numeroRecibo" class="java.lang.String"/>
 	<parameter name="valorTotal" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["/home/giuliano/git/estoque-dmu/src/main/resources/report/"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["C:\\estoque\\report\\"]]></defaultValueExpression>
 	</parameter>
 	<background>
 		<band splitType="Stretch"/>
@@ -209,11 +209,12 @@
 	<title>
 		<band height="309" splitType="Stretch">
 			<image>
-				<reportElement x="43" y="16" width="98" height="65" uuid="afa20d0d-0bf9-4d1a-87c4-73ccb8bec540"/>
-				<imageExpression><![CDATA["/home/giuliano/git/estoque-dmu/src/main/webapp/resources/images/logot.png"]]></imageExpression>
+				<reportElement uuid="afa20d0d-0bf9-4d1a-87c4-73ccb8bec540" x="43" y="16" width="98" height="65"/>
+				<imageExpression><![CDATA["C:\\estoque\\images\\logot.png"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="155" y="16" width="380" height="50" uuid="5423b4ad-fe69-4976-b897-9fb45ae042ee"/>
+				<reportElement uuid="5423b4ad-fe69-4976-b897-9fb45ae042ee" x="155" y="16" width="380" height="50"/>
+				<textElement/>
 				<text><![CDATA[Razão Social: Associação Beneficente De Mãos Unidas
 Utilidade Pública Municipal: n°14.030 / Utilidade Pública Estadual: n°17.500
 Email: contato@demaosunidas.org.br   /  www.demaosunidas.org.br
@@ -224,43 +225,53 @@ Rua: Raul Felix, 277 – CEP: 81070-370 - Portão – Curitiba / PR
 Utilidade Pública Federal: Portaria 1134 - CMAS: n° 20  - COMTIBA:  n° 453]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="309" y="92" width="119" height="20" uuid="cd29aff5-9f74-4a98-a7df-45a54c8dafba"/>
+				<reportElement uuid="cd29aff5-9f74-4a98-a7df-45a54c8dafba" x="309" y="92" width="119" height="20"/>
+				<textElement/>
 				<text><![CDATA[RECIBO Nº ENTRADA:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="217" y="130" width="120" height="20" uuid="0096a7d3-b794-4869-901b-7a7e90aa179e"/>
+				<reportElement uuid="0096a7d3-b794-4869-901b-7a7e90aa179e" x="217" y="130" width="120" height="20"/>
+				<textElement/>
 				<text><![CDATA[ENTRADA DE DOAÇÃO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="211" width="67" height="20" uuid="e63b5e03-133b-40c6-aeae-7d069da5f2da"/>
+				<reportElement uuid="e63b5e03-133b-40c6-aeae-7d069da5f2da" x="10" y="211" width="67" height="20"/>
+				<textElement/>
 				<text><![CDATA[DOADOR]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="242" width="67" height="20" uuid="c9e51a7c-14d1-4b7e-b0ac-ce991cb7f92f"/>
+				<reportElement uuid="c9e51a7c-14d1-4b7e-b0ac-ce991cb7f92f" x="10" y="242" width="67" height="20"/>
+				<textElement/>
 				<text><![CDATA[CPF/CNPJ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="273" width="67" height="20" uuid="0b928fa5-1bbe-4c9c-aaa7-13780f593bf1"/>
+				<reportElement uuid="0b928fa5-1bbe-4c9c-aaa7-13780f593bf1" x="10" y="273" width="67" height="20"/>
+				<textElement/>
 				<text><![CDATA[ENDEREÇO]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="10" y="178" width="299" height="20" uuid="a8d1bea6-1986-4311-a617-017766032add"/>
+				<reportElement uuid="a8d1bea6-1986-4311-a617-017766032add" x="10" y="178" width="299" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$P{data}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="77" y="242" width="375" height="20" uuid="95349679-f7f9-4337-8091-80367ce18692"/>
+				<reportElement uuid="95349679-f7f9-4337-8091-80367ce18692" x="77" y="242" width="375" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$P{documento}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="77" y="211" width="478" height="20" uuid="8d4d572b-9364-49c5-9a9e-2dfaad31ff8b"/>
+				<reportElement uuid="8d4d572b-9364-49c5-9a9e-2dfaad31ff8b" x="77" y="211" width="375" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$P{doador}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="77" y="273" width="375" height="20" uuid="fa6009a0-1763-42f0-b6e0-06a3c74a4e00"/>
+				<reportElement uuid="fa6009a0-1763-42f0-b6e0-06a3c74a4e00" x="77" y="273" width="375" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$P{endereco}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="428" y="92" width="100" height="20" uuid="fcf152f7-78c5-4b41-916b-006accf445e1"/>
+				<reportElement uuid="fcf152f7-78c5-4b41-916b-006accf445e1" x="428" y="92" width="100" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$P{numeroRecibo}]]></textFieldExpression>
 			</textField>
 		</band>
@@ -271,7 +282,7 @@ Utilidade Pública Federal: Portaria 1134 - CMAS: n° 20  - COMTIBA:  n° 453]]>
 	<summary>
 		<band height="50">
 			<subreport>
-				<reportElement x="10" y="0" width="545" height="33" uuid="8512d1ec-324d-4ad5-a843-2c7340bbb5e2"/>
+				<reportElement uuid="8512d1ec-324d-4ad5-a843-2c7340bbb5e2" x="10" y="0" width="545" height="33"/>
 				<subreportParameter name="SUBREPORT_DIR">
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>

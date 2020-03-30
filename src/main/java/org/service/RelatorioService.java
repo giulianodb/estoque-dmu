@@ -133,7 +133,7 @@ public class RelatorioService {
 	
 	
 	public ByteArrayOutputStream relatorioEstoqueSintetico(Date dataInicio, Date dataFim, boolean pdf) throws ApplicationException{
-		 
+		System.out.println("Inicio do relatório,");
 		List<Produto> listaProdutos = produtoService.pesquisarProdutoComMovimentacoes(null, dataInicio, dataFim);
 		
 		//
@@ -142,19 +142,16 @@ public class RelatorioService {
 		
 		
 		for (Produto produto : todosProdutos) {
-			if (produto.getId().equals(24)) {
-				System.out.println("ABACAXIIIII");
-			}
 			if(!listaProdutos.contains(produto)){
 				Movimentacao movimentacaoFake = new Movimentacao();
 				Movimentacao ultimaMov = movimentacaoService.pesquisarUltimaMovimentacao(produto, dataInicio);
 					if (ultimaMov != null){
 						
-						System.out.println("===============================");
-						System.out.println("Codigo produto: " + produto.getId());
-				
-						System.out.println("Codigo ultimov: " + ultimaMov.getId());
-						System.out.println("===============================");
+//						System.out.println("===============================");
+//						System.out.println("Codigo produto: " + produto.getId());
+//				
+//						System.out.println("Codigo ultimov: " + ultimaMov.getId());
+//						System.out.println("===============================");
 						movimentacaoFake.setValor(0f);
 						movimentacaoFake.setTipoMovimentacaoEnum(TipoMovimentacaoEnum.ENTRADA);
 						movimentacaoFake.setQuantidade(0f);
@@ -198,13 +195,13 @@ public class RelatorioService {
 		
 		
 		for (Produto produto : listaProdutos) {
-			if (produto.getId().equals(24)) {
-				System.out.println("ABACAXIIIII");
-			}
+//			if (produto.getId().equals(24)) {
+//				System.out.println("ABACAXIIIII");
+//			}
 			EstoqueSinteticoDTO dto = new EstoqueSinteticoDTO();
-			if (produto.getId().equals(18)){
-				System.out.println("ATENCAO");
-			}
+//			if (produto.getId().equals(18)){
+//				System.out.println("ATENCAO");
+//			}
 			Float quantidadeSaldoAnterior = produto.quantidadeAnterior();
 			Float valorTotalAnterior = produto.valorTotalAnterior();
 			
@@ -979,6 +976,9 @@ public class RelatorioService {
 		MoedaConverter mc = new MoedaConverter();
 		
 		for (Movimentacao movimentacao : listaMovimentacaos) {
+			if(movimentacao.getProduto().getId() == 200) {
+				System.out.println();
+			}
 			EstoqueEspecificoDTO dto = new EstoqueEspecificoDTO();
 		
 			
@@ -993,8 +993,10 @@ public class RelatorioService {
 			dto.setDocumentoSaida(movimentacao.getId().toString());
 			dto.setNomeProduto(movimentacao.getProduto().getNome());
 			dto.setQuantidadeSaida(mc.getAsString(null, null, movimentacao.getQuantidade()));
+			dto.setQuantidadeProdutoF(movimentacao.getQuantidade());
 			dto.setValorMedioSaida("");
 			dto.setValorTotalSaida(mc.getAsString(null, null, movimentacao.getValor()));
+			dto.setValorTotalF(movimentacao.getValor());
 			dto.setCodProduto(movimentacao.getProduto().getId());
 			lista.add(dto);
 			
@@ -1012,9 +1014,11 @@ public class RelatorioService {
 		
 		
 		for (EstoqueEspecificoDTO relatorioFamiliaDTO : lista) {
-			if (mapaTemp.containsKey(relatorioFamiliaDTO.getCodigo() )){
-				
-				EstoqueEspecificoDTO dto =	mapaTemp.get(relatorioFamiliaDTO.getCodigo());
+			if (mapaTemp.containsKey(relatorioFamiliaDTO.getCodProduto() )){
+				if(relatorioFamiliaDTO.getCodProduto().equals(200)) {
+					System.out.println("OPAAAA");
+				}
+				EstoqueEspecificoDTO dto =	mapaTemp.get(relatorioFamiliaDTO.getCodProduto());
 				dto.setQuantidadeProdutoF(NumeroUtil.somarDinheiro(dto.getQuantidadeProdutoF(), relatorioFamiliaDTO.getQuantidadeProdutoF(), 6));
 				dto.setValorTotalF(NumeroUtil.somarDinheiro(dto.getValorTotalF(), relatorioFamiliaDTO.getValorTotalF(), 6));
 				
