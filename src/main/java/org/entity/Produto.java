@@ -87,7 +87,7 @@ public class Produto implements Serializable {
 	
 	public Float valorMedioAtualProduto(){
 //		if (quantidadeEstoque == null || saldoEstoque < 1){
-			if (quantidadeEstoque == null){
+			if (quantidadeEstoque == null || quantidadeEstoque.equals(0.0f)){
 			return 0f;
 		}
 		return NumeroUtil.DividirDinheiro(saldoEstoque,quantidadeEstoque, 10);
