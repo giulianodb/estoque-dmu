@@ -1,13 +1,13 @@
 //Todas as movimentacoes num oeriodo
 
-select SUM(m.valor),count(*)  from estoque.movimentacao m where m.tipomovimentacaoenum = 1 and m."data" >= '01/03/2019 00:00' and m."data" <= '31/03/2019 00:00'
+select SUM(m.valor),count(*)  from estoque.movimentacao m where m.tipomovimentacaoenum = 1 and m."data" >= '01/10/2020 00:00' and m."data" <= '31/20/2020 00:00'
 
 //Somente saida para campanhas
 select SUM(m.valor),count(*)  from estoque.movimentacao m LEFT JOIN estoque.lotemovimentacao as lote
                 on m.lotemovimentacao_codigo= lote.codigo 
                 where m.tipomovimentacaoenum = 1 
-                and m."data" >= '01/03/2019 00:00' 
-                and m."data" <= '31/03/2019 00:00' 
+                and m."data" >= '01/10/2020 00:00' 
+                and m."data" <= '31/10/2020 00:00' 
                 and  lote.campanha_id notnull  
                 
                 
@@ -15,8 +15,8 @@ select SUM(m.valor),count(*)  from estoque.movimentacao m LEFT JOIN estoque.lote
                 select SUM(m.valor),count(*) from estoque.movimentacao m LEFT JOIN estoque.lotemovimentacao as lote
                 on m.lotemovimentacao_codigo= lote.codigo 
                 where m.tipomovimentacaoenum = 1 
-                and m."data" >= '01/03/2019 00:00' 
-                and m."data" <= '31/03/2019 00:00' 
+                    and m."data" >= '01/10/2020 00:00' 
+                and m."data" <= '31/10/2020 00:00' 
                 and  (lote.familia_id notnull AND lote.familiacampanha_id isnull) 
                 
               
@@ -24,8 +24,8 @@ select SUM(m.valor),count(*)  from estoque.movimentacao m LEFT JOIN estoque.lote
                       select SUM(m.valor),count(*)  from estoque.movimentacao m LEFT JOIN estoque.lotemovimentacao as lote
                 on m.lotemovimentacao_codigo= lote.codigo 
                 where m.tipomovimentacaoenum = 1 
-                and m."data" >= '01/03/2019 00:00' 
-                and m."data" <= '31/03/2019 00:00' 
+             and m."data" >= '01/10/2020 00:00' 
+                and m."data" <= '31/10/2020 00:00' 
                 and  (lote.instituicao_id notnull AND lote.instituicaocampanha_id isnull) 
                 
                 
@@ -34,8 +34,8 @@ select SUM(m.valor),count(*)  from estoque.movimentacao m LEFT JOIN estoque.lote
                              select *  from estoque.movimentacao m LEFT JOIN estoque.lotemovimentacao as lote
                 on m.lotemovimentacao_codigo= lote.codigo 
                 where m.tipomovimentacaoenum = 1 
-                and m."data" >= '01/03/2019 00:00' 
-                and m."data" <= '31/03/2019 00:00' 
+                  and m."data" >= '01/10/2020 00:00' 
+                and m."data" <= '31/10/2020 00:00' 
                 and  lote.instituicao_id notnull 
                 AND lote.instituicaocampanha_id isnull  
                 and  lote.familia_id notnull 
