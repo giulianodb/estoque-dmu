@@ -275,8 +275,22 @@ public class SaidaController implements Serializable  {
 	}
 
 	private void resolverReceptor() throws ApplicationException {
-		if (saidaDadosReceptor.getLoteMovimentacao().getFamiliaCampanha() != null && saidaDadosReceptor.getLoteMovimentacao().getFamiliaCampanha().getId() != null){
+		
+		if (saidaDadosReceptor.getLoteMovimentacao().getCampanha() != null && saidaDadosReceptor.getLoteMovimentacao().getCampanha().getId() != null){
+			saidaDadosReceptor.getLoteMovimentacao().setCampanha(campanhaService.obterCampanha(saidaDadosReceptor.getLoteMovimentacao().getCampanha().getId()));
+			
+		}else {
+			saidaDadosReceptor.getLoteMovimentacao().setCampanha(null);
+		}
+		
+		
+		if (saidaDadosReceptor.getLoteMovimentacao().getFamiliaCampanha() != null && saidaDadosReceptor.getLoteMovimentacao().getFamiliaCampanha().getId() != null && saidaDadosReceptor.getLoteMovimentacao().getCampanha() != null){
 			saidaDadosReceptor.getLoteMovimentacao().setFamiliaCampanha(familiaService.obterFamilia(saidaDadosReceptor.getLoteMovimentacao().getFamiliaCampanha().getId()));
+			
+			saidaDadosReceptor.getLoteMovimentacao().setFamilia(null);
+			saidaDadosReceptor.getLoteMovimentacao().setInstituicao(null);
+			saidaDadosReceptor.getLoteMovimentacao().setInstituicaoCampanha(null);
+			
 			
 		}else {
 			saidaDadosReceptor.getLoteMovimentacao().setFamiliaCampanha(null);
@@ -285,6 +299,10 @@ public class SaidaController implements Serializable  {
 		
 		if (saidaDadosReceptor.getLoteMovimentacao().getFamilia() != null && saidaDadosReceptor.getLoteMovimentacao().getFamilia().getId() != null){
 			saidaDadosReceptor.getLoteMovimentacao().setFamilia(familiaService.obterFamilia(saidaDadosReceptor.getLoteMovimentacao().getFamilia().getId()));
+			
+			saidaDadosReceptor.getLoteMovimentacao().setFamiliaCampanha(null);
+			saidaDadosReceptor.getLoteMovimentacao().setInstituicao(null);
+			saidaDadosReceptor.getLoteMovimentacao().setInstituicaoCampanha(null);
 			
 		}else {
 			saidaDadosReceptor.getLoteMovimentacao().setFamilia(null);
@@ -295,26 +313,27 @@ public class SaidaController implements Serializable  {
 		if (saidaDadosReceptor.getLoteMovimentacao().getInstituicao() != null && saidaDadosReceptor.getLoteMovimentacao().getInstituicao().getId() != null){
 			saidaDadosReceptor.getLoteMovimentacao().setInstituicao(instituicaoService.obterInstituicao(saidaDadosReceptor.getLoteMovimentacao().getInstituicao().getId()));
 			
+			saidaDadosReceptor.getLoteMovimentacao().setFamilia(null);
+			saidaDadosReceptor.getLoteMovimentacao().setFamiliaCampanha(null);
+			saidaDadosReceptor.getLoteMovimentacao().setInstituicaoCampanha(null);
+			
 		}else {
 			saidaDadosReceptor.getLoteMovimentacao().setInstituicao(null);
 		}
 		
 		
 		
-		if (saidaDadosReceptor.getLoteMovimentacao().getInstituicaoCampanha() != null && saidaDadosReceptor.getLoteMovimentacao().getInstituicaoCampanha().getId() != null){
+		if (saidaDadosReceptor.getLoteMovimentacao().getInstituicaoCampanha() != null && saidaDadosReceptor.getLoteMovimentacao().getInstituicaoCampanha().getId() != null && saidaDadosReceptor.getLoteMovimentacao().getCampanha() != null){
 			saidaDadosReceptor.getLoteMovimentacao().setInstituicaoCampanha(instituicaoService.obterInstituicao(saidaDadosReceptor.getLoteMovimentacao().getInstituicaoCampanha().getId()));
+			
+			saidaDadosReceptor.getLoteMovimentacao().setFamilia(null);
+			saidaDadosReceptor.getLoteMovimentacao().setFamiliaCampanha(null);
+			saidaDadosReceptor.getLoteMovimentacao().setInstituicao(null);
 			
 		}else {
 			saidaDadosReceptor.getLoteMovimentacao().setInstituicaoCampanha(null);
 		}
 		
-		
-		if (saidaDadosReceptor.getLoteMovimentacao().getCampanha() != null && saidaDadosReceptor.getLoteMovimentacao().getCampanha().getId() != null){
-			saidaDadosReceptor.getLoteMovimentacao().setCampanha(campanhaService.obterCampanha(saidaDadosReceptor.getLoteMovimentacao().getCampanha().getId()));
-			
-		}else {
-			saidaDadosReceptor.getLoteMovimentacao().setCampanha(null);
-		}
 	}
 	
 	public String alterarSaida(){
