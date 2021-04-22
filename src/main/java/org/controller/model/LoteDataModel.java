@@ -35,6 +35,8 @@ public class LoteDataModel extends LazyDataModel<LoteMovimentacao> {
    
    private Integer numeroReciboPesquisa;
    
+   private String nomePessoaInstituicaoPesquisa;
+   
    public Integer getNumeroReciboPesquisa() {
 	return numeroReciboPesquisa;
 }
@@ -69,12 +71,14 @@ private TipoMovimentacaoEnum tipoMovimentacaoPesquisa;
     public List<LoteMovimentacao> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String,Object> filters) {
     	try {
     		//Realiza a contagem do total de dados a serem paginados
-    		this.setRowCount(loteService.obterQtdeLote(lotePesquisa, dataInicioPesquisa, dataFimPesquisa, tipoMovimentacaoPesquisa, numeroReciboPesquisa));
+//    		loteService.teste(lotePesquisa, dataInicioPesquisa, dataFimPesquisa, tipoMovimentacaoPesquisa, numeroReciboPesquisa,nomePessoaInstituicaoPesquisa);
+    		this.setRowCount(loteService.obterQtdeLote(lotePesquisa, dataInicioPesquisa, dataFimPesquisa, tipoMovimentacaoPesquisa, numeroReciboPesquisa,nomePessoaInstituicaoPesquisa));
     		
     		//Seta os dados na lista de forma paginada
-    		this.setDatasource(loteService.pesquisarLote(lotePesquisa,dataInicioPesquisa, dataFimPesquisa, tipoMovimentacaoPesquisa,numeroReciboPesquisa, first,pageSize));
+    		this.setDatasource(loteService.pesquisarLote(lotePesquisa,dataInicioPesquisa, dataFimPesquisa, tipoMovimentacaoPesquisa,numeroReciboPesquisa, first,pageSize,nomePessoaInstituicaoPesquisa));
     		
     	}catch (Exception e) {
+    		e.printStackTrace();
     		Message.setMessage("br.gov.pr.celepar.exemplo.controller.model.DataModel.load.ERRO", new String[]{"alunos"}, FacesMessage.SEVERITY_ERROR);
     	}    	
 		return this.getDatasource(); 
@@ -128,5 +132,15 @@ private TipoMovimentacaoEnum tipoMovimentacaoPesquisa;
 			TipoMovimentacaoEnum tipoMovimentacaoPesquisa) {
 		this.tipoMovimentacaoPesquisa = tipoMovimentacaoPesquisa;
 	}
+
+	public String getNomePessoaInstituicaoPesquisa() {
+		return nomePessoaInstituicaoPesquisa;
+	}
+
+	public void setNomePessoaInstituicaoPesquisa(String nomePessoaInstituicaoPesquisa) {
+		this.nomePessoaInstituicaoPesquisa = nomePessoaInstituicaoPesquisa;
+	}
+
+
 
 }

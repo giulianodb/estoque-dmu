@@ -38,18 +38,29 @@ public class LoteService {
 	@Inject
 	private UsuarioLogadoControl usuarioLogado;
 	
-	public List<LoteMovimentacao> pesquisarLote(LoteMovimentacao lote, Date dataInicioPesquisa, Date dataFimPesquisa, TipoMovimentacaoEnum tipoMovimentacaoPesquisa, Integer numeroReciboPesquisa, Integer primeiroRegistro, Integer tamanhoPagina) throws ApplicationException{
+	public List<LoteMovimentacao> pesquisarLote(LoteMovimentacao lote, Date dataInicioPesquisa, Date dataFimPesquisa,
+			TipoMovimentacaoEnum tipoMovimentacaoPesquisa, Integer numeroReciboPesquisa, 
+			Integer primeiroRegistro, Integer tamanhoPagina, String nomePessoaInstituicaoDoador) throws ApplicationException{
 		try {
 			StringBuilder sb = new StringBuilder("SELECT distinct lote FROM LoteMovimentacao lote ");	
 //			if (dataFimPesquisa != null || dataInicioPesquisa != null){
 //				sb.append(" LEFT JOIN FETCH lote.instituicao instituicao  ");
 //			}
-			if (tipoMovimentacaoPesquisa != null){
-				sb.append(" JOIN lote.listMovimentacao l  ");
-			} else {
-				sb.append(" LEFT JOIN FETCH  lote.listMovimentacao l  ");
-			}
+//			if (tipoMovimentacaoPesquisa != null){
+//				sb.append(" JOIN lote.listMovimentacao l  ");
+//			} 
 			
+//			else {
+				sb.append(" LEFT JOIN FETCH  lote.listMovimentacao l  ");
+//			}
+			
+				sb.append(" LEFT JOIN lote.familia f  ");
+				sb.append(" LEFT JOIN lote.instituicao i  ");
+				sb.append(" LEFT JOIN lote.doador d  ");
+				
+				sb.append(" LEFT JOIN lote.familiaCampanha fc  ");
+				sb.append(" LEFT JOIN lote.instituicaoCampanha ic  ");
+				sb.append(" LEFT JOIN lote.doadorCampanha dc  ");
 			
 			
 			sb.append(" WHERE ");
@@ -60,11 +71,27 @@ public class LoteService {
 				sb.append(" lote.data <= :dataFim AND");
 			}
 			if (tipoMovimentacaoPesquisa != null){
-				sb.append(" l.tipoMovimentacaoEnum = :tipoMovimentacao AND ");
+				sb.append(" lote.tipoMovimentacaoEnum = :tipoMovimentacao AND ");
 			}
+			
+			
 			if (numeroReciboPesquisa != null){
 				sb.append(" lote.codigo = :codigo AND ");
 			}
+			
+			if (nomePessoaInstituicaoDoador != null){
+				sb.append(" ( ");
+				sb.append(" lote.instituicao.nome LIKE :nomePesquisa OR  ");
+				sb.append(" lote.instituicaoCampanha.nome LIKE :nomePesquisa OR  ");
+				sb.append(" lote.familia.nomeResponsavel LIKE :nomePesquisa OR  ");
+				sb.append(" lote.familiaCampanha.nomeResponsavel LIKE :nomePesquisa OR  ");
+				sb.append(" lote.doador.nome LIKE :nomePesquisa OR  ");
+				sb.append(" lote.doadorCampanha.nome LIKE :nomePesquisa  ");
+				
+				sb.append(" ) AND ");
+			}
+			
+			
 			
 			sb.append(" 1 = 1 ");
 			
@@ -93,6 +120,11 @@ public class LoteService {
 	    	
 	    	if (numeroReciboPesquisa != null){
 	    		query.setParameter("codigo", numeroReciboPesquisa); 
+			}
+	    	
+			if (nomePessoaInstituicaoDoador != null){
+				query.setParameter("nomePesquisa", "%" +nomePessoaInstituicaoDoador+"%" );
+//				query.setParameter("nomePesquisa", nomePessoaInstituicaoDoador );
 			}
 	        
 	        List<LoteMovimentacao> listaMovimentacao = query.getResultList();
@@ -137,8 +169,9 @@ public class LoteService {
 	}
 	
 	
-	
-	public Integer obterQtdeLote(LoteMovimentacao loteMovimentacao, Date dataInicioPesquisa, Date dataFimPesquisa, TipoMovimentacaoEnum tipoMovimentacaoPesquisa, Integer numeroReciboPesquisa) throws ApplicationException{
+	public Integer obterQtdeLote(LoteMovimentacao loteMovimentacao, Date dataInicioPesquisa, 
+			Date dataFimPesquisa, TipoMovimentacaoEnum tipoMovimentacaoPesquisa, 
+			Integer numeroReciboPesquisa, String nomePessoaInstituicaoDoador) throws ApplicationException{
 			
 			try {
 				StringBuilder sb = new StringBuilder("SELECT COUNT(DISTINCT lote) FROM LoteMovimentacao lote ");
@@ -146,9 +179,17 @@ public class LoteService {
 //				if (dataFimPesquisa != null || dataInicioPesquisa != null){
 //					sb.append(" LEFT JOIN FETCH lote.instituicao instituicao  ");
 //				}
-				if (tipoMovimentacaoPesquisa != null){
-					sb.append(" JOIN lote.listMovimentacao l  ");
-				}
+//				if (tipoMovimentacaoPesquisa != null){
+//					sb.append(" LEFT JOIN FETCH  lote.listMovimentacao l  ");
+//				}
+				
+				sb.append(" LEFT JOIN lote.familia f  ");
+				sb.append(" LEFT JOIN lote.instituicao i  ");
+				sb.append(" LEFT JOIN lote.doador d  ");
+				
+				sb.append(" LEFT JOIN lote.familiaCampanha fc  ");
+				sb.append(" LEFT JOIN lote.instituicaoCampanha ic  ");
+				sb.append(" LEFT JOIN lote.doadorCampanha dc  ");
 				
 				sb.append(" WHERE ");
 				if (dataInicioPesquisa != null){
@@ -158,11 +199,24 @@ public class LoteService {
 					sb.append(" lote.data <= :dataFim AND");
 				}
 				if (tipoMovimentacaoPesquisa != null){
-					sb.append(" l.tipoMovimentacaoEnum = :tipoMovimentacao AND ");
+					sb.append(" lote.tipoMovimentacaoEnum = :tipoMovimentacao AND ");
 				}
 				
 				if (numeroReciboPesquisa != null){
 					sb.append(" lote.codigo = :codigo AND ");
+				}
+				
+				if (nomePessoaInstituicaoDoador != null){
+					sb.append(" ( ");
+				
+					sb.append(" lote.instituicao.nome LIKE :nomePesquisa OR  ");
+					sb.append(" lote.instituicaoCampanha.nome LIKE :nomePesquisa OR  ");
+					sb.append(" lote.familia.nomeResponsavel LIKE :nomePesquisa OR  ");
+					sb.append(" lote.familiaCampanha.nomeResponsavel LIKE :nomePesquisa OR  ");
+					sb.append(" lote.doador.nome LIKE :nomePesquisa OR  ");
+					sb.append(" lote.doadorCampanha.nome LIKE :nomePesquisa  ");
+					
+					sb.append(" ) AND ");
 				}
 				
 				sb.append(" 1 = 1 ");
@@ -185,8 +239,15 @@ public class LoteService {
 		    	if (numeroReciboPesquisa != null){
 		    		query.setParameter("codigo", numeroReciboPesquisa); 
 				}
+		    	
 				
-				Long x = (Long) query.getSingleResult();		
+				if (nomePessoaInstituicaoDoador != null){
+					query.setParameter("nomePesquisa", "%" +nomePessoaInstituicaoDoador+"%" );
+//					query.setParameter("nomePesquisa", nomePessoaInstituicaoDoador ); 
+				}
+				
+				Long x = (Long) query.getSingleResult();
+				System.out.println("=============="+x);
 				return Integer.valueOf(x.intValue());
 				
 			} catch(Exception e) {

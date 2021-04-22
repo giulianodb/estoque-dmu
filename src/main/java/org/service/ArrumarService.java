@@ -47,7 +47,7 @@ public class ArrumarService {
 		Date fim = DateUtil.retornarData("31/03/2017", "dd/MM/yyyy");
 		
 		try {
-			List<LoteMovimentacao> lista = loteService.pesquisarLote(null, inicio, fim, TipoMovimentacaoEnum.SAIDA, null, null, null);
+			List<LoteMovimentacao> lista = loteService.pesquisarLote(null, inicio, fim, TipoMovimentacaoEnum.SAIDA, null, null, null,null);
 			List<LoteMovimentacao> movComProdutos = new ArrayList<LoteMovimentacao>();
 			
 			for (LoteMovimentacao loteMovimentacao : lista) {
