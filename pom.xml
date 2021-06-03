@@ -116,7 +116,7 @@
 			</activation>
 			<properties>
 				<theme.version>1.0.10</theme.version>
-				<primefacesVersion>5.3</primefacesVersion>
+				<primefacesVersion>6.0</primefacesVersion>
 				<!-- <deltaspike.version>1.5.2</deltaspike.version> -->
 			</properties>
 
